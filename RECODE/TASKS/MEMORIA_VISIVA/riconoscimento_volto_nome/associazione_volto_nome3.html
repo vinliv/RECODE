@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MEMORIA VISIVA Associazione volto-nome LIV. 3</title>
+  <meta charset="UTF-8" />
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-image-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-text.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych-psychophysics-3.3.0/jspsych-psychophysics.js"></script>
+
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+  <script src="jatos.js"></script>
+
+</head>
+<body>
+  <style>
+  body {
+    background-color: white;
+  }
+
+  </style>
+
+  <!--
+  “Ora vedrai dei passaporti di persone, con alcune informazioni.
+  Il suo compito è quello di memorizzarle.
+  Le verrà chiesto di scrivere quali informazioni erano riportate sul passaporto.”
+  Per livello 2 e 3, sotto: “ATTENZIONE: prima di rispondere verrà distratto da un altro breve compito, quindi tenga bene a mente le informazioni!”
+  vengono presentati dei volti di cui bisogna ricordare il nome ed il cognome.
+  creare “passaporti” con immagine volti. di fianco vengono riportare le informazioni
+
+  TERZO LIVELLO:
+  5 trials. Interferenza = calcoli, pallini/stelline/figure da contare a inserimento del numero, suoni da contare.
+  si presentano 2 persone con nome + hobby + animale domestico. il partecipante deve riportare le informazioni
+  bottone per andare avanti (senza limiti di tempo per l’elaborazione)
+
+
+
+-->
+</body>
+<script>
+
+/* to initialize jspsych */
+var jsPsych = initJsPsych({
+  use_webaudio: false,
+
+  on_finish: function() {
+    /*jsPsych.data.displayData();*/ //lascio così adesso in via di sviluppo
+
+    var feed;
+    if(punteggio >= 4){ //affinché si passi l'esercizio con l'80% delle risposte corrette
+      var feed = 1;
+    } else {
+      var feed = -1;
+    }
+    var punteggio_dec = punteggio*10/5;
+    jatos.studySessionData = feed;
+    var memoria_visiva = Number(sessionStorage.getItem('memoria_visiva'))+feed;
+    var counter_memoria_visiva = Number(sessionStorage.getItem('counter_memoria_visiva'))+1;
+    var punteggio_finale_memoria_visiva= Number(sessionStorage.getItem('punteggio_finale_memoria_visiva'))+punteggio_dec;
+    sessionStorage.setItem('punteggio_finale_memoria_visiva', punteggio_finale_memoria_visiva);
+    if (memoria_visiva < 0) {memoria_visiva = 0}
+    if (memoria_visiva > 2) {memoria_visiva = 2}
+    if (counter_memoria_visiva > 3) {counter_memoria_visiva = 3}
+    sessionStorage.setItem('memoria_visiva', memoria_visiva);
+    sessionStorage.setItem('counter_memoria_visiva', counter_memoria_visiva);
+    var Data = {feed: feed, type: 'MEMORIA_VISIVA_associazionevoltonome_level3', cresp: correct_trials};
+    jatos.startComponentByPos(4,Data);
+
+  }
+
+});
+
+
+var preload = {
+  type: jsPsychPreload,
+  images: [
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/1.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/2.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/3.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/4.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/5.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/6.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/7.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/8.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/9.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/10.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/11.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/12.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/13.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/14.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/15.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/16.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/17.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/18.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/19.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/20.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/21.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/22.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/23.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/24.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/25.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/26.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/27.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/28.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/29.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/30.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/31.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/32.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/33.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/34.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/35.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/36.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/37.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/38.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/39.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/40.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/41.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/42.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/43.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/44.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/45.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/46.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/47.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/48.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/49.jpg',
+    './TASKS/MEMORIA_VISIVA/riconoscimento_volto_nome/img_persone/50.jpg'
+  ]
+};
+
+var array_imgs = [
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/1.jpg', nome: 'daniele', passione: 'pesca' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/2.jpg', nome: 'sara', passione: 'pittura' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/3.jpg', nome: 'marco', passione: 'videogiochi' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/4.jpg', nome: 'vittorio', passione: 'filosofia' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/5.jpg', nome: 'angelo', passione: 'tennis' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/6.jpg', nome: 'monica', passione: 'uncinetto' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/7.jpg', nome: 'serena', passione: 'astronomia' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/8.jpg', nome: 'massimo', passione: 'lettura' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/9.jpg', nome: 'michele', passione: 'ceramica' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/10.jpg', nome: 'adriano', passione: 'fotografia' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/11.jpg', nome: 'pasquale', passione: 'giardinaggio' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/12.jpg', nome: 'riccardo', passione: 'giochi da tavolo' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/13.jpg', nome: 'gabriele', passione: 'scrittura' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/14.jpg', nome: 'elisa', passione: 'scacchi' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/15.jpg', nome: 'mara', passione: 'viaggiare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/16.jpg', nome: 'emanuele', passione: 'volontariato' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/17.jpg', nome: 'francesco', passione: 'ballo' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/18.jpg', nome: 'eleonora', passione: 'musica' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/19.jpg', nome: 'maria', passione: 'cucinare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/20.jpg', nome: 'francesca', passione: 'fai da te' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/21.jpg', nome: 'silvia', passione: 'automobili' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/22.jpg', nome: 'giulia', passione: 'fare le passeggiate' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/23.jpg', nome: 'giuseppe', passione: 'ciclismo' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/24.jpg', nome: 'carlo', passione: 'calcio' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/25.jpg', nome: 'giorgia', passione: 'pianoforte' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/26.jpg', nome: 'leonardo', passione: 'montagna' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/27.jpg', nome: 'alice', passione: 'nuoto' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/28.jpg', nome: 'emma', passione: 'ricamare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/29.jpg', nome: 'aurora', passione: 'disegnare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/30.jpg', nome: 'lucia', passione: 'cantare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/31.jpg', nome: 'angela', passione: 'giocare a carte' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/32.jpg', nome: 'rita', passione: 'cucire' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/33.jpg', nome: 'bianca', passione: 'golf' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/34.jpg', nome: 'adele', passione: 'artigianato' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/35.jpg', nome: 'vincenzo', passione: 'sciare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/36.jpg', nome: 'giulio', passione: 'barca a vela' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/37.jpg', nome: 'mario', passione: 'collezionare monete' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/38.jpg', nome: 'daniele', passione: 'recitare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/39.jpg', nome: 'margherita', passione: 'pallavolo' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/40.jpg', nome: 'filippo', passione: 'cani' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/41.jpg', nome: 'tommaso', passione: 'gatti' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/42.jpg', nome: 'mattia', passione: 'film' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/43.jpg', nome: 'sofia', passione: 'pattinare' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/44.jpg', nome: 'alessandro', passione: 'campeggio' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/45.jpg', nome: 'nicola', passione: 'violino' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/46.jpg', nome: 'marta', passione: 'moda' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/47.jpg', nome: 'anna', passione: 'musei' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/48.jpg', nome: 'ester', passione: 'guardare la tv' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/49.jpg', nome: 'luca', passione: 'fare le torte' },
+  { img: './tasks/memoria_visiva/riconoscimento_volto_nome/img_persone/50.jpg', nome: 'simona', passione: 'ballo di coppia' }
+];
+
+
+var imgs = jsPsych.randomization.shuffle(array_imgs);
+
+var via = {
+  timeline: [
+    {
+      type: jsPsychPsychophysics,
+      stimuli: [
+        {
+          obj_type: 'text',
+          startX: 'center', // location of the cross's center in the canvas
+          startY: 'center',
+          content: 'Pronti',
+          font: "60px 'Arial'",
+          line_length: 30,
+          line_color: 'black',
+          show_start_time: 1000, // ms after the start of the trial
+          show_end_time: 3000,
+        },
+        {
+          obj_type: 'text',
+          startX: 'center', // location of the cross's center in the canvas
+          startY: 'center',
+          content: 'VIA!',
+          font: "60px 'Arial'",
+          line_length: 30,
+          line_color: 'black',
+          show_start_time: 3500, // ms after the start of the trial
+          show_end_time: 4000,
+        }
+      ],
+      background_color: 'white',
+      response_type: 'key',
+      response_start_time: 500,
+      response_ends_trial: true,
+      trial_duration: 4100,
+    }]
+  };
+
+var pre_if = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; "> <strong> Ora vedrai delle foto di persone, con alcune informazioni. <br>
+  Il suo compito è quello di memorizzarle. </strong> <br> <br>
+  Le verrà chiesto di scrivere quali informazioni erano riportate nell'immagine vista. </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta_prova = 1;
+    } else{
+      var risposta_prova = 0;
+    }
+    data.risposta_prova = risposta_prova
+  }
+};
+
+var prova_img_A = {
+  type: jsPsychImageButtonResponse,
+  stimulus: ''+imgs[10].img+'',
+  stimulus_height: 600,
+  // da definire dimensioni immagine
+  prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[10].nome + `</a> ;
+  PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[10].passione + ` </a> ;
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+};
+
+var prova_img_B = {
+  type: jsPsychImageButtonResponse,
+  stimulus: ''+imgs[11].img+'',
+  stimulus_height: 600,
+  // da definire dimensioni immagine
+  prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[11].nome + `</a> ;
+  PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[11].passione + ` </a> ;
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+};
+
+var interference_prova = {
+  type: jsPsychSurveyText,
+  questions: [
+    {prompt: "<p style='font-size: 50px; font-weight: bold;'>12 : 2</p>", required: true}
+  ],
+  preamble: "<p style='font-size: 34px; font-weight: bold;'>Riporta il risultato della seguente operazione matematica:</p>",
+  button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    if (data.response.Q0 == "6" ){
+      return console.log("Risposta corretta")
+    } else {
+      return console.log("Risposta sbagliata")
+    }
+  }
+
+  // -----> ci interessa che il risultato sia giusto o sbagliato?
+};
+
+var prova_answer = {
+  type: jsPsychSurveyText,
+  questions: [
+    {prompt:'Qual è il nome della PRIMA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_a', required: true},
+    {prompt:"Qual è la passione della PRIMA persona appena vista?", name: 'Passione_a', required: true},
+
+    {prompt:'Qual è il nome della SECONDA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_b', required: true},
+    {prompt:"Qual è la passione della SECONDA persona appena vista?", name: 'Passione_b', required: true}
+
+  ],
+  button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var response_nome_a = data.response.Nome_a.toLowerCase();
+    var response_passione_a = data.response.Passione_a.toLowerCase();
+    var response_nome_b = data.response.Nome_b.toLowerCase();
+    var response_passione_b = data.response.Passione_b.toLowerCase();
+
+    var nome_a = (imgs[10] && imgs[10].nome) ? imgs[10].nome.toLowerCase() : '';
+    var passione_a = (imgs[10] && imgs[10].passione) ? imgs[10].passione.toLowerCase() : '';
+    console.log(nome_a);
+    var nome_b = (imgs[11] && imgs[11].nome) ? imgs[11].nome.toLowerCase() : '';
+    var passione_b = (imgs[11] && imgs[11].passione) ? imgs[11].passione.toLowerCase() : '';
+
+
+    if (nome_a && response_nome_a.substring(0, 3) === nome_a.substring(0, 3)) {
+      var accuracy_nome_a = true
+    } else {
+      var accuracy_nome_a = false
+    }
+    if (passione_a && response_passione_a.substring(0, 3) === passione_a.substring(0, 3)){
+      var accuracy_passione_a = true
+    } else {
+      var accuracy_passione_a = false
+    };
+    data.accuracy_nome_a = accuracy_nome_a;
+    data.accuracy_passione_a = accuracy_passione_a;
+
+    if (nome_b && response_nome_b.substring(0, 3) === nome_b.substring(0, 3)) {
+      var accuracy_nome_b = true
+    } else {
+      var accuracy_nome_b = false
+    }
+    if (passione_b && response_passione_b.substring(0, 3) === passione_b.substring(0, 3)){
+      var accuracy_passione_b = true
+    } else {
+      var accuracy_passione_b = false
+    };
+    data.accuracy_nome_b = accuracy_nome_b;
+    data.accuracy_passione_b = accuracy_passione_b;
+
+    if (data.accuracy_nome_a, data.accuracy_passione_a,
+      data.accuracy_nome_b, data.accuracy_passione_b== true) {
+        var accuracy = true;
+      } else {
+        var accuracy = false;
+      };
+      data.correct = accuracy;
+      console.log(data.correct);
+
+    },
+
+  };
+
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_answer){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].correct;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_answer.data = {stimulus: feedback};
+    prova_answer.stimulus = feedback_prova_stima;
+  }
+};
+
+var prova_loop = {
+  timeline: [prova_img_A, via, prova_img_B, interference_prova, prova_answer, feedback]
+};
+
+var begin_trial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; "> Allora proseguiamo, inziamo con l'esercizio. <br> <strong>Ora vedrai delle foto di persone, con alcune informazioni. <br>
+  Il suo compito è quello di memorizzarle. </strong><br> <br>
+  Le verrà chiesto di scrivere quali informazioni erano riportate nell'immagine vista.
+  <br> <br> ATTENZIONE: prima di rispondere verrà distratto da un altro breve compito, quindi tenga bene a mente le informazioni! </p>`,
+  button_html: `<button class="jspsych-btn" style="position: left; font-size: 30px; color:black; ">%choice%</button>`,
+  choices: ['Premi qui per iniziare']
+};
+
+///////////////////////// TRIALS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+let punteggio = 0
+
+  var trial1_img_A = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+imgs[0].img+'',
+    stimulus_height: 600,
+    // da definire dimensioni immagine
+    prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[0].nome + `</a> ;
+    PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[0].passione + ` </a> ;
+    </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+  };
+
+  var trial1_img_B = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+imgs[1].img+'',
+    stimulus_height: 600,
+    // da definire dimensioni immagine
+    prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[1].nome + `</a> ;
+    PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[1].passione + ` </a> ;
+    </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+  };
+
+  var interference1 = {
+    type: jsPsychSurveyText,
+    questions: [
+      {prompt: "<p style='font-size: 50px; font-weight: bold;'>22 : 2</p>", required: true}
+    ],
+    preamble: "<p style='font-size: 34px; font-weight: bold;'>Riporta il risultato della seguente operazione matematica:</p>",
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    on_finish: function(data){
+      if (data.response.Q0 == "11" ){
+        return console.log("Risposta corretta")
+      } else {
+        return console.log("Risposta sbagliata")
+      }
+    }
+
+    // -----> ci interessa che il risultato sia giusto o sbagliato?
+  };
+
+  var trial1 = {
+    type: jsPsychSurveyText,
+    questions: [
+      {prompt:'Qual è il nome della PRIMA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_a', required: true},
+      {prompt:"Qual è la passione della PRIMA persona appena vista?", name: 'Passione_a', required: true},
+
+      {prompt:'Qual è il nome della SECONDA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_b', required: true},
+      {prompt:"Qual è la passione della SECONDA persona appena vista?", name: 'Passione_b', required: true}
+
+    ],
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    on_finish: function(data){
+      var response_nome_a = data.response.Nome_a.toLowerCase();
+      var response_passione_a = data.response.Passione_a.toLowerCase();
+      var response_nome_b = data.response.Nome_b.toLowerCase();
+      var response_passione_b = data.response.Passione_b.toLowerCase();
+
+      var nome_a = (imgs[0] && imgs[0].nome) ? imgs[0].nome.toLowerCase() : '';
+      var passione_a = (imgs[0] && imgs[0].passione) ? imgs[0].passione.toLowerCase() : '';
+
+      var nome_b = (imgs[1] && imgs[1].nome) ? imgs[1].nome.toLowerCase() : '';
+      var passione_b = (imgs[1] && imgs[1].passione) ? imgs[1].passione.toLowerCase() : '';
+
+
+      if (nome_a && response_nome_a.substring(0, 3) === nome_a.substring(0, 3)) {
+        var accuracy_nome_a = true
+      } else {
+        var accuracy_nome_a = false
+      }
+      if (passione_a && response_passione_a.substring(0, 3) === passione_a.substring(0, 3)){
+        var accuracy_passione_a = true
+      } else {
+        var accuracy_passione_a = false
+      };
+      data.accuracy_nome_a = accuracy_nome_a;
+      data.accuracy_passione_a = accuracy_passione_a;
+
+      if (nome_b && response_nome_b.substring(0, 3) === nome_b.substring(0, 3)) {
+        var accuracy_nome_b = true
+      } else {
+        var accuracy_nome_b = false
+      }
+      if (passione_b && response_passione_b.substring(0, 3) === passione_b.substring(0, 3)){
+        var accuracy_passione_b = true
+      } else {
+        var accuracy_passione_b = false
+      };
+      data.accuracy_nome_b = accuracy_nome_b;
+      data.accuracy_passione_b = accuracy_passione_b;
+
+      if (data.accuracy_nome_a, data.accuracy_passione_a,
+        data.accuracy_nome_b, data.accuracy_passione_b== true) {
+          var correct = true;
+        } else {
+          var correct = false;
+        };
+        data.correct = correct;
+        console.log(data.correct);
+        if (data.correct == true) {
+          punteggio++;
+          console.log('risposta corretta', punteggio);
+
+        } else {
+
+          console.log('risposta sbagliata', punteggio);
+
+        }
+      },
+
+    };
+
+    var trial2_img_A = {
+      type: jsPsychImageButtonResponse,
+      stimulus: ''+imgs[2].img+'',
+      stimulus_height: 600,
+      // da definire dimensioni immagine
+      prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[2].nome + `</a> ;
+      PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[2].passione + ` </a> ;
+      </p>`,
+      button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+      choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+    };
+
+    var trial2_img_B = {
+      type: jsPsychImageButtonResponse,
+      stimulus: ''+imgs[3].img+'',
+      stimulus_height: 600,
+      // da definire dimensioni immagine
+      prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[3].nome + `</a> ;
+      PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[3].passione + ` </a> ;
+      </p>`,
+      button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+      choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+    };
+
+    var interference2 = {
+      type: jsPsychSurveyText,
+      questions: [
+        {prompt: "<p style='font-size: 50px; font-weight: bold;'>9 + 6</p>", required: true}
+      ],
+      preamble: "<p style='font-size: 34px; font-weight: bold;'>Riporta il risultato della seguente operazione matematica:</p>",
+      button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+      on_finish: function(data){
+        if (data.response.Q0 == "15" ){
+          return console.log("Risposta corretta")
+        } else {
+          return console.log("Risposta sbagliata")
+        }
+      }
+      // -----> ci interessa che il risultato sia giusto o sbagliato?
+    };
+
+    var trial2 = {
+      type: jsPsychSurveyText,
+      questions: [
+        {prompt:'Qual è il nome della PRIMA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_a', required: true},
+        {prompt:"Qual è la passione della PRIMA persona appena vista?", name: 'Passione_a', required: true},
+
+        {prompt:'Qual è il nome della SECONDA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_b', required: true},
+        {prompt:"Qual è la passione della SECONDA persona appena vista?", name: 'Passione_b', required: true}
+
+      ],
+      button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+      on_finish: function(data){
+        var response_nome_a = data.response.Nome_a.toLowerCase();
+        var response_passione_a = data.response.Passione_a.toLowerCase();
+        var response_nome_b = data.response.Nome_b.toLowerCase();
+        var response_passione_b = data.response.Passione_b.toLowerCase();
+
+        var nome_a = (imgs[2] && imgs[2].nome) ? imgs[2].nome.toLowerCase() : '';
+        var passione_a = (imgs[2] && imgs[2].passione) ? imgs[2].passione.toLowerCase() : '';
+
+        var nome_b = (imgs[3] && imgs[3].nome) ? imgs[3].nome.toLowerCase() : '';
+        var passione_b = (imgs[3] && imgs[3].passione) ? imgs[3].passione.toLowerCase() : '';
+
+        if (nome_a && response_nome_a.substring(0, 3) === nome_a.substring(0, 3)) {
+          var accuracy_nome_a = true
+        } else {
+          var accuracy_nome_a = false
+        }
+        if (passione_a && response_passione_a.substring(0, 3) === passione_a.substring(0, 3)){
+          var accuracy_passione_a = true
+        } else {
+          var accuracy_passione_a = false
+        };
+        data.accuracy_nome_a = accuracy_nome_a;
+        data.accuracy_passione_a = accuracy_passione_a;
+
+        if (nome_b && response_nome_b.substring(0, 3) === nome_b.substring(0, 3)) {
+          var accuracy_nome_b = true
+        } else {
+          var accuracy_nome_b = false
+        }
+        if (passione_b && response_passione_b.substring(0, 3) === passione_b.substring(0, 3)){
+          var accuracy_passione_b = true
+        } else {
+          var accuracy_passione_b = false
+        };
+        data.accuracy_nome_b = accuracy_nome_b;
+        data.accuracy_passione_b = accuracy_passione_b;
+
+
+        if (data.accuracy_nome_a, data.accuracy_passione_a,
+          data.accuracy_nome_b, data.accuracy_passione_b== true) {
+            var correct = true;
+          } else {
+            var correct = false;
+          };
+          data.correct = correct;
+          console.log(correct);
+          if (data.correct == true) {
+            punteggio++;
+            console.log('risposta corretta', punteggio);
+
+          } else {
+
+            console.log('risposta sbagliata', punteggio);
+
+          }
+        },
+
+      };
+
+      var trial3_img_A = {
+        type: jsPsychImageButtonResponse,
+        stimulus: ''+imgs[4].img+'',
+        stimulus_height: 600,
+        // da definire dimensioni immagine
+        prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[4].nome + `</a> ;
+        PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[4].passione + ` </a> ;
+        </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+      };
+
+      var trial3_img_B = {
+        type: jsPsychImageButtonResponse,
+        stimulus: ''+imgs[5].img+'',
+        stimulus_height: 600,
+        // da definire dimensioni immagine
+        prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[5].nome + `</a> ;
+        PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[5].passione + ` </a> ;
+        </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+      };
+
+      var interference3 = {
+        type: jsPsychSurveyText,
+        questions: [
+          {prompt: "<p style='font-size: 50px; font-weight: bold;'>12 : 3</p>", required: true}
+        ],
+        preamble: "<p style='font-size: 34px; font-weight: bold;'>Riporta il risultato della seguente operazione matematica:</p>",
+        button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+        on_finish: function(data){
+          if (data.response.Q0 == "4" ){
+            return console.log("Risposta corretta")
+          } else {
+            return console.log("Risposta sbagliata")
+          }
+        }
+        // -----> ci interessa che il risultato sia giusto o sbagliato?
+      };
+
+      var trial3 = {
+        type: jsPsychSurveyText,
+        questions: [
+          {prompt:'Qual è il nome della PRIMA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_a', required: true},
+          {prompt:"Qual è la passione della PRIMA persona appena vista?", name: 'Passione_a', required: true},
+
+          {prompt:'Qual è il nome della SECONDA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_b', required: true},
+          {prompt:"Qual è la passione della SECONDA persona appena vista?", name: 'Passione_b', required: true}
+
+        ],
+        button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+        on_finish: function(data){
+          var response_nome_a = data.response.Nome_a.toLowerCase();
+          var response_passione_a = data.response.Passione_a.toLowerCase();
+          var response_nome_b = data.response.Nome_b.toLowerCase();
+          var response_passione_b = data.response.Passione_b.toLowerCase();
+
+          var nome_a = (imgs[4] && imgs[4].nome) ? imgs[4].nome.toLowerCase() : '';
+          var passione_a = (imgs[4] && imgs[4].passione) ? imgs[4].passione.toLowerCase() : '';
+
+          var nome_b = (imgs[5] && imgs[5].nome) ? imgs[5].nome.toLowerCase() : '';
+          var passione_b = (imgs[5] && imgs[5].passione) ? imgs[5].passione.toLowerCase() : '';
+
+
+          if (nome_a && response_nome_a.substring(0, 3) === nome_a.substring(0, 3)) {
+            var accuracy_nome_a = true
+          } else {
+            var accuracy_nome_a = false
+          }
+          if (passione_a && response_passione_a.substring(0, 3) === passione_a.substring(0, 3)){
+            var accuracy_passione_a = true
+          } else {
+            var accuracy_passione_a = false
+          };
+          data.accuracy_nome_a = accuracy_nome_a;
+          data.accuracy_passione_a = accuracy_passione_a;
+
+          if (nome_b && response_nome_b.substring(0, 3) === nome_b.substring(0, 3)) {
+            var accuracy_nome_b = true
+          } else {
+            var accuracy_nome_b = false
+          }
+          if (passione_b && response_passione_b.substring(0, 3) === passione_b.substring(0, 3)){
+            var accuracy_passione_b = true
+          } else {
+            var accuracy_passione_b = false
+          };
+          data.accuracy_nome_b = accuracy_nome_b;
+          data.accuracy_passione_b = accuracy_passione_b;
+
+
+          if (data.accuracy_nome_a, data.accuracy_passione_a,
+            data.accuracy_nome_b, data.accuracy_passione_b== true) {
+              var correct = true;
+            } else {
+              var correct = false;
+            };
+            data.correct = correct;
+            console.log(correct);
+            if (data.correct == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+          },
+
+        };
+
+        var trial4_img_A = {
+          type: jsPsychImageButtonResponse,
+          stimulus: ''+imgs[6].img+'',
+          stimulus_height: 600,
+          // da definire dimensioni immagine
+          prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[6].nome + `</a> ;
+          PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[6].passione + ` </a> ;
+          </p>`,
+          button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+          choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+        };
+
+        var trial4_img_B = {
+          type: jsPsychImageButtonResponse,
+          stimulus: ''+imgs[7].img+'',
+          stimulus_height: 600,
+          // da definire dimensioni immagine
+          prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[7].nome + `</a> ;
+          PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[7].passione + ` </a> ;
+          </p>`,
+          button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+          choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+        };
+
+        var interference4 = {
+          type: jsPsychSurveyText,
+          questions: [
+            {prompt: "<p style='font-size: 50px; font-weight: bold;'>11 - 6</p>", required: true}
+          ],
+          preamble: "<p style='font-size: 34px; font-weight: bold;'>Riporta il risultato della seguente operazione matematica:</p>",
+          button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+          on_finish: function(data){
+            if (data.response.Q0 == "5" ){
+              return console.log("Risposta corretta")
+            } else {
+              return console.log("Risposta sbagliata")
+            }
+          }
+          // -----> ci interessa che il risultato sia giusto o sbagliato?
+        };
+
+        var trial4 = {
+          type: jsPsychSurveyText,
+          questions: [
+            {prompt:'Qual è il nome della PRIMA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_a', required: true},
+            {prompt:"Qual è la passione della PRIMA persona appena vista?", name: 'Passione_a', required: true},
+
+            {prompt:'Qual è il nome della SECONDA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_b', required: true},
+            {prompt:"Qual è la passione della SECONDA persona appena vista?", name: 'Passione_b', required: true}
+
+          ],
+          button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+          on_finish: function(data){
+            var response_nome_a = data.response.Nome_a.toLowerCase();
+            var response_passione_a = data.response.Passione_a.toLowerCase();
+            var response_nome_b = data.response.Nome_b.toLowerCase();
+            var response_passione_b = data.response.Passione_b.toLowerCase();
+
+            var nome_a = (imgs[6] && imgs[6].nome) ? imgs[6].nome.toLowerCase() : '';
+            var passione_a = (imgs[6] && imgs[6].passione) ? imgs[6].passione.toLowerCase() : '';
+
+            var nome_b = (imgs[7] && imgs[7].nome) ? imgs[7].nome.toLowerCase() : '';
+            var passione_b = (imgs[7] && imgs[7].passione) ? imgs[7].passione.toLowerCase() : '';
+
+
+            if (nome_a && response_nome_a.substring(0, 3) === nome_a.substring(0, 3)) {
+              var accuracy_nome_a = true
+            } else {
+              var accuracy_nome_a = false
+            }
+            if (passione_a && response_passione_a.substring(0, 3) === passione_a.substring(0, 3)){
+              var accuracy_passione_a = true
+            } else {
+              var accuracy_passione_a = false
+            };
+            data.accuracy_nome_a = accuracy_nome_a;
+            data.accuracy_passione_a = accuracy_passione_a;
+
+            if (nome_b && response_nome_b.substring(0, 3) === nome_b.substring(0, 3)) {
+              var accuracy_nome_b = true
+            } else {
+              var accuracy_nome_b = false
+            }
+            if (passione_b && response_passione_b.substring(0, 3) === passione_b.substring(0, 3)){
+              var accuracy_passione_b = true
+            } else {
+              var accuracy_passione_b = false
+            };
+            data.accuracy_nome_b = accuracy_nome_b;
+            data.accuracy_passione_b = accuracy_passione_b;
+
+
+            if (data.accuracy_nome_a, data.accuracy_passione_a,
+              data.accuracy_nome_b, data.accuracy_passione_b== true) {
+                var correct = true;
+              } else {
+                var correct = false;
+              };
+              data.correct = correct;
+              console.log(correct);
+              if (data.correct == true) {
+                punteggio++;
+                console.log('risposta corretta', punteggio);
+
+              } else {
+
+                console.log('risposta sbagliata', punteggio);
+
+              }
+            },
+
+          };
+
+          var trial5_img_A = {
+            type: jsPsychImageButtonResponse,
+            stimulus: ''+imgs[8].img+'',
+            stimulus_height: 600,
+            // da definire dimensioni immagine
+            prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[8].nome + `</a> ;
+            PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[8].passione + ` </a> ;
+            </p>`,
+            button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+            choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+          };
+
+          var trial5_img_B = {
+            type: jsPsychImageButtonResponse,
+            stimulus: ''+imgs[9].img+'',
+            stimulus_height: 600,
+            // da definire dimensioni immagine
+            prompt: `<p style="font-size: 34px; font-weight: bold;">NOME: <a style="font-size: 45px; font-weight: lighter; font-style: italic ; color: #2540E6 ">`+ imgs[9].nome + `</a> ;
+            PASSIONE: <a style="font-size: 45px; font-weight: lighter; font-style: italic; color: #2540E6"> `+ imgs[9].passione + ` </a> ;
+            </p>`,
+            button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+            choices: ['PREMI QUI QUANDO HAI MEMORIZZATO'],
+          };
+
+          var interference5 = {
+            type: jsPsychSurveyText,
+            questions: [
+              {prompt: "<p style='font-size: 50px; font-weight: bold;'>4 x 5</p>", required: true}
+            ],
+            preamble: "<p style='font-size: 34px; font-weight: bold;'>Riporta il risultato della seguente operazione matematica:</p>",
+            button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+            on_finish: function(data){
+              if (data.response.Q0 == "20" ){
+                return console.log("Risposta corretta")
+              } else {
+                return console.log("Risposta sbagliata")
+              }
+            }
+            // -----> ci interessa che il risultato sia giusto o sbagliato?
+          };
+
+          var trial5 = {
+            type: jsPsychSurveyText,
+            questions: [
+              {prompt:'Qual è il nome della PRIMA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_a', required: true},
+              {prompt:"Qual è la passione della PRIMA persona appena vista?", name: 'Passione_a', required: true},
+
+              {prompt:'Qual è il nome della SECONDA persona appena vista?', placeholder: 'basta soltanto il nome', name: 'Nome_b', required: true},
+              {prompt:"Qual è la passione della SECONDA persona appena vista?", name: 'Passione_b', required: true}
+
+            ],
+            button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+            on_finish: function(data){
+              var response_nome_a = data.response.Nome_a.toLowerCase();
+              var response_passione_a = data.response.Passione_a.toLowerCase();
+              var response_nome_b = data.response.Nome_b.toLowerCase();
+              var response_passione_b = data.response.Passione_b.toLowerCase();
+
+              var nome_a = (imgs[8] && imgs[8].nome) ? imgs[8].nome.toLowerCase() : '';
+              var passione_a = (imgs[8] && imgs[8].passione) ? imgs[8].passione.toLowerCase() : '';
+
+              var nome_b = (imgs[9] && imgs[9].nome) ? imgs[9].nome.toLowerCase() : '';
+              var passione_b = (imgs[9] && imgs[9].passione) ? imgs[9].passione.toLowerCase() : '';
+
+
+              if (nome_a && response_nome_a.substring(0, 3) === nome_a.substring(0, 3)) {
+                var accuracy_nome_a = true
+              } else {
+                var accuracy_nome_a = false
+              }
+              if (passione_a && response_passione_a.substring(0, 3) === passione_a.substring(0, 3)){
+                var accuracy_passione_a = true
+              } else {
+                var accuracy_passione_a = false
+              };
+              data.accuracy_nome_a = accuracy_nome_a;
+              data.accuracy_passione_a = accuracy_passione_a;
+
+              if (nome_b && response_nome_b.substring(0, 3) === nome_b.substring(0, 3)) {
+                var accuracy_nome_b = true
+              } else {
+                var accuracy_nome_b = false
+              }
+              if (passione_b && response_passione_b.substring(0, 3) === passione_b.substring(0, 3)){
+                var accuracy_passione_b = true
+              } else {
+                var accuracy_passione_b = false
+              };
+              data.accuracy_nome_b = accuracy_nome_b;
+              data.accuracy_passione_b = accuracy_passione_b;
+
+
+              if (data.accuracy_nome_a, data.accuracy_passione_a,
+                data.accuracy_nome_b, data.accuracy_passione_b== true) {
+                  var correct = true;
+                } else {
+                  var correct = false;
+                };
+                data.correct = correct;
+                console.log(correct);
+                if (data.correct == true) {
+                  punteggio++;
+                  console.log('risposta corretta', punteggio);
+
+                } else {
+
+                  console.log('risposta sbagliata', punteggio);
+
+                }
+              },
+
+            };
+
+            var trial_timeline = {
+              timeline: [trial1_img_A, via, trial1_img_B, interference1, trial1, trial2_img_A, via, trial2_img_B, interference2, trial2, trial3_img_A, via, trial3_img_B, interference3, trial3, trial4_img_A, via, trial4_img_B, interference4, trial4, trial5_img_A, via, trial5_img_B, interference5, trial5]
+            };
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            var if_node = {
+              timeline: [begin_trial,trial_timeline],
+              conditional_function: function(){
+                var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+                if (response_button == 0){
+                  console.log("prosegui a esercizio");
+                  return true;
+                } else {
+                  console.log("inizia la prova");
+                  jsPsych.addNodeToEndOfTimeline(loop_prova)
+                  return false;
+                }
+              }
+            };
+
+            var begin_loop = {
+              type: jsPsychHtmlButtonResponse,
+              stimulus: `<p style="font-size: 34px; line-height: 1.5;"> Va bene facciamo una prova! <br> <strong> Ora vedrai delle foto di persone, con alcune informazioni. <br>
+              Il suo compito è quello di memorizzarle. </strong><br> <br>
+              Le verrà chiesto di scrivere quali informazioni erano riportate nell'immagine vista. </p>`,
+              button_html: `<button class="jspsych-btn" style="position: left; font-size: 30px; color:black; ">%choice%</button>`,
+              choices: ['Premi qui per iniziare la prova'],
+              on_start: function(data){
+                var response_button = jsPsych.data.get().last(1).values()[0].response;
+                console.log(response_button)
+                if (response_button == 0){
+                  console.log("salta loop");
+                  jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+                }
+              }
+            };
+
+            var end_loop_prova = {
+              type: jsPsychHtmlButtonResponse,
+              stimulus: `<p style="font-size: 34px;line-height: 1.5; "> Ora che ha terminato la prova, inziamo con l'esercizio. <br> <strong> Ora vedrai delle foto di persone, con alcune informazioni. <br>
+              Il suo compito è quello di memorizzarle. </strong> <br> <br>
+              Le verrà chiesto di scrivere quali informazioni erano riportate nell'immagine vista; le raccomandiamo di scrivere tutto in corsivo.
+              <br> <br> ATTENZIONE: prima di rispondere verrà distratto da un altro breve compito, quindi tenga bene a mente le informazioni! </p>`,
+              button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+              choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+              on_finish: function(data){
+                if(data.response == 1){
+                  var risposta = 1;
+                } else{
+                  var risposta = 0;
+                  console.log("Termine loop prova");
+                  jsPsych.addNodeToEndOfTimeline(trial_timeline);
+                }
+                data.risposta_loop = risposta
+              }
+            };
+
+            var loop_prova = {
+              timeline: [begin_loop, prova_loop, end_loop_prova],
+              loop_function: function(){
+                var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+                if (response_button == 1){
+                  return true;
+                } else {
+                  return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+                }
+              }
+            };
+
+
+
+
+            var timeline = [preload,pre_if, if_node];
+            jsPsych.run(timeline);
+            </script>
+            </html>

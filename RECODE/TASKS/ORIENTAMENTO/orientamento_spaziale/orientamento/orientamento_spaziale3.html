@@ -1,0 +1,349 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>ORIENTAMENTO SPAZIALE LIV.1 </title>
+  <meta charset="UTF-8">
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-multi-choice.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+
+  <script src="jatos.js"></script>
+  <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <style>
+    body {
+      background-color: white;
+    }
+  </style>
+
+
+</body>
+
+<script type='text/javascript'>
+
+  var jsPsych = initJsPsych({
+    use_webaudio: false,
+    on_finish: function () {
+      /*jsPsych.data.displayData();*/
+      var feed;
+      if(punteggio >=4){
+        feed = 1;
+      } else {
+        feed = -1;
+      }
+      var punteggio_dec = punteggio*10/5;
+      jatos.studySessionData = feed;
+      var orientamento = Number(sessionStorage.getItem('orientamento'))+feed;
+      var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'))+1;
+      var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'))+punteggio_dec;
+      sessionStorage.setItem('punteggio_finale_orientamento', punteggio_finale_orientamento);
+      if (orientamento < 0) {orientamento = 0}
+      if (orientamento > 2) {orientamento = 2}
+      if (counter_orientamento > 3) {counter_orientamento = 3}
+      sessionStorage.setItem('orientamento', orientamento);
+      sessionStorage.setItem('counter_orientamento', counter_orientamento);
+      var Data = { feed: feed, type: 'OREINTAMENTO_orientamento_spaziale3', cresp: punteggio_dec };
+      jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+    }
+  });
+  var pre_if = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus:`<p style="font-size: 34px; line-height: 1.5;"> Adesso ti verrà chiesto di immaginare la posizione di due città Italiane.
+    <br>Dovrai decidere quale delle due è a NORD, a SUD, a EST o a OVEST rispetto all’altra.<br>
+    </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta_prova = 1;
+      } else {
+        var risposta_prova = 0;
+      }
+      data.risposta_prova = risposta_prova
+    }
+  };
+var questions = [
+{question: "Dove si trova Roma rispetto a Venezia?", answer: "sud"},
+{question: "Dove si trova Torino rispetto a Padova?", answer: "ovest"},
+{question: "Dove si trova Milano rispetto a Roma?", answer: "nord"},
+{question: "Dove si trova Bologna rispetto a Napoli?", answer: "nord"},
+{question: "Dove si trova Firenze rispetto a Parma?", answer: "sud"} ,
+{question: "Dove si trova Trento rispetto a Vicenza?", answer: "nord"} ,
+{question: "Dove si trova Cosenza rispetto a Verona?", answer: "sud"} ,
+{question: "Dove si trova Pisa rispetto a Bari?", answer: "nord"} ,
+{question: "Dove si trova Bergamo rispetto a Cagliari?", answer: "nord"} ,
+{question: "Dove si trova Cagliari rispetto a Palermo?", answer: "nord"} ,
+{question: "Dove si trova Catanzaro rispetto Brescia?", answer: "sud"} ,
+{question: "Dove si trova Monopoli rispetto Campobbasso?", answer: "sud"} ,
+{question: "Dove si trova Pescara rispetto Brindisi?", answer: "nord"} ,
+{question: "Dove si trova Ferrara rispetto Ancona?", answer: "nord"} ,
+{question: "Dove si trova Peschiera del Garda rispetto Modena?", answer: "nord"} ,
+{question: "Dove si trovano le Marche rispetto al Molise?", answer: "nord"},
+{question: "Dove si trova il Veneto rispetto al Lazio?", answer: "nord"},
+{question: "Dove si trova l'Abruzzo rispetto al Piemonte?", answer: "sud"},
+{question: "Dove si trova la Sardegna rispetto la Sicilia?", answer: "nord"},
+{question: "Dove si trova la Calabria rispetto al Lazio?", answer: "sud"},
+{question: "Dove si trova il Veneto rispetto alla Lombardia?", answer: "est"},
+{question: "Dove si trova Verona rispetto a Vicenza?", answer: "ovest"},
+{question: "Dove si trova il Friuli Venezia Giulia rispetto al Piemonte?", answer: "est"} ,
+{question: "Dove si trova l'Umbria rispetto alla Basilicata?", answer: "nord"} ,
+];
+
+questions = jsPsych.randomization.shuffle(questions)
+
+var prova_loop = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: ''+questions[0].question+'',
+  choices:['a NORD', 'a SUD', 'a EST', 'a OVEST'],
+prompt: "Premi sul bottone con la risposta corretta",
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'nord';
+      } if (data.response == 1){
+          var risposta = 'sud';
+      } if (data.response == 2){
+          var risposta = 'est';
+      } if (data.response == 3){
+          var risposta = 'ovest';
+      };
+      if (risposta == questions[0].answer){
+          var accuracy = true;
+      } else {
+          var accuracy = false;
+      }
+      data.accuracy = accuracy;
+      console.log("RISPOSTA: "+risposta+"")
+  }
+};
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_loop){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_loop.data = {stimulus: feedback};
+    prova_loop.stimulus = feedback_prova_stima;
+  },
+};
+
+  var begin_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio.
+     <br> <strong> Ricorda: decidi dove si trova una città rispetto all’altra.
+     </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare']
+  };
+
+var punteggio = 0;
+var trial1 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: ''+questions[1].question+'',
+  choices:['a NORD', 'a SUD', 'a EST', 'a OVEST'],
+  prompt: "Premi sul bottone con la risposta corretta",
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'nord';
+      } if (data.response == 1){
+          var risposta = 'sud';
+      } if (data.response == 2){
+          var risposta = 'est';
+      } if (data.response == 3){
+          var risposta = 'ovest';
+      };
+      if (risposta == questions[1].answer){
+        punteggio++;
+        console.log("RISPOSTA corretta: "+risposta+" punteggio: "+punteggio+"")
+
+      } else {
+        console.log("RISPOSTA sbagliata: "+risposta+" punteggio: "+punteggio+"")
+      }
+  }
+};
+var trial2 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: ''+questions[2].question+'',
+  choices:['a NORD', 'a SUD', 'a EST', 'a OVEST'],
+  prompt: "Premi sul bottone con la risposta corretta",
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'nord';
+      } if (data.response == 1){
+          var risposta = 'sud';
+      } if (data.response == 2){
+          var risposta = 'est';
+      } if (data.response == 3){
+          var risposta = 'ovest';
+      };
+      if (risposta == questions[2].answer){
+        punteggio++;
+        console.log("RISPOSTA corretta: "+risposta+" punteggio: "+punteggio+"")
+
+      } else {
+        console.log("RISPOSTA sbagliata: "+risposta+" punteggio: "+punteggio+"")
+      }
+  }
+};
+var trial3 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: ''+questions[3].question+'',
+  choices:['a NORD', 'a SUD', 'a EST', 'a OVEST'],
+  prompt: "Premi sul bottone con la risposta corretta",
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'nord';
+      } if (data.response == 1){
+          var risposta = 'sud';
+      } if (data.response == 2){
+          var risposta = 'est';
+      } if (data.response == 3){
+          var risposta = 'ovest';
+      };
+      if (risposta == questions[3].answer){
+        punteggio++;
+        console.log("RISPOSTA corretta: "+risposta+" punteggio: "+punteggio+"")
+
+      } else {
+        console.log("RISPOSTA sbagliata: "+risposta+" punteggio: "+punteggio+"")
+      }
+  }
+  };
+var trial4 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: ''+questions[4].question+'',
+  choices:['a NORD', 'a SUD', 'a EST', 'a OVEST'],
+  prompt: "Premi sul bottone con la risposta corretta",
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'nord';
+      } if (data.response == 1){
+          var risposta = 'sud';
+      } if (data.response == 2){
+          var risposta = 'est';
+      } if (data.response == 3){
+          var risposta = 'ovest';
+      };
+      if (risposta == questions[4].answer){
+        punteggio++;
+        console.log("RISPOSTA corretta: "+risposta+" punteggio: "+punteggio+"")
+
+      } else {
+        console.log("RISPOSTA sbagliata: "+risposta+" punteggio: "+punteggio+"")
+      }
+  }
+  };
+var trial5 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: ''+questions[5].question+'',
+  choices:['a NORD', 'a SUD', 'a EST', 'a OVEST'],
+  prompt: "Premi sul bottone con la risposta corretta",
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'nord';
+      } if (data.response == 1){
+          var risposta = 'sud';
+      } if (data.response == 2){
+          var risposta = 'est';
+      } if (data.response == 3){
+          var risposta = 'ovest';
+      };
+      if (risposta == questions[5].answer){
+        punteggio++;
+        console.log("RISPOSTA corretta: "+risposta+" punteggio: "+punteggio+"")
+      } else {
+        console.log("RISPOSTA sbagliata: "+risposta+" punteggio: "+punteggio+"")
+      }
+  }
+  };
+var trial_timeline = {
+  timeline: [trial1, trial2, trial3, trial4, trial5]
+};
+var if_node = {
+  timeline: [begin_trial, trial_timeline],
+  conditional_function: function () {
+    var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+    if (response_button == 0) {
+      console.log("prosegui a esercizio");
+      return true;
+    } else {
+      console.log("inizia la prova");
+      jsPsych.addNodeToEndOfTimeline(loop_prova)
+      return false;
+    }
+  }
+};
+var begin_loop = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px; line-height: 1.5;"> Va bene facciamo una prova! <br>
+  <br> <strong> Ricorda: decidi dove si trova una città rispetto all’altra.
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Premi qui per iniziare la prova'],
+  on_start: function (data) {
+    var response_button = jsPsych.data.get().last(1).values()[0].response;
+    console.log(response_button)
+    if (response_button == 0) {
+      console.log("salta loop");
+      jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+    }
+  }
+};
+
+var end_loop_prova = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che hai terminato la prova, inziamo con l'esercizio. <br>
+  <br> <strong> Ricorda: decidi dove si trova una città rispetto all’altra.
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Premi qui per iniziare', 'Premi qui per ripetere la prova'],
+  on_finish: function (data) {
+    if (data.response == 1) {
+      var risposta = 1;
+    } else {
+      var risposta = 0;
+      console.log("Termine loop prova");
+      jsPsych.addNodeToEndOfTimeline(trial_timeline);
+    }
+    data.risposta_loop = risposta
+  }
+};
+
+var loop_prova = {
+  timeline: [begin_loop, prova_loop, feedback, end_loop_prova],
+  loop_function: function () {
+    var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+    if (response_button == 1) {
+      return true;
+    } else {
+      return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+    }
+  }
+};
+
+var timeline = [pre_if, if_node];
+jsPsych.run(timeline)
+</script>
+
+
+</html>

@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LINGUAGGIO Categorizzazione Semantica LIV.3</title>
+    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+
+    <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+
+    <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-canvas-button-response.js"></script>
+    <script src="./jspsych7.2.3/dist/jspsych-psychophysics.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-call-function.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-sort-DragDrop-blank.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-canvas-keyboard-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-fullscreen.js"></script>
+    <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="jatos.js"></script>
+    <style>
+    body {
+      margin: 0;
+      padding: 0;
+      transform-origin: center;
+      transform: scale(0.85); /* Adjust the scale value as needed */
+  }
+
+  .content {
+      text-align: center;
+      transform: scale(1.25); /* Adjust the inverse scale value to counteract the body scale */
+      transform-origin: center;
+  }
+       </style>
+   </head>
+
+   <body>
+       <div class="content">
+           <!-- Your page content goes here -->
+           <p>This is your page content.</p>
+       </div>
+   </body>
+
+    <!--
+
+CATEGORIZZAZIONE SEMANTICA per immagini:
+
+Ogni livello prevede 5 categorizzazioni (ad es. categoria: abbigliamento) ;
+Ogni categorizzazione prevede 5 distrattori e 5 target e ha un punteggio che va da 0 a 10 (hanno punteggio anche i distrattori correttamente non inclusi); il punteggio totale sarà
+ dato dalla somma dei punteggi alle cinque categorizzazioni diviso 5, in modo tale da avere un punteggio globale da 0 a 10;
+Il primo livello ha un cue contestualizzato (cesto con oggetti della stessa categoria), il secondo e il terzo no;
+Tra il secondo e il terzo varia soprattutto la vicinanza semantica e la specificità di categoria;
+Ogni livello avrà al centro un contenitore diverso: per il primo livello il cesto, il secondo la  scatola, il terzo il sacco.
+
+ISTRUZIONI:     Uguali al secondo tranne che al posto del sacco, si inserirà un’immagine come sfondo che fungerà da cue per la categorizzazione (es: la strada per la categoria cartelli stradali).
+Le istruzioni saranno : “ Ora vedrai degli oggetti sparsi. Dovrà scegliere quelli che appartengono alla stessa categoria. Faccia attenzione all’immagine al centro: sarà un prezioso indizio!”
+
+Nella schermata con l’immagine scrivere “Metta gli elementi simili all’interno dell’immagine”.
+
+
+Schermata successiva, quella già con la scatola o il sacco vuoto:
+In mezzo la scatola o il sacco, attorno gli oggetti
+E sotto: “Premi con il tasto sinistro del mouse sugli oggetti della stessa categoria.
+Mancano X elementi da inserire”
+
+
+
+CATEGORIE SEMANTICHE E IMMAGINI DA INSERIRE
+
+3° LIVELLO DI DIFFICOLTÀ
+
+Categoria MOBILI CAMERA DA LETTO
+
+Stimoli Target:
+LETTO
+COMODINO
+ABAT-JOUR
+ARMADIO
+SPECCHIERA
+
+Stimoli Non-Target:
+LAVELLO
+TAVOLO DA PRANZO
+WC
+DIVANO
+FORNO
+
+Categoria VERDURE VERDI
+
+Stimoli Target:
+SPINACI
+CAVOLO ROMANO
+ZUCCHINE
+LATTUGA
+RUCOLA
+
+Stimoli Non-Target:
+POMODORO ROSSO
+ZUCCA
+RADICCHIO
+PATATE
+RAVANELLI
+
+Categoria VERDURE VERDI (versione 2)
+
+Stimoli Target:
+CETRIOLO
+CAVOLETTO DI BRUXELLES
+ASPARAGI VERDI
+BROCCOLI
+CIME DI RAPA
+
+Stimoli Non-Target:
+POMODORO ROSSO
+CIPOLLA
+MELANZANE
+FUNGHI
+CAROTE
+
+Categoria VIAGGIO
+
+Stimoli Target:
+CARTOLINA
+VALIGIA
+BIGLIETTO AEREO
+PASSAPORTO
+MAPPA
+
+Stimoli Non-Target:
+FERRO DA STIRO
+GUANTI
+MAZZA DA BASEBALL
+BORSETTA
+RADIO
+
+Categoria CARTELLI STRADALI
+
+Stimoli Target:
+STOP
+FRECCIA
+DIVIETO D’ACCESSO
+NON SUPERARE
+DIVIETO DI FERMATA E TRANSITO
+
+Stimoli Non-Target:
+CARTELLO CHE INDICA IL BAGNO
+VIETATO FUMARE
+USCITA DI EMERGENZA
+NON SUPERARE LA STRISCIA GIALLA
+PAVIMENTO BAGNATO
+
+Categoria ANIMALI DELLA SAVANA
+
+Stimoli Target:
+LEONE
+IENA
+GIRAFFA
+RINOCERONTE
+COCCODRILLO
+
+Stimoli Non-Target:
+MAIALE
+PESCE
+CANE
+PAPPAGALLO (NON TROPICALE)
+CAVALLUCCIO MARINO
+
+
+
+Categoria ANIMALI DELLA SAVANA (versione 2)
+
+Stimoli Target:
+ZEBRA
+LEOPARDO
+ELEFANTE
+TIGRE
+GNU
+
+Stimoli Non-Target:
+GATTO
+CONIGLIO
+CIMICE
+CRICETO
+CAVALLUCCIO MARINO
+
+Categoria SPORT
+
+Stimoli Target:
+SCI
+RACCHETTA DA TENNIS
+PALLA DA CALCIO
+MAZZA DA BASEBALL
+GUANTONI DA PUGILE
+
+
+Stimoli Non-Target:
+GUANTI DA CUCINA
+CAMICIA
+OROLOGIO
+CORNICE QUADRO
+UOVA
+
+
+        -->
+</body>
+<script>
+
+    var jsPsych = initJsPsych({
+        on_finish: function () {
+          //  jsPsych.data.displayData();
+          var feed;
+          if(punteggio >=4){
+            feed = 1;
+          } else {
+            feed = -1;
+          }
+          var punteggio_dec=punteggio*10/5;
+          jatos.studySessionData = feed;
+          var linguaggio = Number(sessionStorage.getItem('linguaggio'))+feed;
+          var counter_linguaggio = Number(sessionStorage.getItem('counter_linguaggio'))+1;
+          var punteggio_finale_linguaggio= Number(sessionStorage.getItem('punteggio_finale_linguaggio'))+punteggio_dec;
+          sessionStorage.setItem('punteggio_finale_linguaggio', punteggio_finale_linguaggio);
+          if (linguaggio < 0) {linguaggio = 0}
+          if (linguaggio > 2) {linguaggio = 2}
+          if (counter_linguaggio > 3) {counter_linguaggio = 3}
+          sessionStorage.setItem('linguaggio', linguaggio);
+          sessionStorage.setItem('counter_linguaggio', counter_linguaggio);
+          var Data = { feed: feed, type: 'LINGUAGGIO_categorizzazione_semantica_level3', cresp: punteggio_dec };
+          jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+        }
+      });
+    var preload = {
+        type: jsPsychPreload,
+        auto_preload: true
+    }
+
+    var num = jsPsych.randomization.shuffle([1, 2])
+
+
+    var fruttaEfiori = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/pera.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/melaVerde.jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/prugna.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore1.jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore2.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore3.jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore4.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore5.jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var camera_letto = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/abatjour" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/armadio" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/comodino" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/letto" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/specchiera" + num[0] + ".jpg"
+    ];
+
+    var non_target_camera_letto = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/non-target/forno" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/non-target/lavello" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/non-target/sofa" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/non-target/tavolo" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mobili/cartoon/non-target/wc" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var verdure_verdi = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/cavolo" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/lattuga" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/rucola" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/spinaci" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/zucchina" + num[0] + ".jpg"
+    ];
+
+    var non_target_verdure = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/non-target/patata" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/non-target/pomodoro" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/non-target/radicchio" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/non-target/ravanelli" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon/non-target/zucca" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var verdure_verdi2 = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/asparagi" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/broccoli" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/cavoletto" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/cetriolo" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/cime" + num[0] + ".jpg"
+    ];
+
+    var non_target_verdure2 = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/non-target/carota" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/non-target/cipolla" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/non-target/funghi" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/non-target/melanzana" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/verdure_verdi/cartoon2/non-target/pomodoro" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var viaggio = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/biglietto" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/cartolina" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/mappa" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/passaporto" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/valigia" + num[0] + ".jpg"
+    ];
+
+    var non_target_viaggio = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/non-target/borsetta" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/non-target/ferro" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/non-target/guanti" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/non-target/mazza" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/viaggio/cartoon/non-target/radio" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var cartelli_stradali = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/divieto" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/fermata" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/freccia" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/stop" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/superare" + num[0] + ".jpg"
+    ];
+
+    var non_target_cartelli_stradali = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/non-target/bagnato" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/non-target/linea" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/non-target/smoke" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/non-target/toilette" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/cartelli/cartoon/non-target/uscita" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var savana = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/coccodrillo" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/giraffa" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/iena" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/leone" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/rinoceronte" + num[0] + ".jpg"
+    ];
+
+    var non_target_savana = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/non-target/cane" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/non-target/cavalluccio" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/non-target/maiale" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/non-target/pappagallo" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon/non-target/pesce" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var savana2 = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/elefante" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/gnu" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/leopardo" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/tigre" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/zebra" + num[0] + ".jpg"
+    ];
+
+    var non_target_savana2 = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/non-target/cavalluccio" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/non-target/cimice" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/non-target/coniglio" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/non-target/criceto" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/savana/cartoon2/non-target/gatto" + num[0] + ".jpg"
+    ];
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var sport = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/boxe" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/calcio" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/mazza" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/racchetta" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/scii" + num[0] + ".jpg"
+    ];
+
+    var non_target_sport = [
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/non-target/camicia" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/non-target/cornice" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/non-target/guanti" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/non-target/orologio" + num[0] + ".jpg",
+        "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/sport/cartoon/non-target/uova" + num[0] + ".jpg"
+    ];
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    var fullscreen_on = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: true
+    };
+
+    var fullscreen_off = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: false
+    };
+
+    var pre_if = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Ora vedrai una immagine di sfondo. <br>
+                Attorno, ci saranno diversi oggetti sparsi. <br>
+                <strong> Dovrà sceglierne 5 da mettere nello sfondo che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+        button_html: ['<button class="jspsych-btn" style="font-size:30px; color:green;">%choice%</button>', '<button class="jspsych-btn" style="font-size:20px;color:black;">%choice%</button>'],
+        choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+        on_finish: function (data) {
+            if (data.response == 1) {
+                var risposta_prova = 1;
+            } else {
+                var risposta_prova = 0;
+            }
+            data.risposta_prova = risposta_prova
+        }
+
+    };
+
+    var prova_loop = {
+        type: jsPsychSortDD,
+        stimuli: fruttaEfiori,
+        bagItems: ["./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore2.jpg","./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore3.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore4.jpg","./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore5.jpg"], //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700,
+        sort_area_height: 500,
+        sort_area_shape: "square",
+        prompt: "<p>Metti gli elementi simili nello sfondo. </p>",
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.",
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.",
+        prompt_location: 'above',
+        numItem: 5,
+        stim_height: 111,
+        stim_width: 115,
+        scale_factor: 1.5,
+        button_label: "FINE",
+        border_width: 5,
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+                data.final_locations[1].score +
+                data.final_locations[2].score +
+                data.final_locations[3].score +
+                data.final_locations[4].score +
+                data.final_locations[5].score +
+                data.final_locations[6].score +
+                data.final_locations[7].score);
+                console.log(data.final_locations[0].score)
+                console.log(data.final_locations[1].score)
+                console.log(data.final_locations[2].score)
+                console.log(data.final_locations[3].score)
+                console.log(data.final_locations[4].score)
+                console.log(data.final_locations[5].score)
+                console.log(data.final_locations[6].score)
+                console.log(data.final_locations[7].score)
+
+            if ((data.final_locations[0].score +
+                data.final_locations[1].score +
+                data.final_locations[2].score +
+                data.final_locations[3].score +
+                data.final_locations[4].score +
+                data.final_locations[5].score +
+                data.final_locations[6].score +
+                data.final_locations[7].score) > 2) {
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+           }
+
+        },
+        on_load: function () {
+            // Code to change the background image of the plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/campo_fiori.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+
+    };
+
+    var feedback = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: "NO_KEYS",
+        trial_duration: 1500,
+        data: "",
+        stimulus: "",
+        on_start: function (prova_loop) {
+            var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+            if (last_response_accuracy == true) {
+                var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+                console.log("Corretto")
+            } else {
+                var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+                console.log("Sbagliato")
+            };
+            var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback + "</b></div>";
+            prova_loop.data = { stimulus: feedback };
+            prova_loop.stimulus = feedback_prova_stima;
+        },
+
+    };
+
+    var begin_trial = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+                Ora vedrai una immagine di sfondo. <br> Attorno, ci saranno diversi oggetti sparsi. <br>
+                <strong> Dovrà sceglierne 5 da mettere nello sfondo che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+        button_html: `<button class="jspsych-btn" style="position: left; font-size: 30px; color:black;">%choice%</button>`,
+        choices: ['Premi qui per iniziare']
+
+    };
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+let punteggio = 0; // aggiorna punteggio
+let upload_trial = 0; // aggiorna accuratezza trial
+    var trial1 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: camera_letto.concat(non_target_camera_letto), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: camera_letto, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+              console.log(data.final_locations[0].score)
+              console.log(data.final_locations[1].score)
+              console.log(data.final_locations[2].score)
+              console.log(data.final_locations[3].score)
+              console.log(data.final_locations[4].score)
+              console.log(data.final_locations[5].score)
+              console.log(data.final_locations[6].score)
+              console.log(data.final_locations[7].score)
+              console.log(data.final_locations[8].score)
+
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial1) {
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/bedroom.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+
+            }
+
+    };
+
+    var trial2 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: verdure_verdi.concat(non_target_verdure), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: verdure_verdi, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial2) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/orto.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var trial3 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: verdure_verdi2.concat(non_target_verdure2), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: verdure_verdi2, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial3) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/orto.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var trial4 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: viaggio.concat(non_target_viaggio), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: viaggio, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial4) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/viaggio.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var trial5 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: cartelli_stradali.concat(non_target_cartelli_stradali), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: cartelli_stradali, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial5) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/strada.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var trial6 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: savana.concat(non_target_savana), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: savana, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial6) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/savana.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var trial7 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: savana2.concat(non_target_savana2), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: savana2, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial7) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/savana.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var trial8 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: sport.concat(non_target_sport), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: sport, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 700, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 500, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metti gli elementi simili nello sfondo.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro lo sfondo.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+            console.log(data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score +
+              data.final_locations[7].score +
+              data.final_locations[8].score +
+              data.final_locations[9].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+            } else {
+                data.accuracy = false;
+            }
+            if (data.accuracy == true) {
+              punteggio++;
+              console.log('risposta corretta', punteggio);
+
+            } else {
+
+              console.log('risposta sbagliata', punteggio);
+
+            }
+        },
+        on_load: function changeBackground(trial8) {
+
+            //Codice per modificare l'immagine di background del plugin
+            const background = document.getElementById("jspsych-free-sort-arena");
+            background.style.backgroundImage = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/backgrounds/campo_sportivo.jpg')";
+            background.style.width = "700px";
+            background.style.height = "500px";
+            ////////////////////////////////////////////////////////////////////////////////
+            //Codice per organizzare la disposizione dei riquadri per apporre gli input
+            const rectangle = document.getElementById("jspsych-free-sort-border");
+            const rectangle1 = document.getElementById("jspsych-free-sort-border1");
+            const rectangle2 = document.getElementById("jspsych-free-sort-border2");
+            const rectangle3 = document.getElementById("jspsych-free-sort-border3");
+            const rectangle4 = document.getElementById("jspsych-free-sort-border4");
+            rectangle.style.top = "70%";
+            rectangle1.style.top = "auto";
+            rectangle2.style.top = "auto";
+            rectangle3.style.top = "auto";
+            rectangle4.style.top = "-70%";
+            rectangle.style.left = "25%";
+            rectangle1.style.left = "-25%";
+            rectangle2.style.left = "auto";
+            rectangle3.style.left = "-25%";
+            rectangle4.style.left = "25%";
+            }
+    };
+
+    var sample_trials = jsPsych.randomization.sampleWithoutReplacement([trial1, trial2, trial3, trial4, trial5, trial6, trial7, trial8])
+
+    var trial_timeline = {
+        timeline: [fullscreen_on, sample_trials[0], sample_trials[1], sample_trials[2], sample_trials[3], sample_trials[4], fullscreen_off]
+    }
+
+    var if_node = {
+        timeline: [begin_trial, trial_timeline],
+        conditional_function: function () {
+            var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+            if (response_button == 0) {
+                console.log("prosegui a esercizio");
+                return true;
+            } else {
+                console.log("inizia la prova");
+                jsPsych.addNodeToEndOfTimeline(loop_prova)
+                return false;
+            }
+        }
+    };
+
+    var begin_loop = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Va bene facciamo una prova! <br> Ora vedrai una immagine di sfondo. <br> Attorno, ci saranno diversi oggetti sparsi. <br>
+                <strong> Dovrà sceglierne 5 da mettere nello sfondo che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+        button_html: `<button class="jspsych-btn" style="position: left; font-size: 30px; color:black; ">%choice%</button>`,
+        choices: ['Premi qui per iniziare la prova'],
+        on_start: function (data) {
+            var response_button = jsPsych.data.get().last(1).values()[0].response;
+            console.log(response_button)
+            if (response_button == 0) {
+                console.log("salta loop");
+                jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+            }
+        }
+    };
+
+    var end_loop_prova = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br>
+                Ora vedrai una immagine di sfondo. <br> Attorno, ci saranno diversi oggetti sparsi. <br>
+                <strong> Dovrà sceglierne 5 da mettere nello sfondo che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+        button_html: ['<button class="jspsych-btn" style="font-size:30px; color:green;">%choice%</button>', '<button class="jspsych-btn" style="font-size:20px;color:black;">%choice%</button>'],
+        choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+        on_finish: function (data) {
+            if (data.response == 1) {
+                var risposta = 1;
+            } else {
+                var risposta = 0;
+                console.log("Termine loop prova");
+                jsPsych.addNodeToEndOfTimeline(trial_timeline);
+            }
+            data.risposta_loop = risposta
+        }
+    };
+
+    var loop_prova = {
+        timeline: [begin_loop, fullscreen_on, prova_loop, feedback, end_loop_prova],
+        loop_function: function () {
+            var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+            if (response_button == 1) {
+                return true;
+            } else {
+                return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+            }
+        }
+    };
+
+
+
+
+    var timeline = [pre_if, if_node];
+    jsPsych.run(timeline);
+
+</script>
+
+</html>

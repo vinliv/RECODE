@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>ORIENTAMENTO SPAZIALE LIV.1 </title>
+  <meta charset="UTF-8">
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-html-form.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="jatos.js"></script>
+  <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+	<script type='text/javascript'>
+  var jsPsych = initJsPsych({
+    use_webaudio: false,
+    on_finish: function () {
+      /*jsPsych.data.displayData();*/
+      var feed;
+      if(punteggio >=4){
+        feed = 1;
+      } else {
+        feed = -1;
+      }
+      var punteggio_dec = punteggio*10/5;
+      jatos.studySessionData = feed;
+      var orientamento = Number(sessionStorage.getItem('orientamento'))+feed;
+      var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'))+1;
+      var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'))+punteggio_dec;
+      sessionStorage.setItem('punteggio_finale_orientamento', punteggio_finale_orientamento);
+      if (orientamento < 0) {orientamento = 0}
+      if (orientamento > 2) {orientamento = 2}
+      if (counter_orientamento > 3) {counter_orientamento = 3}
+      sessionStorage.setItem('orientamento', orientamento);
+      sessionStorage.setItem('counter_orientamento', counter_orientamento);
+      var Data = { feed: feed, type: 'OREINTAMENTO_orientamento_spaziale1', cresp: punteggio_dec };
+      jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+    }
+  });
+
+
+var questions = [
+{question: "Dove si trova Roma rispetto a Venezia?", answer: "sud"},
+{question: "Dove si trova Torino Rispetto a Padova?", answer: "ovest"},
+{question: "Dove si trova Milano rispetto Roma?", answer: "nord"},
+{question: "Dove si trova Bologna rispetto Napoli?", answer: "nord"},
+{question: "Dove si trova Firenze rispetto Parma?", answer: "sud"} ,
+{question: "Dove si trova Trento rispetto Vicenza?", answer: "nord"} ,
+{question: "Dove si trova Cosenza rispetto a Verona?", answer: "sud"} ,
+{question: "Dove si trova Pisa rispetto a Bari?", answer: "nord"} ,
+{question: "Dove si trova Bergamo rispetto a Cagliari?", answer: "nord"} ,
+{question: "Dove si trova Cagliari rispetto a Palermo?", answer: "nord"} ,
+{question: "Dove si trova Catanzaro rispetto Brescia?", answer: "sud"} ,
+{question: "Dove si trova Monopoli rispetto Campobbasso?", answer: "sud"} ,
+{question: "Dove si trova Pescara rispetto Brindisi?", answer: "nord"} ,
+{question: "Dove si trova Ferrara rispetto Ancona?", answer: "nord"} ,
+{question: "Dove si trova Peschiera del garda rispetto Modena?", answer: "nord"} ,
+{question: "Dove si trovano le Marche rispetto il Molise?", answer: "nord"},
+{question: "Dove si trova il Veneto rispetto al Lazio?", answer: "nord"},
+{question: "Dove si trova l'Abruzzo rispetto al Piemonte?", answer: "sud"},
+{question: "Dove si trova la Sardegna rispetto la Sicilia?", answer: "nord"},
+{question: "Dove si trova la Calabria rispetto al Lazio?", answer: "sud"},
+{question: "Dove si trova il Veneto rispetto alla Lombardia?", answer: "est"},
+{question: "Dove si trova Verona rispetto a Vicenza?", answer: "ovest"},
+{question: "Dove si trova il Friuli Venezia Giulia rispetto al Piemonte?", answer: "est"} ,
+{question: "Dove si trova l'Umbria rispetto alla Basilicata?", answer: "nord"} ,
+];
+
+questions = jsPsych.randomization.shuffle(questions)
+
+var options = ["Nord", "sud", "Est", "ovest"];
+
+var question1 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: ''+questions[0].question+'', name: '', options: options, required: false},
+  ],
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'Nord';
+      } if (data.response == 1){
+          var risposta = 'Sud';
+      } if (data.response == 2){
+          var risposta = 'Est';
+      } if (data.response == 3){
+          var risposta = 'Ovest';
+      };
+      if (risposta == questions[0].answer){
+          var accuracy = true;
+      } else {
+          var accuracy = false;
+      }
+      data.correct = accuracy;
+      console.log("RISPOSTA: "+risposta+"")
+  }
+};
+var question2 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: ''+questions[1].question+'', name: '', options: options, required: false},
+  ],
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'Nord';
+      } if (data.response == 1){
+          var risposta = 'Sud';
+      } if (data.response == 2){
+          var risposta = 'Est';
+      } if (data.response == 3){
+          var risposta = 'Ovest';
+      };
+      if (risposta == questions[1].answer){
+          var accuracy = true;
+      } else {
+          var accuracy = false;
+      }
+      data.correct = accuracy;
+      console.log("RISPOSTA: "+risposta+"")
+  }
+};
+var question3 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: ''+questions[2].question+'', name: '', options: options, required: false}
+  ],
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'Nord';
+      } if (data.response == 1){
+          var risposta = 'Sud';
+      } if (data.response == 2){
+          var risposta = 'Est';
+      } if (data.response == 3){
+          var risposta = 'Ovest';
+      };
+      if (risposta == questions[2].answer){
+          var accuracy = true;
+      } else {
+          var accuracy = false;
+      }
+      data.correct = accuracy;
+      console.log("RISPOSTA: "+risposta+"")
+  }
+};
+var question4 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: ''+questions[3].question+'', name: '', options: options, required: false}
+  ],
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'Nord';
+      } if (data.response == 1){
+          var risposta = 'Sud';
+      } if (data.response == 2){
+          var risposta = 'Est';
+      } if (data.response == 3){
+          var risposta = 'Ovest';
+      };
+      if (risposta == questions[3].answer){
+          var accuracy = true;
+      } else {
+          var accuracy = false;
+      }
+      data.correct = accuracy;
+      console.log("RISPOSTA: "+risposta+"")
+  }
+};
+var question5 = {
+  type: 'survey-multi-choice',
+  questions: [
+    {prompt: ''+questions[4].question+'', name: '', options: options, required: false}
+  ],
+  on_finish: function(data) {
+      if (data.response == 0){
+          var risposta = 'Nord';
+      } if (data.response == 1){
+          var risposta = 'Sud';
+      } if (data.response == 2){
+          var risposta = 'Est';
+      } if (data.response == 3){
+          var risposta = 'Ovest';
+      };
+      if (risposta == questions[4].answer){
+          var accuracy = true;
+      } else {
+          var accuracy = false;
+      }
+      data.correct = accuracy;
+      console.log("RISPOSTA: "+risposta+"")
+  }
+};
+
+var  timeline =[question1, question2, question3, question4, question5];
+jsPsych.run(timeline)
+
+});
+
+
+
+</script>
+</html>

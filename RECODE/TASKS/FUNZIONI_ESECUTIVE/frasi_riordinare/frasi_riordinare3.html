@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRASI DA RIORDINARE LIV.3 </title>
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-html-form.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+  <script src="jatos.js"></script>
+
+</head>
+<body>
+
+</body>
+<script>
+
+var punteggio_finale = 0
+var jsPsych = initJsPsych({
+        use_webaudio: false,
+        on_finish: function() {
+          //  jsPsych.data.displayData();
+            var feed;
+            if(punteggio>=7){
+              feed = 1;
+            } else {
+              feed = -1;
+            }
+          var  punteggio_dec = punteggio*10/10;
+            jatos.studySessionData = feed;
+            var funzioni_esecutive = Number(sessionStorage.getItem('funzioni_esecutive'))+feed;
+            var counter_funzioni_esecutive = Number(sessionStorage.getItem('counter_funzioni_esecutive'))+1;
+            var punteggio_finale_funzioni_esecutive= Number(sessionStorage.getItem('punteggio_finale_funzioni_esecutive'))+punteggio_dec;
+            sessionStorage.setItem('punteggio_finale_funzioni_esecutive', punteggio_finale_funzioni_esecutive);
+            if (funzioni_esecutive < 0) {funzioni_esecutive = 0}
+            if (funzioni_esecutive > 2) {funzioni_esecutive = 2}
+            if (counter_funzioni_esecutive > 3) {counter_funzioni_esecutive = 3}
+            sessionStorage.setItem('funzioni_esecutive', funzioni_esecutive);
+            sessionStorage.setItem('counter_funzioni_esecutive', counter_funzioni_esecutive);
+            var Data = {feed: feed, type: 'FUNZIONI_ESECUTIVE_riordina_frasi_level3', cresp: punteggio_dec};
+            jatos.startComponentByPos(4,Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+            }
+            });
+
+punteggio_prova = 0;
+punteggio = 0;
+var pre_if = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; font-weight: bold;">Una breve storiella è stata divisa in vari pezzi. <br>Di seguito vedrai i  pezzi di questa storiella, messi in disordine. <br> Riordini i pezzi in modo da ricostruire la sequenza della storia. <br>
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per procedere al compito','Prema qui per fare una prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta_prova = 1;
+    } else{
+      var risposta_prova = 0;
+    }
+    data.risposta_prova = risposta_prova
+  }
+};
+
+
+var storiella1_parti = [
+  { storiella1: "Mentre prepara il pranzo, Margherita sente dei rumori provenire dalla strada. ", position:"1"},
+  { storiella1: "Si avvicina alla finestra della cucina per vedere cosa sta accadendo.  ", position:"2"},
+  { storiella1: "Spostando le tende vede due persone che litigano furiosamente sul marciapiede. ", position:"3"},
+  { storiella1: "Uno dei due litiganti è il suo vicino, il signor Costa. ", position:"4"},
+  { storiella1: "Margherita decide allora di scendere in strada per calmare gli animi. ", position:"5"},
+  { storiella1: "‘Questo imbecille mi ha tamponato!’, le dice il signor Costa. ", position:"6"},
+  { storiella1: "‘Lei ha frenato di colpo!’, risponde l’altro guidatore.  ", position:"7"},
+  { storiella1: "‘Guarda qui che danni!’ replica il signor Costa indicando il retro della sua auto. ", position:"8"},
+  { storiella1: "Margherita si avvicina al punto indicato dal signor Costa.", position:"9"},
+  { storiella1: "‘Perché non fate la constatazione amichevole e la finiamo qui?’, propone pacifica Margherita. ", position:"10"}
+]
+var storiella1_parti = jsPsych.randomization.shuffle(storiella1_parti);
+
+var prova_storiella1 = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: "<h2> Scriva con la tastiera i numeri da 1 a 10 accanto alle frasi scritte di seguito per ricomporre la sequenza della storia: </h2>",
+  html:[
+    '<style>' +
+   '  .story-container { display: flex; align-items: center; margin-bottom: 10px; }' +
+   '  .story-text { font-size: 24px; margin-center: 10px; }' +
+   '  .input-box { width: 30px; height: 30px; }' +
+   '</style>' +
+   '<div style="text-align: left;">' +
+   '  <div class="story-container"><input type="text" class="input-box" name="1" /><span class="story-text">' + storiella1_parti[0].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="2" /><span class="story-text">' + storiella1_parti[1].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="3" /><span class="story-text">' + storiella1_parti[2].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="4" /><span class="story-text">' + storiella1_parti[3].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella1_parti[4].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella1_parti[5].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella1_parti[6].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella1_parti[7].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella1_parti[8].storiella1 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella1_parti[9].storiella1 + '</span></div>' +
+   '</div>'
+  ],
+  dataAsArray: true,
+  required: true,
+  button_label: [`INVIA RISPOSTE"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var risposta1 = data.response[0].value;
+    var risposta2 = data.response[1].value;
+    var risposta3 = data.response[2].value;
+    var risposta4 = data.response[3].value;
+    var risposta5 = data.response[4].value;
+    var risposta6 = data.response[5].value;
+    var risposta7 = data.response[6].value;
+    var risposta8 = data.response[7].value;
+    var risposta9 = data.response[8].value;
+    var risposta10 = data.response[9].value;
+
+
+
+    if (risposta1.includes(storiella1_parti[0].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la prima condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta2.includes(storiella1_parti[1].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la seconda condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta3.includes(storiella1_parti[2].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la terza condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta4.includes(storiella1_parti[3].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quarta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta5.includes(storiella1_parti[4].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quinta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta6.includes(storiella1_parti[5].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quinta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta7.includes(storiella1_parti[6].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quinta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta8.includes(storiella1_parti[7].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quinta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta9.includes(storiella1_parti[8].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quinta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    if (risposta10.includes(storiella1_parti[9].position)) {
+      punteggio_prova++; // Incrementa il punteggio_prova se la quinta condizione è soddisfatta
+      console.log('punteggio_prova:', punteggio_prova);
+    }
+    // Logga il punteggio_prova ottenuto
+    console.log('punteggio_prova totale:', punteggio_prova);
+    // Determina l'accuratezza della prova
+   var accuracy_prova;
+   if (punteggio_prova >= 7) {
+     accuracy_prova = true;
+     console.log("Prova superata");
+   } else {
+     accuracy_prova = false;
+     console.log("Prova non superata");
+   }
+
+   // Aggiungi l'accuratezza della prova ai dati
+   data.accuracy_prova = accuracy_prova;
+  }
+  };
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+var prova_loop ={
+  timeline: [prova_storiella1]
+}
+
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_loop){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy_prova;;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_loop.data = {stimulus: feedback};
+    prova_loop.stimulus = feedback_prova_stima;
+  },
+
+};
+
+var begin_trial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; font-weight: bold;">Allora proseguiamo, inziamo con il vero esercizio. <br>
+  Una breve storiella è stata divisa in vari pezzi. <br>Di seguito vedrai i  pezzi di questa storiella, messi in disordine. <br> Riordini i pezzi in modo da ricostruire la sequenza della storia. <br> </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare']
+};
+
+//trials
+
+let x = [1,2,3,4,5]
+
+var storiella2_parti = [
+  { storiella2: "Oggi è l’ultimo giorno di lavoro di Marisa: da domani sarà in pensione. ", position:"1"},
+  { storiella2: "Marisa è stata professoressa di italiano per tutta la sua carriera.   ", position:"2"},
+  { storiella2: "Ha mosso i primi passi come docente presso un convitto femminile di Monza, la sua città. ", position:"3"},
+  { storiella2: "Poi, dopo una decina di anni, ha ottenuto una cattedra al Liceo Classico di Monza. ", position:"4"},
+  { storiella2: "Un giorno, all’improvviso, un prestigioso Liceo di Milano le ha offerto il posto di professoressa di italiano. ", position:"5"},
+  { storiella2: "Marisa ricorda il suo stupore: non pensava l’avrebbero mai presa in considerazione per il liceo di Milano!  ", position:"6"},
+  { storiella2: "Marisa ha quindi lasciato il suo lavoro a Monza e si è trasferita a Milano.  ", position:"7"},
+  { storiella2: "Dopo qualche anno a Milano, però, a Marisa iniziava a mancare la sua città, Monza. ", position:"8"},
+  { storiella2: "Marisa si è fatta coraggio e ha deciso di licenziarsi dalla cattedra tanto ambita per tornare ad insegnare a Monza. ", position:"9"},
+  { storiella2: "Marisa non si è mai pentita della scelta fatta e ora si sente pronta ad andare finalmente in pensione.", position:"10"}
+]
+var storiella2_parti = jsPsych.randomization.shuffle(storiella2_parti);
+
+var trial_storiella2 = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: "<h2> Scriva con la tastiera i numeri da 1 a 10 accanto alle frasi scritte di seguito per ricomporre la sequenza della storia: </h2>",
+  html:[
+    '<style>' +
+   '  .story-container { display: flex; align-items: center; margin-bottom: 10px; }' +
+   '  .story-text { font-size: 24px; margin-left: 10px; }' +
+   '  .input-box { width: 30px; height: 30px; }' +
+   '</style>' +
+   '<div style="text-align: left;">' +
+   '  <div class="story-container"><input type="text" class="input-box" name="1" /><span class="story-text">' + storiella2_parti[0].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="2" /><span class="story-text">' + storiella2_parti[1].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="3" /><span class="story-text">' + storiella2_parti[2].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="4" /><span class="story-text">' + storiella2_parti[3].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella2_parti[4].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella2_parti[5].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella2_parti[6].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella2_parti[7].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella2_parti[8].storiella2 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella2_parti[9].storiella2 + '</span></div>' +
+   '</div>'
+  ],
+  dataAsArray: true,
+  required: true,
+  button_label: [`INVIA RISPOSTE"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var risposta1 = data.response[0].value;
+    var risposta2 = data.response[1].value;
+    var risposta3 = data.response[2].value;
+    var risposta4 = data.response[3].value;
+    var risposta5 = data.response[4].value;
+    var risposta6 = data.response[5].value;
+    var risposta7 = data.response[6].value;
+    var risposta8 = data.response[7].value;
+    var risposta9 = data.response[8].value;
+    var risposta10 = data.response[9].value;
+
+
+
+    if (risposta1.includes(storiella2_parti[0].position)) {
+      punteggio++; // Incrementa il punteggio se la prima condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta2.includes(storiella2_parti[1].position)) {
+      punteggio++; // Incrementa il punteggio se la seconda condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta3.includes(storiella2_parti[2].position)) {
+      punteggio++; // Incrementa il punteggio se la terza condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta4.includes(storiella2_parti[3].position)) {
+      punteggio++; // Incrementa il punteggio se la quarta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta5.includes(storiella2_parti[4].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta6.includes(storiella2_parti[5].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta7.includes(storiella2_parti[6].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta8.includes(storiella2_parti[7].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta9.includes(storiella2_parti[8].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta10.includes(storiella2_parti[9].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    // Logga il punteggio ottenuto
+    console.log('Punteggio totale:', punteggio);
+    // Determina l'accuratezza della prova
+ }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var storiella3_parti = [
+  { storiella3: "Francesco ha avuto una giornata storta. ", position:"1"},
+  { storiella3: "È iniziata con il latte bruciato nel pentolino e i biscotti finiti.", position:"2"},
+  { storiella3: "Poi ha perso il solito autobus che lo porta a lavoro per pochissimi minuti.  ", position:"3"},
+  { storiella3: "Quindi ha chiamato un collega e l’ha implorato di dargli un passaggio per il lavoro. ", position:"4"},
+  { storiella3: "Mentre aspettava il collega, un tuono ha squarciato il cielo ed ha iniziato a piovere.", position:"5"},
+  { storiella3: "Francesco, innervosito, si è reso conto di non aver dietro l’ombrello, così ha aspettato il collega sotto la pioggia battente. ", position:"6"},
+  { storiella3: "Francesco ha passato la mattinata a cercare di asciugare i suoi vestiti, zuppi di acqua piovana. ", position:"7"},
+  { storiella3: "Durante il pomeriggio, ha dimenticato un importante appuntamento di lavoro, fissato molti mesi prima. ", position:"8"},
+  { storiella3: "Il suo titolare l’ha quindi convocato e gli ha fatto una ramanzina per la sua dimenticanza. ", position:"9"},
+  { storiella3: "È giunta la sera e Francesco si dice che è proprio vero: quando una giornata inizia male finirà peggio! ", position:"10"}
+]
+var storiella3_parti = jsPsych.randomization.shuffle(storiella3_parti);
+
+var trial_storiella3 = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: "<h2> Scriva con la tastiera i numeri da 1 a 10 accanto alle frasi scritte di seguito per ricomporre la sequenza della storia: </h2>",
+  html:[
+    '<style>' +
+   '  .story-container { display: flex; align-items: center; margin-bottom: 10px; }' +
+   '  .story-text { font-size: 24px; margin-left: 10px; }' +
+   '  .input-box { width: 30px; height: 30px; }' +
+   '</style>' +
+   '<div style="text-align: left;">' +
+   '  <div class="story-container"><input type="text" class="input-box" name="1" /><span class="story-text">' + storiella3_parti[0].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="2" /><span class="story-text">' + storiella3_parti[1].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="3" /><span class="story-text">' + storiella3_parti[2].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="4" /><span class="story-text">' + storiella3_parti[3].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella3_parti[4].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella3_parti[5].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella3_parti[6].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella3_parti[7].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella3_parti[8].storiella3 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella3_parti[9].storiella3 + '</span></div>' +
+   '</div>'
+  ],
+  dataAsArray: true,
+  required: true,
+  button_label: [`INVIA RISPOSTE"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var risposta1 = data.response[0].value;
+    var risposta2 = data.response[1].value;
+    var risposta3 = data.response[2].value;
+    var risposta4 = data.response[3].value;
+    var risposta5 = data.response[4].value;
+    var risposta6 = data.response[5].value;
+    var risposta7 = data.response[6].value;
+    var risposta8 = data.response[7].value;
+    var risposta9 = data.response[8].value;
+    var risposta10 = data.response[9].value;
+
+
+
+    if (risposta1.includes(storiella3_parti[0].position)) {
+      punteggio++; // Incrementa il punteggio se la prima condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta2.includes(storiella3_parti[1].position)) {
+      punteggio++; // Incrementa il punteggio se la seconda condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta3.includes(storiella3_parti[2].position)) {
+      punteggio++; // Incrementa il punteggio se la terza condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta4.includes(storiella3_parti[3].position)) {
+      punteggio++; // Incrementa il punteggio se la quarta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta5.includes(storiella3_parti[4].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta6.includes(storiella3_parti[5].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta7.includes(storiella3_parti[6].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta8.includes(storiella3_parti[7].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta9.includes(storiella3_parti[8].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta10.includes(storiella3_parti[9].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    // Logga il punteggio ottenuto
+    console.log('Punteggio totale:', punteggio);
+    // Determina l'accuratezza della prova
+ }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var storiella4_parti = [
+  { storiella4: "È un giorno tipico di marzo, con tanto vento e pioggia.", position:"1"},
+  { storiella4: "Miranda è uscita molto tardi dal suo ufficio e rischia di perdere il treno.", position:"2"},
+  { storiella4: "A causa del cattivo tempo è costretta ad andare lentamente verso la stazione. ", position:"3"},
+  { storiella4: "Arrivata lì vede il suo treno che si allontana dai binari: purtroppo lo ha perso.  ", position:"4"},
+  { storiella4: "Miranda sente la rabbia crescere: se solo non si fosse fermata a controllare quelle carte ora sarebbe sul suo treno sulla strada per casa.", position:"5"},
+  { storiella4: "Controlla gli orari delle partenze e si rende conto che il prossimo treno è tra un’ora.", position:"6"},
+  { storiella4: "Desolata e arrabbiata, Miranda pensa a cosa può fare per riempire questo tempo di attesa.", position:"7"},
+  { storiella4: "Le viene in mente un bar-ristorante proprio fuori la stazione, dove è stata mesi prima con un’amica. ", position:"8"},
+  { storiella4: "Sfidando il vento e la pioggia Miranda si reca verso il bar-ristorante 'La Faina'.", position:"9"},
+  { storiella4: "Ora che è al chiuso, con una cioccolata calda tra le mani, Miranda sente la rabbia scivolare via.", position:"10"}
+]
+var storiella4_parti = jsPsych.randomization.shuffle(storiella4_parti);
+
+var trial_storiella4 = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: "<h2> Scriva con la tastiera i numeri da 1 a 10 accanto alle frasi scritte di seguito per ricomporre la sequenza della storia: </h2>",
+  html:[
+    '<style>' +
+   '  .story-container { display: flex; align-items: center; margin-bottom: 10px; }' +
+   '  .story-text { font-size: 24px; margin-left: 10px; }' +
+   '  .input-box { width: 30px; height: 30px; }' +
+   '</style>' +
+   '<div style="text-align: left;">' +
+   '  <div class="story-container"><input type="text" class="input-box" name="1" /><span class="story-text">' + storiella4_parti[0].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="2" /><span class="story-text">' + storiella4_parti[1].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="3" /><span class="story-text">' + storiella4_parti[2].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="4" /><span class="story-text">' + storiella4_parti[3].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella4_parti[4].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella4_parti[5].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella4_parti[6].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella4_parti[7].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella4_parti[8].storiella4 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella4_parti[9].storiella4 + '</span></div>' +
+   '</div>'
+  ],
+  dataAsArray: true,
+  required: true,
+  button_label: [`INVIA RISPOSTE"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var risposta1 = data.response[0].value;
+    var risposta2 = data.response[1].value;
+    var risposta3 = data.response[2].value;
+    var risposta4 = data.response[3].value;
+    var risposta5 = data.response[4].value;
+    var risposta6 = data.response[5].value;
+    var risposta7 = data.response[6].value;
+    var risposta8 = data.response[7].value;
+    var risposta9 = data.response[8].value;
+    var risposta10 = data.response[9].value;
+
+
+
+    if (risposta1.includes(storiella4_parti[0].position)) {
+      punteggio++; // Incrementa il punteggio se la prima condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta2.includes(storiella4_parti[1].position)) {
+      punteggio++; // Incrementa il punteggio se la seconda condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta3.includes(storiella4_parti[2].position)) {
+      punteggio++; // Incrementa il punteggio se la terza condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta4.includes(storiella4_parti[3].position)) {
+      punteggio++; // Incrementa il punteggio se la quarta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta5.includes(storiella4_parti[4].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta6.includes(storiella4_parti[5].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta7.includes(storiella4_parti[6].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta8.includes(storiella4_parti[7].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta9.includes(storiella4_parti[8].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta10.includes(storiella4_parti[9].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    // Logga il punteggio ottenuto
+    console.log('Punteggio totale:', punteggio);
+ }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var storiella5_parti = [
+  { storiella5: "La signora Giovannina si reca ogni domenica al cimitero assieme alla sua amica Laura.", position:"1"},
+  { storiella5: "Prima chiama la sua amica d’infanzia per chiederle conferma del loro appuntamento. ", position:"2"},
+  { storiella5: "Poi si incontrano al fioraio ‘La Betulla’, in via Pasolini 34, nel centro di Prato. ", position:"3"},
+  { storiella5: "Comprano due grandi mazzi di fiori, con petunie, bucaneve e crisantemi.", position:"4"},
+  { storiella5: "Giovannina e Laura pensano alla loro amica Marta, a cui lasceranno i fiori appena comprati. ", position:"5"},
+  { storiella5: "‘Ci pensi a quanto le piacerebbero questi fiori, se li vedesse?’ dice Laura. ", position:"6"},
+  { storiella5: "‘Lei amava molto i fiori. Sono certa che le piacerebbero’, risponde Giovannina. ", position:"7"},
+  { storiella5: "Consolate da questo pensiero giungono al cimitero del paese, poco distante da lì.", position:"8"},
+  { storiella5: "Quando arrivano nei pressi della tomba, Laura si blocca esterrefatta.", position:"9"},
+  { storiella5: "‘Maledetti, hanno rubato il portafiori!’ esclama inorridita.", position:"10"}
+]
+var storiella5_parti = jsPsych.randomization.shuffle(storiella5_parti);
+
+var trial_storiella5 = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: "<h2> Scriva con la tastiera i numeri da 1 a 10 accanto alle frasi scritte di seguito per ricomporre la sequenza della storia: </h2>",
+  html:[
+    '<style>' +
+   '  .story-container { display: flex; align-items: center; margin-bottom: 10px; }' +
+   '  .story-text { font-size: 24px; margin-left: 10px; }' +
+   '  .input-box { width: 30px; height: 30px; }' +
+   '</style>' +
+   '<div style="text-align: left;">' +
+   '  <div class="story-container"><input type="text" class="input-box" name="1" /><span class="story-text">' + storiella5_parti[0].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="2" /><span class="story-text">' + storiella5_parti[1].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="3" /><span class="story-text">' + storiella5_parti[2].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="4" /><span class="story-text">' + storiella5_parti[3].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella5_parti[4].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella5_parti[5].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella5_parti[6].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella5_parti[7].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella5_parti[8].storiella5 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella5_parti[9].storiella5 + '</span></div>' +
+   '</div>'
+  ],
+  dataAsArray: true,
+  required: true,
+  button_label: [`INVIA RISPOSTE"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var risposta1 = data.response[0].value;
+    var risposta2 = data.response[1].value;
+    var risposta3 = data.response[2].value;
+    var risposta4 = data.response[3].value;
+    var risposta5 = data.response[4].value;
+    var risposta6 = data.response[5].value;
+    var risposta7 = data.response[6].value;
+    var risposta8 = data.response[7].value;
+    var risposta9 = data.response[8].value;
+    var risposta10 = data.response[9].value;
+
+
+
+    if (risposta1.includes(storiella5_parti[0].position)) {
+      punteggio++; // Incrementa il punteggio se la prima condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta2.includes(storiella5_parti[1].position)) {
+      punteggio++; // Incrementa il punteggio se la seconda condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta3.includes(storiella5_parti[2].position)) {
+      punteggio++; // Incrementa il punteggio se la terza condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta4.includes(storiella5_parti[3].position)) {
+      punteggio++; // Incrementa il punteggio se la quarta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta5.includes(storiella5_parti[4].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta6.includes(storiella5_parti[5].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta7.includes(storiella5_parti[6].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta8.includes(storiella5_parti[7].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta9.includes(storiella5_parti[8].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta10.includes(storiella5_parti[9].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+
+    // Logga il punteggio ottenuto
+    console.log('Punteggio totale:', punteggio);
+  }
+  };
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var storiella6_parti = [
+{ storiella6: "Pietro ha dei giorni buoni e dei giorni brutti.", position:"1"},
+{ storiella6: "In quelli brutti, Pietro avverte un forte fastidio al ginocchio destro. ", position:"2"},
+{ storiella6: "In quelli buoni, invece, non sente dolore e può dedicarsi alle sue passioni. ", position:"3"},
+{ storiella6: "Tra queste vi è una in particolare a cui Pietro tiene molto e che coltiva con sua moglie: il ballo.", position:"4"},
+{ storiella6: "Quando possono vanno insieme alla balera più vicina per passare una bella serata.  ", position:"5"},
+{ storiella6: "Ad aspettarli in balera trovano sempre i loro amici Francesco e Marta.", position:"6"},
+{ storiella6: "Marta ha appena chiamato Ada, moglie di Pietro, per chiederle se sarebbero andati a ballare, quella sera. ", position:"7"},
+{ storiella6: "Pietro allora ci pensa un attimo, non ne è sicuro, ma poi decide che sì, se la sente di andare. ", position:"8"},
+{ storiella6: "Tutto sommato è una “buona giornata” per il suo ginocchio. ", position:"9"},
+{ storiella6: "Pietro e Ada si preparano con cura, felici dell’appuntamento in balera.", position:"10"}
+]
+var storiella6_parti = jsPsych.randomization.shuffle(storiella6_parti);
+
+var trial_storiella6 = {
+  type: jsPsychSurveyHtmlForm,
+  preamble: "<h2> Scriva con la tastiera i numeri da 1 a 10 accanto alle frasi scritte di seguito per ricomporre la sequenza della storia: </h2>",
+  html:[
+    '<style>' +
+   '  .story-container { display: flex; align-items: center; margin-bottom: 10px; }' +
+   '  .story-text { font-size: 24px; margin-left: 10px; }' +
+   '  .input-box { width: 30px; height: 30px; }' +
+   '</style>' +
+   '<div style="text-align: left;">' +
+   '  <div class="story-container"><input type="text" class="input-box" name="1" /><span class="story-text">' + storiella6_parti[0].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="2" /><span class="story-text">' + storiella6_parti[1].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="3" /><span class="story-text">' + storiella6_parti[2].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="4" /><span class="story-text">' + storiella6_parti[3].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella6_parti[4].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella6_parti[5].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella6_parti[6].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="5" /><span class="story-text">' + storiella6_parti[7].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="6" /><span class="story-text">' + storiella6_parti[8].storiella6 + '</span></div>' +
+   '  <div class="story-container"><input type="text" class="input-box" name="7" /><span class="story-text">' + storiella6_parti[9].storiella6 + '</span></div>' +
+   '</div>'
+  ],
+  dataAsArray: true,
+  required: true,
+  button_label: [`INVIA RISPOSTE"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  on_finish: function(data){
+    var risposta1 = data.response[0].value;
+    var risposta2 = data.response[1].value;
+    var risposta3 = data.response[2].value;
+    var risposta4 = data.response[3].value;
+    var risposta5 = data.response[4].value;
+    var risposta6 = data.response[5].value;
+    var risposta7 = data.response[6].value;
+    var risposta8 = data.response[7].value;
+    var risposta9 = data.response[8].value;
+    var risposta10 = data.response[9].value;
+
+
+
+    if (risposta1.includes(storiella6_parti[0].position)) {
+      punteggio++; // Incrementa il punteggio se la prima condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta2.includes(storiella6_parti[1].position)) {
+      punteggio++; // Incrementa il punteggio se la seconda condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta3.includes(storiella6_parti[2].position)) {
+      punteggio++; // Incrementa il punteggio se la terza condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta4.includes(storiella6_parti[3].position)) {
+      punteggio++; // Incrementa il punteggio se la quarta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta5.includes(storiella6_parti[4].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta6.includes(storiella6_parti[5].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta7.includes(storiella6_parti[6].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta8.includes(storiella6_parti[7].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta9.includes(storiella6_parti[8].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+    if (risposta10.includes(storiella6_parti[9].position)) {
+      punteggio++; // Incrementa il punteggio se la quinta condizione è soddisfatta
+      console.log('Punteggio:', punteggio);
+    }
+
+    // Logga il punteggio ottenuto
+    console.log('Punteggio totale:', punteggio);
+    // Determina l'accuratezza della prova
+   if (punteggio >= 7) {
+     punteggio_finale = punteggio_finale + 1;
+
+   } else {
+     punteggio_finale = 0;
+
+   }
+}
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var sample_trials = jsPsych.randomization.sampleWithoutReplacement([
+    { timeline: [trial_storiella2] },
+    { timeline: [trial_storiella3] },
+    { timeline: [trial_storiella4] },
+    { timeline: [trial_storiella5] },
+    { timeline: [trial_storiella6] }
+],1);
+
+
+var trial_timeline = {
+  timeline: sample_trials
+};
+
+
+
+var if_node = {
+  timeline: [begin_trial,trial_timeline],
+  conditional_function: function(){
+    var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+    if (response_button == 0){
+      console.log("prosegui a esercizio");
+      return true;
+    } else {
+      console.log("inizia la prova");
+      jsPsych.addNodeToEndOfTimeline(loop_prova)
+      return false;
+    }
+  }
+};
+
+var begin_loop = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; font-weight: bold;"> Va bene facciamo una prova! <br> Una breve storiella è stata divisa in vari pezzi. <br>Di seguito vedrai i  pezzi di questa storiella, messi in disordine. <br> Riordini i pezzi in modo da ricostruire la sequenza della storia. <br></p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare la prova'],
+  on_start: function(data){
+    var response_button = jsPsych.data.get().last(1).values()[0].response;
+    console.log(response_button)
+    if (response_button == 0){
+      console.log("salta loop");
+      jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+    }
+  }
+};
+
+var end_loop_prova = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; font-weight: bold;"> Ora che ha terminato la prova, inziamo con il vero esercizio. <br> Una breve storiella è stata divisa in vari pezzi. <br>Di seguito vedrai i  pezzi di questa storiella, messi in disordine. <br> Riordini i pezzi in modo da ricostruire la sequenza della storia. <br></p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per proseguire', 'Prema qui per ripetere la prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta = 1;
+    } else{
+      var risposta = 0;
+      console.log("Termine loop prova");
+      jsPsych.addNodeToEndOfTimeline(trial_timeline);
+    }
+    data.risposta_loop = risposta
+  }
+};
+
+var loop_prova = {
+  timeline: [begin_loop, prova_loop, feedback, end_loop_prova],
+  loop_function: function(){
+    var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+    if (response_button == 1){
+      return true;
+    } else {
+      return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+    }
+  }
+};
+
+
+
+var timeline = [pre_if, if_node];
+
+jsPsych.run(timeline);
+</script>
+
+</html>

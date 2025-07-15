@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATTENZIONE CROSS MODALE 2</title>
+  <!-- Include jsPsych library -->
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-image-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-audio-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych-psychophysics-3.3.0/jspsych-psychophysics.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-fullscreen.js"></script>
+
+  <!-- Include jatos.js -->
+  <script src="jatos.js"></script>
+
+  <!-- Connect your CSS stylesheet -->
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body></body>
+<script>
+
+/* initialize jsPsych */
+var jsPsych = initJsPsych({
+  use_webaudio: true,
+  on_finish: function () {
+    /*jsPsych.data.displayData();*/
+    var feed;
+    if(punteggio >=40){
+      feed = 1;
+    } else {
+      feed = -1;
+    }
+    if (punteggio < 0) {punteggio = 0}
+    var punteggio_dec = punteggio*10/50;
+    jatos.studySessionData = feed;
+    var attenzione = Number(sessionStorage.getItem('attenzione'))+feed;
+    var counter_attenzione = Number(sessionStorage.getItem('counter_attenzione'))+1;
+    var punteggio_finale_attenzione = Number(sessionStorage.getItem('punteggio_finale_attenzione'))+punteggio_dec;
+    sessionStorage.setItem('punteggio_finale_attenzione', punteggio_finale_attenzione);
+    if (attenzione < 0) {attenzione = 0}
+    if (attenzione > 2) {attenzione = 2}
+    if (counter_attenzione > 3) {counter_attenzione = 3}
+    sessionStorage.setItem('attenzione', attenzione);
+    sessionStorage.setItem('counter_attenzione', counter_attenzione);
+    var Data = { feed: feed, type: 'ATTENZIONE_attenzione_crossmodale_lev2', cresp: punteggio_dec };
+    jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+  }
+});
+var fullscreen_on = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: true
+};
+
+var fullscreen_off = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: false
+};
+// Funzione per generare un colore casuale tra verde, blu, nero, viola e giallo
+function getRandomColor() {
+  var colors = ['darkolivegreen', '#0000FF', 'orchid', '#800080', 'gold']; // Codici esadecimali dei colori
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+
+// Funzione per modificare il colore dell'auto
+function changeCarColor(color) {
+  var car = document.getElementById("car");
+  if (car) {
+    var bodyRect = car.querySelector("#car-body");
+    var roofRect = car.querySelector("#car-roof");
+    var spoilerPoygon = car.querySelector("#car-spoiler");
+
+    if (bodyRect) {
+      bodyRect.style.fill = color;
+      bodyRect.style.stroke = color;
+
+    }
+
+    if (roofRect) {
+      roofRect.style.fill = color;
+      roofRect.style.stroke = color;
+
+    }
+    if (spoilerPoygon) {
+      spoilerPoygon.style.fill = color;
+      spoilerPoygon.style.stroke = color;
+    }
+  }
+}
+
+var trialColor = '#D29415';
+var punteggio = 0
+//Stimolo della macchina
+var car1 =
+  '<div id="trial-container" style="position: relative; width: 100w; height: 100vh; background: url(\'TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png\') center/cover no-repeat;">' +
+  '<img src="TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png" style="width: 100%; height: 100%;" />' +
+  '<svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+  '<rect id="car-body" x="50" y="80" width="300" height="90" rx="50" ry="100" fill="' + trialColor + '" />' + // carrozzeria
+  '<rect id="car-roof" x="100" y="30" width="200" height="100" rx="60" ry="100" fill="' + trialColor + '" />' + // tetto
+  '<rect x="130" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' + // finestrino anteriore
+  '<rect x="210" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' + // finestrino anteriore
+  '<circle cx="100" cy="165" r="30" fill="#000000" />' + // ruota anteriore
+  '<circle cx="300" cy="165" r="30" fill="#000000" />' + // ruota posteriore
+  '<circle cx="100" cy="165" r="25" fill="grey" />' + // ruota anteriore
+  '<circle cx="300" cy="165" r="25" fill="grey" />' + // ruota posteriore
+  '</svg>' +
+  '</div>';
+
+var car2 =
+  '<div id="trial-container" style="position: relative; width: 100w; height: 100vh; background: url(\'TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png\') center/cover no-repeat;">' +
+  '<img src="TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png" style="width: 100%; height: 100%;" />' +
+  '<svg id="car" height="150" width="300" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+  '<rect id="car-body" x="30" y="60" width="240" height="70" rx="30" ry="15" fill="' + trialColor + '" />' + // carrozzeria
+  '<rect id="car-roof" x="60" y="10" width="150" height="100" rx="30" ry="30" fill="' + trialColor + '" />' + // tetto
+  '<rect x="100" y="20" width="100" height="40" rx="10" ry="15" fill="lightblue" />' + // finestrino anteriore
+  '<circle cx="60" cy="125" r="20" fill="#000000" />' + // ruota anteriore
+  '<circle cx="240" cy="125" r="20" fill="#000000" />' + // ruota posteriore
+  '</svg>' +
+  '</div>';
+
+var car3 =
+'<div id="trial-container" style="position: relative; width: 100w; height: 100vh; background: url(\'TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png\') center/cover no-repeat;">' +
+'<img src="TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png" style="width: 100%; height: 100%;" />' +
+'<svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+'<rect id="car-body" x="10" y="70" width="340" height="70" fill="' + trialColor + '" rx="20" />' + // carrozzeria
+'<rect id="car-roof" x="70" y="10" width="220" height="120" fill="' + trialColor + '" rx="400" ry="200" stroke="' + trialColor + '" stroke-width="15" />' + // tetto
+'<polygon id="car-spoiler" points="30,100 190,100 360,30 390,40 330,100" fill="' + trialColor + '" />' + // finestrino anteriore
+'<rect x="100" y="20" width="75" height="40" rx="10" ry="15" fill="lightblue" />' +
+'<rect x="180" y="20" width="75" height="40" rx="10" ry="15" fill="lightblue" />' +
+'<circle r="40" fill="#222" stroke="white" stroke-width="7" cx="100" cy="140"/>'+
+'<circle r="15px" fill="#555" cx="100" cy="140"/>'+
+'<circle r="40" fill="#222" stroke="white" stroke-width="7" cx="260" cy="140"/>'+
+'<circle r="15px" fill="#555" cx="260" cy="140"/>' + // ruota posteriore
+ // ruota posteriore
+'</svg>' +
+'</div>'
+
+var car4 =
+    '<div id="trial-container" style="position: relative; width: 100w; height: 100vh; background: url(\'TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png\') center/cover no-repeat;">' +
+    '<img src="TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png" style="width: 100%; height: 100%;" />' +
+    '<svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+    '<line x1="145" y1="10" x2="145" y2="80" stroke="black" stroke-width="10"/>' +
+    '<line x1="215" y1="10" x2="215" y2="80" stroke="black" stroke-width="10"/>' +
+    '<rect id="car-body" <rect x="10" y="70" width="340" height="80" fill="' + trialColor + '" rx="30" ry="80"  />' + // carrozzeria
+    '<rect id="car-roof" x="70" y="10" width="220" height="130" fill="' + trialColor + '" rx="10" ry="80" stroke="' + trialColor + '" stroke-width="10" />' + // tetto
+    '<rect x="100" y="20" width="100" height="40" rx="10" ry="15" fill="lightblue" />' +
+    '<circle r="35px" fill="#222" stroke="white" stroke-width="5" cx="90" cy="140"/>' +
+    '<circle r="15px" fill="#555" cx="90" cy="140"/>' +
+    '<circle r="35px" fill="#222" stroke="white" stroke-width="5" cx="270" cy="140"/>' +
+    '<circle r="15px" fill="#555" cx="270" cy="140"/>' +
+    '</svg>' +
+    '</div>'
+
+var carDesigns = [car1, car2, car3, car4];
+/* preload sfondo e audio */
+var preload = {
+  type:  jsPsychPreload,
+  images: ['TASKS/ATTENZIONE/attenzione_crossmodale/sfondo.png'],
+  audio: ['TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav', 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3','TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav']
+};
+
+var test_stimuli_prova = [
+  {isRed: true, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav', carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car2},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car3},
+  {isRed: true, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car1},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns:car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.wav',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+];
+
+/* define trial stimuli array for timeline variables */
+var test_stimuli = [
+  {isRed: true, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav', carDesigns: car2},
+  {isRed: true, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav', carDesigns: car3},
+  {isRed: true, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car4},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car2},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car3},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car4},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/1treno.wav',carDesigns: car2},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car1},
+  {isRed: false, correct_response: ' ', audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car1},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car3},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car4},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car2},
+  {isRed: false, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car3},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car4},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car2},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/ambulance.wav',carDesigns: car3},
+  {isRed: true, correct_response: null, audio: 'TASKS/ATTENZIONE/attenzione_crossmodale/silence.mp3',carDesigns: car4},
+];
+
+
+var pre_if = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus:
+  `<p style="font-size: 30px;line-height: 1.5;"> Adesso vedrai delle macchine di diversi modelli e colori.
+  <br>Sentirai anche il suono di un clacson e di una ambulanza.
+  <br>Ogni volta che vedrai <strong>una macchina che corrisponde A QUESTO MODELLO,</strong>
+  <br>dovrai premere la BARRA SPAZIATRICE, qualsiasi sia il colore.
+  <svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+  '<rect id="car-body" x="50" y="80" width="300" height="90" rx="50" ry="100" fill="' + trialColor + '" />' +
+  '<rect id="car-roof" x="100" y="30" width="200" height="100" rx="60" ry="100" fill="' + trialColor + '" />' +
+  '<rect x="130" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<rect x="210" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<circle cx="100" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="300" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="100" cy="165" r="25" fill="grey" />' +
+  '<circle cx="300" cy="165" r="25" fill="grey" />' +
+  '</svg>
+  <br><br><br><br><br><br>
+  <br>Ogni volta che sentirai <strong>il SUONO DI UN CLACSON</strong> dovrai premere la BARRA SPAZIATRICE.
+  <br>Quando vedrai macchine di diverso modello non dovrai fare nulla.
+  <br>Quando sentirai il suono di un'ambulanza non dovrai fare nulla.
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta_prova = 1;
+    } else{
+      var risposta_prova = 0;
+    }
+    data.risposta_prova = risposta_prova;
+  }
+};
+
+var trial_prova = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("carDesigns"),
+  trial_duration: 2500,
+  response_ends_trial: false,
+  post_trial_gap: 250,
+  on_load: function () {
+    trialColor = jsPsych.timelineVariable("isRed") ? '#FF0000' : getRandomColor();
+    changeCarColor(trialColor);
+    var context = jsPsych.pluginAPI.audioContext();
+    jsPsych.pluginAPI.getAudioBuffer(jsPsych.timelineVariable("audio"))
+      .then(function(buffer){
+        audio = context.createBufferSource();
+        audio.buffer = buffer;
+        audio.connect(context.destination);
+        audio.start(context.currentTime);
+      })
+      .catch(function(err){
+        console.error('Audio file failed to load')
+      })
+  },
+  choices: [' '],// Barra spaziatrice
+  data: {
+    task: 'response',
+    correct_response: jsPsych.timelineVariable('correct_response')
+  },
+  on_finish: function(data){
+    data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+    if (data.correct == true ) {
+      data.accuracy = true;
+  } else {
+      data.accuracy = false;
+  }
+},
+};
+
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_loop){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_loop.data = {stimulus: feedback};
+    prova_loop.stimulus = feedback_prova_stima;
+  },
+};
+
+var begin_trial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 30px;line-height: 1.5;"> Allora proseguiamo.
+  <br>Ricorda:<strong>se vedi QUESTO MODELLO o senti il SUONO DI UN CLACSON,</strong>
+  <br>premi la BARRA SPAZIATRICE, qualsiasi sia il colore.
+  <svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+  '<rect id="car-body" x="50" y="80" width="300" height="90" rx="50" ry="100" fill="' + trialColor + '" />' +
+  '<rect id="car-roof" x="100" y="30" width="200" height="100" rx="60" ry="100" fill="' + trialColor + '" />' +
+  '<rect x="130" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<rect x="210" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<circle cx="100" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="300" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="100" cy="165" r="25" fill="grey" />' +
+  '<circle cx="300" cy="165" r="25" fill="grey" />' +
+  '</svg>
+  <br><br><br><br><br><br>
+  ATTENZIONE!
+  <br>Quando vedrai macchine di diverso modello NON dovrai fare nulla.
+  <br>Quando sentirà il suono di un'ambulanza NON dovrai fare nulla.
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare']
+};
+
+var trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: jsPsych.timelineVariable("carDesigns"),
+  trial_duration: 2500,
+  response_ends_trial: false,
+  post_trial_gap: 500,
+  on_load: function () {
+    trialColor = jsPsych.timelineVariable("isRed") ? '#FF0000' : getRandomColor();
+    changeCarColor(trialColor);
+    var context = jsPsych.pluginAPI.audioContext();
+    jsPsych.pluginAPI.getAudioBuffer(jsPsych.timelineVariable("audio"))
+      .then(function(buffer){
+        audio = context.createBufferSource();
+        audio.buffer = buffer;
+        audio.connect(context.destination);
+        audio.start(context.currentTime);
+      })
+      .catch(function(err){
+        console.error('Audio file failed to load')
+      })
+  },
+  choices: [' '],// Barra spaziatrice
+  data: {
+    task: 'response',
+    correct_response: jsPsych.timelineVariable('correct_response')
+  },
+  on_finish: function(data){
+    data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_response);
+    console.log(data.correct)
+    if (data.correct == true ) {
+      punteggio++;
+  } else {
+      punteggio--;
+  }
+
+  }
+  };
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var prova_loop = {
+  timeline: [trial_prova, feedback],
+  timeline_variables: test_stimuli_prova,
+  repetitions: 1,
+  randomize_order: true
+};
+
+var trial_timeline = {
+  timeline: [trial],
+  timeline_variables: test_stimuli,
+  repetitions: 1,
+  randomize_order: true
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+var if_node = {
+    timeline: [begin_trial,trial_timeline, fullscreen_off],
+    conditional_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+        if (response_button == 0){
+            console.log("prosegui a esercizio");
+            return true;
+        } else {
+            console.log("inizia la prova");
+            jsPsych.addNodeToEndOfTimeline(loop_prova)
+            return false;
+        }
+    }
+};
+
+var begin_loop = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus:`<p style="font-size: 30px;line-height: 1.5;"> Va bene facciamo una prova!
+  <br>Ricorda:<strong>se vedi QUESTO MODELLO o senti il SUONO DI UN CLACSON,</strong>
+  <br>premi la BARRA SPAZIATRICE, qualsiasi sia il colore.
+  <svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+  '<rect id="car-body" x="50" y="80" width="300" height="90" rx="50" ry="100" fill="' + trialColor + '" />' +
+  '<rect id="car-roof" x="100" y="30" width="200" height="100" rx="60" ry="100" fill="' + trialColor + '" />' +
+  '<rect x="130" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<rect x="210" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<circle cx="100" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="300" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="100" cy="165" r="25" fill="grey" />' +
+  '<circle cx="300" cy="165" r="25" fill="grey" />' +
+  '</svg>
+  <br><br><br><br><br><br>
+  ATTENZIONE!
+  <br>Quando vedrai macchine di diverso modello NON dovrai fare nulla.
+  <br>Quando sentirà il suono di un'ambulanza NON dovrai fare nulla.
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare la prova'],
+  on_start: function(data){
+    var response_button = jsPsych.data.get().last(1).values()[0].response;
+    console.log(response_button)
+    if (response_button == 0){
+      console.log("salta loop");
+      jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+    }
+  }
+};
+
+var end_loop_prova = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5; "> Ora che hai terminato la prova, inziamo con l'esercizio.
+  <br>Ricorda:<strong>se vedi QUESTO MODELLO o senti il SUONO DI UN CLACSON,</strong>
+  <br>premi la BARRA SPAZIATRICE, qualsiasi sia il colore.
+  <svg id="car" height="200" width="400" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">' +
+  '<rect id="car-body" x="50" y="80" width="300" height="90" rx="50" ry="100" fill="' + trialColor + '" />' +
+  '<rect id="car-roof" x="100" y="30" width="200" height="100" rx="60" ry="100" fill="' + trialColor + '" />' +
+  '<rect x="130" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<rect x="210" y="45" width="60" height="50" rx="10" ry="15" fill="lightblue" />' +
+  '<circle cx="100" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="300" cy="165" r="30" fill="#000000" />' +
+  '<circle cx="100" cy="165" r="25" fill="grey" />' +
+  '<circle cx="300" cy="165" r="25" fill="grey" />' +
+  '</svg>
+  <br><br><br><br><br><br>
+  ATTENZIONE!
+  <br>Quando vedrai macchine di diverso modello NON dovrai fare nulla.
+  <br>Quando sentirà il suono di un'ambulanza NON dovrai fare nulla.
+  </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare', 'Prema qui per ripetere la prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta = 1;
+    } else{
+      var risposta = 0;
+      console.log("Termine loop prova");
+      jsPsych.addNodeToEndOfTimeline(trial_timeline);
+    }
+    data.risposta_loop = risposta
+  }
+};
+
+var loop_prova = {
+  timeline: [begin_loop, prova_loop, end_loop_prova],
+  loop_function: function(){
+    var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+    if (response_button == 1){
+      return true;
+    } else {
+
+      return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+    }
+  }
+};
+
+var timeline = [fullscreen_on, pre_if, if_node];
+
+// Run the JsPsych trial
+jsPsych.run(timeline);
+
+</script>
+</html>

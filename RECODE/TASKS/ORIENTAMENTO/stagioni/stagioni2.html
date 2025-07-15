@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIENTAMENTO_stagioni_level2</title>
+
+    <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-survey-text.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-image-button-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+
+
+    <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="jatos.js"></script>
+</head>
+
+<body>
+    <!--Livello due: Si alternano due tipi di esercizi (randomizzati all'interno della stessa sessione, si fa o uno o l'altro) che sono VESTITI e FESTIVITA’.
+
+    VESTITI: in ogni trial viene presentato un vestito, e bisogna collocarlo nella sua stagione corrispondente (scegliete voi la modalità, scelta multipla o altro che vi venga comodo).
+    Ad ogni esercizio 5 trial, due punti per esercizio, per un totale di 10 punti. Scegliete vestiti abbastanza prototipici (guanti, cuffia, costume, camicia, impermeabile, gonna…).
+
+    FESTIVITA’: uguale a prima, ma al posto dei vestiti il nome di una festività. Ecco la lista delle festività da proporre: natale, capodanno, ferragosto, halloween, immacolata, pasqua,
+    carnevale, ognissanti, santo stefano, epifania, festa dei lavoratori, festa della liberazione, festa della repubblica.
+    -->
+</body>
+<script>
+
+    // inizializzazione di jsPsych secondo le modalità della versione 7.2
+
+    var jsPsych = initJsPsych({
+        use_webaudio: false,
+        on_finish: function () {
+            //jsPsych.data.displayData();
+
+            //Codice necessario per aggiornare la BatchSession con i punteggi ottenuti nell'esercizio e proseguire nell'esperimento
+
+            var feed;
+              if(punteggio >= 4){
+                    var feed = 1;
+                } else {
+                    var feed = -1;
+                }
+                var punteggio_dec = punteggio*10/5;
+            jatos.studySessionData = feed;
+            var orientamento = Number(sessionStorage.getItem('orientamento'))+feed;
+            var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'))+1;
+            var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'))+punteggio_dec;
+            sessionStorage.setItem('punteggio_finale_orientamento', punteggio_finale_orientamento);
+            if (orientamento < 0) {orientamento = 0}
+            if (orientamento > 2) {orientamento = 2}
+            if (counter_orientamento > 3) {counter_orientamento = 3}
+            sessionStorage.setItem('orientamento', orientamento);
+            sessionStorage.setItem('counter_orientamento', counter_orientamento);
+            var Data = {feed: feed, type: 'ORIENTAMENTO_stagioni_level2', cresp: punteggio_dec};
+            jatos.startComponentByPos(4,Data); //PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos // */
+        }
+    });
+
+
+    var preload = {
+        type: jsPsychPreload,
+        auto_preload: true
+    };
+
+    var clothes_array = [
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/autumn1.png', season1: 'autumn', season2: 'spring' },
+    /*{ clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/autumn2.png', season1: 'autumn', season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/autumn3.png', season1: 'autumn', season2: null },
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/autumn4.png', season1: 'autumn' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/autumn5.png', season1: 'autumn' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/autumn6.png', season1: 'autumn' ,season2: null},*/
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/spring1.png', season1: 'spring' ,season2: 'summer'},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/spring2.png', season1: 'spring' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/spring3.png', season1: 'spring' ,season2: 'autumn'},
+    /*{ clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/spring4.png', season1: 'spring' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/spring5.png', season1: 'spring' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/spring6.png', season1: 'spring' ,season2: null},*/
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer1.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer2.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer3.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer4.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer5.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer6.png', season1: 'summer' ,season2: 'spring'},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer7.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer8.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer9.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer10.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer11.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer12.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer13.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer14.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/summer15.png', season1: 'summer' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter1.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter2.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter3.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter4.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter5.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter6.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter7.png', season1: 'winter' ,season2: 'autumn'},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter8.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter9.png', season1: 'winter' ,season2: null},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter10.png', season1: 'winter' ,season2: 'autumn'},
+    { clothes: './TASKS/ORIENTAMENTO/stagioni/img/clothes/winter11.png', season1: 'winter' ,season2: null}
+];
+
+    var clothes = jsPsych.randomization.shuffle(clothes_array)
+
+    var feasts_array = [
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/autumn1.jpg', season: 'autumn' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/autumn2.jpg', season: 'autumn' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/autumn3.jpg', season: 'autumn' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/autumn4.jpg', season: 'autumn' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/autumn5.jpg', season: 'autumn' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/spring1.jpg', season: 'spring' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/spring2.jpg', season: 'spring' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/spring3.jpg', season: 'spring' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/spring4.jpg', season: 'spring' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/spring5.jpg', season: 'spring' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/summer1.jpg', season: 'summer' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/summer2.jpg', season: 'summer' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/summer3.jpg', season: 'summer' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/summer4.jpg', season: 'summer' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/summer5.jpg', season: 'summer' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/winter1.jpg', season: 'winter' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/winter2.jpg', season: 'winter' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/winter3.jpg', season: 'winter' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/winter4.jpg', season: 'winter' },
+        { feast: './TASKS/ORIENTAMENTO/stagioni/img/festività/winter5.jpg', season: 'winter' }
+    ];
+    var feasts = jsPsych.randomization.shuffle(feasts_array)
+    var punteggio = 0
+
+    var pre_if_clothes = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style='font-size:34px;line-height: 1.5;'> Adesso vedrà dei vestiti che si indossano in diverse stagioni.<br>
+        <br>Scelga qual è la stagione corretta per indossare ogni indumento. </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare', 'Prema qui per fare una prova'],
+        on_finish: function (data) {
+            if (data.response == 1) {
+                var risposta_prova = 1;
+            } else {
+                var risposta_prova = 0;
+            }
+            data.risposta_prova = risposta_prova
+        }
+    };
+
+    var pre_if_feasts = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style='font-size:34px;line-height: 1.5;'> Adesso vedrà delle immagini che rappresentano diverse festività. <br>
+        Indichi in quale stagione si celebra ogni festività. <strong> </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare', 'Prema qui per fare una prova'],
+        on_finish: function (data) {
+            if (data.response == 1) {
+                var risposta_prova = 1;
+            } else {
+                var risposta_prova = 0;
+            }
+            data.risposta_prova = risposta_prova
+        }
+    };
+
+
+
+    var prova_loop_clothes = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + clothes[0].clothes + '',
+        stimulus_height: 300,
+        choices:['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == clothes[0].season1 || risposta == clothes[0].season2) {
+                var accuracy = 1;
+            } else {
+                var accuracy = 0;
+            }
+            data.accuracy = accuracy;
+            console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var feasts_prova_if = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[0].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[0].season) {
+                var accuracy = 1;
+            } else {
+                var accuracy = 0;
+            }
+            data.accuracy = accuracy;
+            console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var prova_loop_feasts = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[0].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[0].season) {
+                var accuracy = 1;
+            } else {
+                var accuracy = 0;
+            }
+            data.accuracy = accuracy;
+            console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var feedback = {
+        type: jsPsychHtmlKeyboardResponse,
+        choices: "NO_KEYS",
+        trial_duration: 1500,
+        data: "",
+        stimulus: "",
+        on_start: function (prova_loop) {
+            var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+            if (last_response_accuracy == true) {
+                var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+                console.log("Corretto")
+            } else {
+                var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+                console.log("Sbagliato")
+            };
+            var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback + "</b></div>";
+            prova_loop.data = { stimulus: feedback };
+            prova_loop.stimulus = feedback_prova_stima;
+        },
+
+    };
+
+    var begin_trial_clothes = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+             Adesso vedrà dei vestiti che si indossano in diverse stagioni.<br>
+            <br>Scelga qual è la stagione corretta per indossare ogni indumento. </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare']
+    };
+
+    var begin_trial_feasts = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+            Adesso vedrà delle immagini che rappresentano diverse festività. <br>
+             Indichi in quale stagione si celebra ogni festività. <strong> </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare']
+    };
+
+    var trial1_clothes = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + clothes[1].clothes + '',
+        stimulus_height: 300,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == clothes[1].season1 || risposta == clothes[1].season2) {
+                punteggio++;
+                console.log('risposta corretta', punteggio)
+            } else {
+              console.log('risposta sbagliata', punteggio)
+            }
+
+            console.log("RISPOSTA: " + risposta + "")
+
+        }
+    };
+
+    var trial2_clothes = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + clothes[2].clothes + '',
+        stimulus_height: 300,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == clothes[2].season1 || risposta == clothes[2].season2) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial3_clothes = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + clothes[3].clothes + '',
+        stimulus_height: 300,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == clothes[3].season) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+
+        }
+    };
+
+    var trial4_clothes = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + clothes[4].clothes + '',
+        stimulus_height: 300,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == clothes[4].season1 || risposta == clothes[4].season2) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial5_clothes = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + clothes[5].clothes + '',
+        stimulus_height: 300,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == clothes[5].season1 || risposta == clothes[5].season2) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial1_feasts = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[1].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[1].season) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial2_feasts = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[2].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[2].season) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial3_feasts = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[3].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[3].season) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial4_feasts = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[4].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[4].season) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+    var trial5_feasts = {
+        type: jsPsychImageButtonResponse,
+        stimulus: '' + feasts[5].feast + '',
+        stimulus_height: 600,
+        choices: ['Primavera', 'Estate', 'Autunno', 'Inverno'],
+        prompt: "<p>Scelga la stagione tra le alternative cliccando sulla casella corrispondente</p>",
+        on_finish: function (data) {
+            if (data.response == 0) {
+                var risposta = 'spring';
+            } if (data.response == 1) {
+                var risposta = 'summer';
+            } if (data.response == 2) {
+                var risposta = 'autumn';
+            } if (data.response == 3) {
+                var risposta = 'winter';
+            };
+            if (risposta == feasts[5].season) {
+              punteggio++;
+              console.log('risposta corretta', punteggio)
+          } else {
+            console.log('risposta sbagliata', punteggio)
+          }
+
+          console.log("RISPOSTA: " + risposta + "")
+        }
+    };
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var trial_clothes = {
+    timeline: [trial1_clothes, trial2_clothes, trial3_clothes, trial4_clothes, trial5_clothes]
+};
+
+var trial_feasts = {
+    timeline: [trial1_feasts, trial2_feasts, trial3_feasts, trial4_feasts, trial5_feasts]
+};
+
+
+    var if_node_clothes = {
+        timeline: [begin_trial_clothes, trial_clothes],
+        conditional_function: function(){
+            var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+            if (response_button == 0){
+                console.log("prosegui a esercizio");
+                return true;
+            } else {
+                console.log("inizia la prova");
+                jsPsych.addNodeToEndOfTimeline(loop_prova_clothes)
+                return false;
+            }
+        }
+    };
+
+    var if_node_feasts = {
+        timeline: [begin_trial_feasts,trial_feasts],
+        conditional_function: function(){
+            var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+            if (response_button == 0){
+                console.log("prosegui a esercizio");
+                return true;
+            } else {
+                console.log("inizia la prova");
+                jsPsych.addNodeToEndOfTimeline(loop_prova_feasts)
+                return false;
+            }
+        }
+    };
+
+    var begin_loop_clothes = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br> Adesso vedrà le immagini di alcuni vestiti.<br>
+            <br> <br> <strong>Scelga qual è la stagione adatta per indossare ogni indumento secondo lei.</strong></p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare la prova'],
+        on_start: function(data){
+            var response_button = jsPsych.data.get().last(1).values()[0].response;
+            console.log(response_button)
+            if (response_button == 0){
+                console.log("salta loop");
+                jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+            }
+        }
+    };
+
+    var begin_loop_feasts = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br>
+         Indichi in quale stagione si celebra ogni festività. <strong> </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare la prova'],
+        on_start: function(data){
+            var response_button = jsPsych.data.get().last(1).values()[0].response;
+            console.log(response_button)
+            if (response_button == 0){
+                console.log("salta loop");
+                jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+            }
+        }
+    };
+
+    var end_loop_prova_clothes = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br> <br>
+            Adesso vedrà le foto di alcuni vestiti.<br>
+            <br> <strong> Scelga qual è la stagione adatta ad indossare ciascun indumento secondo lei. </strong></p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per proseguire', 'Prema qui per ripetere la prova'],
+        on_finish: function(data){
+            if(data.response == 1){
+                var risposta = 1;
+            } else{
+                var risposta = 0;
+                console.log("Termine loop prova");
+                jsPsych.addNodeToEndOfTimeline(trial_clothes);
+            }
+            data.risposta_loop = risposta
+        }
+    };
+
+    var end_loop_prova_feasts = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br>
+             <br> Adesso vedrà delle foto che rappresentano diverse festività. <br> <br> <strong> Indichi in quale stagione si celebra ciascuna festività </strong></p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per proseguire', 'Prema qui per ripetere la prova'],
+        on_finish: function(data){
+            if(data.response == 1){
+                var risposta = 1;
+            } else{
+                var risposta = 0;
+                console.log("Termine loop prova");
+                jsPsych.addNodeToEndOfTimeline(trial_feasts);
+            }
+            data.risposta_loop = risposta
+        }
+    };
+
+    var loop_prova_clothes = {
+        timeline: [begin_loop_clothes, prova_loop_clothes, feedback, end_loop_prova_clothes],
+        loop_function: function(){
+            var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+             if (response_button == 1){
+                return true;
+            } else {
+                return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+            }
+        }
+    };
+
+    var loop_prova_feasts = {
+        timeline: [begin_loop_feasts, prova_loop_feasts, feedback, end_loop_prova_feasts],
+        loop_function: function(){
+            var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+             if (response_button == 1){
+                return true;
+            } else {
+                return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+            }
+        }
+    };
+
+
+    /*let num = [1,2];
+    let y = jsPsych.randomization.shuffle(num);
+    if (y[1] == 2){
+        var timeline = [pre_if_clothes,pre_if_clothes, if_node_clothes];
+        console.log("La condizione dell'esperimento sarà clothes'");
+    } else if (y[1] == 1){
+        var timeline = [pre_if_feasts,pre_if_feasts, if_node_feasts];
+        console.log("La condizione dell'esperimento sarà feasts");
+    };*/
+
+    var timeline = [pre_if_clothes,pre_if_clothes, if_node_clothes];
+    jsPsych.run(timeline) //non è stato possibile inserire la variabile PRELOAD perché altrimenti dà errore "Trial level node is missing the "type" parameter. The parameters for the node are: {}"
+    </script>
+    </html>

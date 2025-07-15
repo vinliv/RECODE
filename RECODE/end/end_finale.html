@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BENVENUTO</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="jatos.js"></script>
+  <script src="./end/emoji.js"></script>
+</head>
+<style>
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+}
+
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+.button {background-color: #4CAF50;} /* Green */
+</style>
+<body>
+  <div id='logo_unipd' style="text-align:center">
+    <img src="./intro/university_logo.png" alt='logo_unipd' height="120pt">
+  </div>
+
+  <div id='instructions'>
+    <h2 style="text-align:center">Clicca sull'immagine sotto per ascoltare il messaggio.</h2>
+  </div>
+
+  <div id="image_avatar" style="text-align:center">
+    <!-- Your existing code for image and audio -->
+    <a onclick="playSound('sound','maria');">
+      <audio id="sound">
+        <source src="./end/end.m4a">
+      </audio>
+      <img id="maria" src="./end/maria.png" height="300pt">
+    </a>
+    <!-- End of existing code -->
+    <h1 class="content is-center" id="total"></h1>
+    <div id="emoji-div" style="text-align:center"></div>
+    <h3 class="content is-center" id="partial"></h3>
+  </div>
+
+  <div id="footer" style="text-align: center;">
+    <p style='font-size:20px; color:black;'>_______________________________________________________________________________________________________________________________</p>
+    <h2 style='font-size:20px; color:black;'>Come si sente? Lo scriva qua sotto e poi prema il bottone in basso per completare.</h2>
+    <br>
+    <textarea id="user_feels" rows="3" cols="100" maxlength="500" placeholder="scriva qui..."></textarea>
+    <p style='font-size:20px; color:black;'>_______________________________________________________________________________________________________________________________</p>
+    <button class="button button" onclick="endFunction()">TERMINA LA SESSIONE</button>
+  </div>
+
+<script>
+// JavaScript code here
+var attenzione = Number(sessionStorage.getItem('attenzione'));
+var linguaggio = Number(sessionStorage.getItem('linguaggio'));
+var memoria_visiva = Number(sessionStorage.getItem('memoria_visiva'));
+var memoria_lavoro = Number(sessionStorage.getItem('memoria_lavoro'));
+var funzioni_esecutive = Number(sessionStorage.getItem('funzioni_esecutive'));
+var orientamento = Number(sessionStorage.getItem('orientamento'));
+
+var level_attenzione = Number(sessionStorage.getItem('level_attenzione'));
+var level_linguaggio = Number(sessionStorage.getItem('level_linguaggio'));
+var level_memoria_visiva = Number(sessionStorage.getItem('level_memoria_visiva'));
+var level_memoria_lavoro = Number(sessionStorage.getItem('level_level_memoria_lavoro'));
+var level_funzioni_esecutive = Number(sessionStorage.getItem('level_funzioni_esecutive'));
+var level_orientamento = Number(sessionStorage.getItem('level_orientamento'));
+
+var counter_attenzione = Number(sessionStorage.getItem('counter_attenzione'));
+var counter_linguaggio = Number(sessionStorage.getItem('counter_linguaggio'));
+var counter_memoria_visiva = Number(sessionStorage.getItem('counter_memoria_visiva'));
+var counter_memoria_lavoro = Number(sessionStorage.getItem('counter_memoria_lavoro'));
+var counter_funzioni_esecutive = Number(sessionStorage.getItem('counter_funzioni_esecutive'));
+var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'));
+
+var punteggio_finale_attenzione= Number(sessionStorage.getItem('punteggio_finale_attenzione'));
+var punteggio_finale_linguaggio= Number(sessionStorage.getItem('punteggio_finale_linguaggio'));
+var punteggio_finale_memoria_visiva= Number(sessionStorage.getItem('punteggio_finale_memoria_visiva'));
+var punteggio_finale_memoria_lavoro= Number(sessionStorage.getItem('punteggio_finale_memoria_lavoro'));
+var punteggio_finale_funzioni_esecutive= Number(sessionStorage.getItem('punteggio_finale_funzioni_esecutive'));
+var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'));
+
+
+var score = 0;
+score = (punteggio_finale_attenzione + punteggio_finale_linguaggio + punteggio_finale_memoria_visiva + punteggio_finale_memoria_lavoro + punteggio_finale_funzioni_esecutive + punteggio_finale_orientamento)*10/120;
+
+document.getElementById("total").innerHTML = ["Il punteggio totale ottenuto è: " + score.toFixed() + ' su 10 '];
+document.getElementById("partial").innerHTML =
+[
+  'Attenzione: ' + (punteggio_finale_attenzione * 10 / 20).toFixed() + ' su 10 | ' +
+  'Linguaggio: ' + (punteggio_finale_linguaggio * 10 / 20).toFixed() + ' su 10 | ' +
+  'Memoria Visiva: ' + (punteggio_finale_memoria_visiva * 10 / 20).toFixed() + ' su 10 | ' +
+  'Memoria di Lavoro: ' + (punteggio_finale_memoria_lavoro * 10 / 20).toFixed() + ' su 10 | '+
+  'Funzioni Esecutive: ' + (punteggio_finale_funzioni_esecutive * 10 / 20).toFixed() + ' su 10 | '+
+  'Orientamento: ' + (punteggio_finale_orientamento * 10 / 20).toFixed() + ' su 10'
+]
+
+function endFunction() {
+  // Function to save user_feels data
+  var user_feedback = document.getElementById("user_feels").value ;
+  localStorage.setItem("user_feels", user_feedback) ;
+  var data = {
+    attenzione: attenzione,
+    counter_attenzione: counter_attenzione,
+    punteggio_finale_attenzione:punteggio_finale_attenzione,
+    linguaggio: linguaggio,
+    counter_linguaggio: counter_linguaggio,
+    punteggio_finale_linguaggio:punteggio_finale_linguaggio,
+    memoria_visiva: memoria_visiva,
+    counter_memoria_visiva: counter_memoria_visiva,
+    punteggio_finale_memoria_visiva:punteggio_finale_memoria_visiva,
+    memoria_lavoro: memoria_lavoro,
+    counter_memoria_lavoro: counter_memoria_lavoro,
+    punteggio_finale_memoria_lavoro:punteggio_finale_memoria_lavoro,
+    funzioni_esecutive: funzioni_esecutive,
+    counter_funzioni_esecutive: counter_funzioni_esecutive,
+    punteggio_finale_funzioni_esecutive:punteggio_finale_funzioni_esecutive,
+    orientamento: orientamento,
+    counter_orientamento: counter_orientamento,
+    punteggio_finale_orientamento:punteggio_finale_orientamento,
+  };
+  jatos.batchSession.set("level_attenzione", attenzione)
+  .then(() => jatos.batchSession.set("level_linguaggio", linguaggio))
+  .then(() => jatos.batchSession.set("level_memoria_visiva", memoria_visiva))
+  .then(() => jatos.batchSession.set("level_memoria_lavoro", memoria_lavoro))
+  .then(() => jatos.batchSession.set("level_funzioni_esecutive", funzioni_esecutive))
+  .then(() => jatos.batchSession.set("level_orientamento", orientamento))
+
+
+  let arr = [data];
+
+  function arrayToCSV(objArray) {
+    const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+    let str = `${Object.keys(array[0]).map(value => `"${value}"`).join(",")}` + '\r\n';
+
+    return array.reduce((str, next) => {
+      str += `${Object.values(next).map(value => `"${value}"`).join(",")}` + '\r\n';
+      return str;
+    }, str);
+  }
+
+  csv = arrayToCSV(arr);
+  var day = new Date();
+  var gg, mm, aaaa;
+  gg = day.getDate() + "-";
+  mm = day.getMonth() + 1 + "-";
+  aaaa = day.getFullYear();
+  jatos.uploadResultFile(csv, "data_file_" + gg + mm + aaaa + ".csv")
+  .then(() => console.log("File was successfully uploaded"))
+  .catch(() => console.log("File upload failed"));
+
+  jatos.endStudy(data, true, JSON.stringify(data));
+}
+</script>
+<script>
+function playSound(sound,image){
+  var myAudio = document.getElementById(sound);
+  var myGif = document.getElementById(image);
+  if (myAudio.paused) {
+    myAudio.play();
+    myGif.src="end/maria.gif";
+    myAudio.addEventListener("ended", function stopGif(){
+      myAudio.currentTime = 0;
+      myGif.src="end/maria.png";
+    });
+  }
+  else{
+    myAudio.pause();
+    myGif.src="end/maria.png";
+    myAudio.removeEventListener("ended", function stopGif(){
+      myAudio.currentTime = 0;
+      myGif.src="end/maria.png";
+    });
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEMORIA DI LAVORO Operazioni LIV.1 </title>
+  <head>
+
+    <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-free-sort.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+
+    <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="jatos.js"></script>
+  <style>
+    body {
+      background-color: white;
+    }
+  </style>
+
+  </head>
+
+  <body>
+    <script type='text/javascript'>
+
+
+var jsPsych = initJsPsych({
+  use_webaudio: false,
+  on_finish: function() {
+      /*jsPsych.data.displayData();*/
+
+      var feed;
+      if(punteggio >= 4){
+          var feed = 1;
+      } else {
+          var feed = -1;
+      }
+      var  punteggio_dec = punteggio*10/5;
+      jatos.studySessionData = feed;
+      var memoria_lavoro = Number(sessionStorage.getItem('memoria_lavoro'))+feed;
+      var counter_memoria_lavoro = Number(sessionStorage.getItem('counter_memoria_lavoro'))+1;
+      var punteggio_finale_memoria_lavoro= Number(sessionStorage.getItem('punteggio_finale_memoria_lavoro'))+punteggio_dec;
+      sessionStorage.setItem('punteggio_finale_memoria_lavoro', punteggio_finale_memoria_lavoro);
+      if (memoria_lavoro < 0) {memoria_lavoro = 0}
+      if (memoria_lavoro > 2) {memoria_lavoro = 2}
+      if (counter_memoria_lavoro > 3) {counter_memoria_lavoro = 3}
+      sessionStorage.setItem('memoria_lavoro', memoria_lavoro);
+      sessionStorage.setItem('counter_memoria_lavoro', counter_memoria_lavoro);
+      var Data = {feed: feed, type: 'MEMORIA_LAVORO_operazioni_level1', cresp: punteggio_dec};
+      jatos.startComponentByPos(4,Data); //PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+  }
+});
+
+  let target = Math.floor(Math.random() * 20);
+  let notarget1 = Math.floor(Math.random() * 20);
+  let notarget2  = Math.floor(Math.random() * 20);
+
+  function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+  }
+
+
+  let valueNumber = [0,1,2,3,4,5,6,7,8,9,10];
+  let valueLetter = ["a","b","c","d","e","f","g","h","i","j","k"];
+  shuffle(valueNumber);
+  shuffle(valueLetter);
+  punteggio = 0
+
+  var preload = {
+    type: jsPsychPreload,
+    auto_preload: true
+  };
+
+  var pre_if = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora le verrà presentata un'operazione matematica tramite delle immagini. <br>
+        Le verranno poi date delle opzioni e lei dovrà indicare quali di queste rappresentino l'operazione matematica richiesta. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per procedere al compito', 'Premi qui per fare una prova'],
+    on_finish: function(data){
+        if(data.response == 1){
+            var risposta_prova = 1;
+        } else{
+            var risposta_prova = 0;
+        }
+        data.risposta_prova = risposta_prova
+    }
+  };
+
+  var prova_loop = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+     <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_${valueNumber[0]}.png"  height="350"> </p>`,
+    choices: ["", "", ""],
+    prompt: `<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html: [
+        `<button class="jspsych-btn" style="height:148px; width:140px;  font-size: 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_${valueNumber[0]}.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>`,
+        `<button class="jspsych-btn" style="height:148px; width:140px;  font-size: 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_${valueNumber[1]}.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>`,
+        `<button class="jspsych-btn" style="height:148px; width:140px; font-size: 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_${valueNumber[2]}.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>`
+    ],
+    randomize_choices_order: 1,
+    on_finish: function (data) {
+        data.correct = data.response == 0; // Simplify the accuracy assignment
+        console.log(data.correct);
+    }
+};
+
+var feedback = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "NO_KEYS",
+    trial_duration: 1500,
+    data: {},
+    stimulus: "",
+    on_start: function (trial) {
+        var lastResponseAccuracy = jsPsych.data.getLastTrialData().values()[0].correct;
+        var feedbackImage = lastResponseAccuracy ? 'feedback/img/corretto.png' : 'feedback/img/sbagliato.png';
+        trial.stimulus = `<img src='${feedbackImage}' width='300'></img>`;
+        console.log(lastResponseAccuracy ? 'Corretto' : 'Sbagliato');
+    }
+};
+
+  var begin_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con il vero esercizio. <br>
+      Ora le verrà presentata un'operazione matematica tramite delle immagini. <br>
+      Le verranno poi date delle opzioni e lei dovrà indicare quali di queste rappresentino l'operazione matematica richiesta.  </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare']
+  };
+
+  var img1 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[1]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:[
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[3]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[4]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+    randomize_choices_order: 1,
+    on_finish: function(data) {
+      if (data.response == 1){
+        punteggio++
+        console.log("punteggio", punteggio)
+      } else {
+
+        console.log("punteggio", punteggio)
+      }
+
+    }
+  };
+
+  var img2 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[2]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[5]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[6]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 2){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img3 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[3]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[7]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[8]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[3]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 2){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img4 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[4]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[9]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[10]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[4]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 2){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img5 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[5]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[0]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[5]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 1){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img6 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[6]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:[
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[6]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[3]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 0){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+ var img7 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[7]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:[  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[7]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+      '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[4]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[5]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 0){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img8 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[8]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[6]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[8]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[7]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 1){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img9 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[9]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:[
+      '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[10]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[9]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[0]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 1){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+  };
+
+  var img10 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+    <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+    <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueNumber[10]+`.png"  height="350"> </p>`,
+    choices: "NO_KEYS",
+    choices:["", "", ""],
+    prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+    button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+    '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueNumber[10]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 2){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+};
+var img11 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[1]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:[
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[3]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[4]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+  randomize_choices_order: 1,
+  on_finish: function(data) {
+    if (data.response == 1){
+      punteggio++
+      console.log("punteggio", punteggio)
+    } else {
+
+      console.log("punteggio", punteggio)
+    }
+
+  }
+};
+
+var img12 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[2]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[5]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[6]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 2){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img13 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[3]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[7]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[8]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[3]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 2){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img14 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[4]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[9]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[10]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[4]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 2){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img15 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[5]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[0]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[5]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 1){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img16 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[6]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:[
+'<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[6]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+'<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+'<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[3]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 0){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img17 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[7]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:[  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[7]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[4]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[5]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 0){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img18 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[8]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[6]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[8]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[7]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 1){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img19 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[9]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:[
+    '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[10]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[9]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',//corretto
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[0]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 1){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img20 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[10]+`.png"  height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:['<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[10]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 2){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+
+var img21 = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 24px; font-weight: bold;"> Sullo schermo compariranno due griglie con dei quadratini colorati: </p>
+  <p style="font-size: 24px; font-weight: bold;">  ciò che deve fare è sommare i quadratini colorati e indicare la risposta corretta.</p>
+  <img src="./TASKS/MEMORIA_LAVORO/operazioni/img/somma_`+valueLetter[0]+`.png" height="350"> </p>`,
+  choices: "NO_KEYS",
+  choices:["", "", ""],
+  prompt:`<p style="font-size: 24px;">Premi sulla figura che corrisponde alla somma delle due figure in alto</p>`,
+  button_html:[
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[2]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px;  font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[1]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>',
+  '<button class="jspsych-btn" style = "height:148px; width:140px; font-size : 24px; background: url(TASKS/MEMORIA_LAVORO/operazioni/img/risultato_'+valueLetter[0]+'.png); background-size: contain; background-repeat: no-repeat; background-position: center;">%choice%</button>'],//corretto
+randomize_choices_order: 1,
+on_finish: function(data) {
+  if (data.response == 2){
+    punteggio++
+    console.log("punteggio", punteggio)
+  } else {
+
+    console.log("punteggio", punteggio)
+  }
+
+}
+};
+var sample_trials = jsPsych.randomization.sampleWithoutReplacement([
+  img1, img2, img3, img4, img5,
+  img6, img7, img8, img9, img10,
+  img11, img12, img13, img14, img15,
+  img16, img17, img18, img19, img20, img21
+],5);
+var trial_timeline = {
+    timeline: sample_trials
+    };
+var if_node = {
+    timeline: [begin_trial,trial_timeline],
+    conditional_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+        if (response_button == 0){
+            console.log("prosegui a esercizio");
+            return true;
+        } else {
+            console.log("inizia la prova");
+            jsPsych.addNodeToEndOfTimeline(loop_prova)
+            return false;
+        }
+    }
+};
+
+var begin_loop = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br>
+      Ora le verrà presentata un'operazione matematica tramite delle immagini. <br>
+      Le verranno poi date delle opzioni e lei dovrà indicare quali di queste rappresentino l'operazione matematica richiesta. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare la prova'],
+    on_start: function(data){
+        var response_button = jsPsych.data.get().last(1).values()[0].response;
+        console.log(response_button)
+        if (response_button == 0){
+            console.log("salta loop");
+            jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+        }
+    }
+};
+
+var end_loop_prova = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con il vero esercizio. <br>
+      Ora le verrà presentata un'operazione matematica tramite delle immagini. <br>
+      Le verranno poi date delle opzioni e lei dovrà indicare quali di queste rappresentino l'operazione matematica richiesta.  </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per proseguire', 'Premi qui per ripetere la prova'],
+    on_finish: function(data){
+        if(data.response == 1){
+            var risposta = 1;
+        } else{
+            var risposta = 0;
+            console.log("Termine loop prova");
+            jsPsych.addNodeToEndOfTimeline(trial_timeline);
+        }
+        data.risposta_loop = risposta
+    }
+};
+
+var loop_prova = {
+    timeline: [begin_loop, prova_loop, feedback, end_loop_prova],
+    loop_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+        if (response_button == 1){
+            return true;
+        } else {
+            return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+        }
+    }
+};
+
+var timeline = [pre_if, if_node]
+jsPsych.run(timeline)
+
+</script>
+</html>

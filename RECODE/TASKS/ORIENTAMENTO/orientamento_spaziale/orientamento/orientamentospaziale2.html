@@ -1,0 +1,353 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>orientamento DENOMINAZIONE LIV.1 </title>
+  <meta charset="UTF-8">
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-html-form.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="jatos.js"></script>
+  <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <style>
+    body {
+      background-color: white;
+    }
+  </style>
+
+
+</body>
+
+<script type='text/javascript'>
+
+  var jsPsych = initJsPsych({
+    use_webaudio: false,
+    on_finish: function () {
+      /*jsPsych.data.displayData();*/
+      var feed;
+      if(punteggio >=4){
+        feed = 1;
+      } else {
+        feed = -1;
+      }
+      var punteggio_dec = punteggio*10/5;
+      jatos.studySessionData = feed;
+      var orientamento = Number(sessionStorage.getItem('orientamento'))+feed;
+      var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'))+1;
+      var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'))+punteggio_dec;
+      sessionStorage.setItem('punteggio_finale_orientamento', punteggio_finale_orientamento);
+      if (orientamento < 0) {orientamento = 0}
+      if (orientamento > 2) {orientamento = 2}
+      if (counter_orientamento > 3) {counter_orientamento = 3}
+      sessionStorage.setItem('orientamento', orientamento);
+      sessionStorage.setItem('counter_orientamento', counter_orientamento);
+      var Data = { feed: feed, type: 'ORIENTAMENTO_orientamento_spaziale2', cresp: punteggio_dec };
+      jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+    }
+  });
+
+  var preload_images = {
+    type: jsPsychPreload,
+    auto_preload: true,
+    show_detailed_errors: true
+  };
+
+  var imgs = [
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/torino.PNG', name: 'torino' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/milano.PNG', name: 'milano' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/aosta.PNG', name: 'aosta' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/genova.PNG', name: 'genova' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/firenze.PNG', name: 'firenze' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/roma.PNG', name: 'roma' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/napoli.PNG', name: 'napoli' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/catanzaro.PNG', name: 'catanzaro' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/palermo.PNG', name: 'palermo' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/cagliari.PNG', name: 'cagliari' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/trento.PNG', name: 'trento' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/venezia.PNG', name: 'venezia' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/trieste.PNG', name: 'trieste' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/ancona.PNG', name: 'ancona' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/perugia.PNG', name: 'perugia' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/laquila.PNG', name: "l'aquila" },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/campobasso.PNG', name: 'campobasso' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/bari.PNG', name: 'bari' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/bologna.PNG', name: 'bologna' },
+      { image: './TASKS/ORIENTAMENTO/orientamento_spaziale/orientamento/img2/potenza.PNG', name: 'potenza' }
+  ];
+
+  var images = jsPsych.randomization.shuffle(imgs);
+
+
+  var pre_if = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus:'<p style="font-size: 24px; line-height: 1.5;"><p style="font-size: 24px; line-height: 1.5;">Adesso le verrà presentata la cartina italiana.</p>'+
+      '<p style="font-size: 24px; line-height: 1.5;">Dovrà indovinare il CAPOLUOGO della regione indicata dalla freccia, scrivendo il nome corrispondente nello spazio apposito. </p>'+
+    '<p style="font-size: 24px; line-height: 1.5;">Se non ricorda il nome lasci lo spazio vuoto e vada avanti.</p>',
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per iniziare', 'Prema qui per fare una prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta_prova = 1;
+      } else {
+        var risposta_prova = 0;
+      }
+      data.risposta_prova = risposta_prova
+    }
+  };
+
+  var prova_loop = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: `<p> <img src="` + images[15].image + `" height="400pt"> </p>
+     <p style="font-size: 34px; line-height: 1.5;"> Qual è il capoluogo di questa regione? scriva il nome nella casella sottostante </p>` ,
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: true,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[15] && images[15].name) ? images[15].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+      var accuracy = true;
+        console.log('Risposta corretta');
+      } else {
+        var accuracy = false;
+        console.log('Risposta sbagliata');
+      }
+      data.accuracy = accuracy;
+    }
+  };
+
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_loop){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_loop.data = {stimulus: feedback};
+    prova_loop.stimulus = feedback_prova_stima;
+  },
+};
+
+  var begin_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+     Adesso le verrà mostrata una cartina dell'Italia. <br> <strong> Scriva il capoluogo della regione indicata dalla freccia nello spazio apposito.
+    <br> <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti.</p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per iniziare']
+  };
+
+
+  // ELENCO 10 TRIALS //////////////////////////////////////////////////////////////////
+
+  let punteggio = 0;
+  var one = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[0].image + '" height="400pt"> </p> <p style="font-size: 34px; line-height: 1.5;"> Qual è il capoluogo di questa regione? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[0] && images[0].name) ? images[0].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+  var two = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[1].image + '" height="400pt"> </p> <p style="font-size: 34px; line-height: 1.5;"> Qual è il capoluogo di questa regione? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[1] && images[1].name) ? images[1].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var three = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[2].image + '" height="400pt"> </p> <p style="font-size: 34px; line-height: 1.5;"> Qual è il capoluogo di questa regione? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[2] && images[2].name) ? images[2].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var four = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[3].image + '" height="400pt"> </p> <p style="font-size: 34px; line-height: 1.5;"> Qual è il capoluogo di questa regione? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[3] && images[3].name) ? images[3].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var five = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[4].image + '" height="400pt"> </p> <p style="font-size: 34px; line-height: 1.5;"> Qual è il capoluogo di questa regione? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[4] && images[4].name) ? images[4].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var trial_timeline = {
+    timeline: [one, two, three, four, five]
+  };
+
+  ////////////////////////////////////////////////////////////////////////
+
+  var if_node = {
+    timeline: [begin_trial, trial_timeline],
+    conditional_function: function () {
+      var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+      if (response_button == 0) {
+        console.log("prosegui a esercizio");
+        return true;
+      } else {
+        console.log("inizia la prova");
+        jsPsych.addNodeToEndOfTimeline(loop_prova)
+        return false;
+      }
+    }
+  };
+
+  var begin_loop = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; line-height: 1.5;"> Va bene facciamo una prova! <br>
+     Adesso le verrà mostrata una cartina dell'Italia. <br> <strong> Scriva il capoluogo della regione indicata dalla freccia nello spazio apposito.
+    <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti.</p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per iniziare la prova'],
+    on_start: function (data) {
+      var response_button = jsPsych.data.get().last(1).values()[0].response;
+      console.log(response_button)
+      if (response_button == 0) {
+        console.log("salta loop");
+        jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+      }
+    }
+  };
+
+  var end_loop_prova = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br>  Adesso le verrà mostrata una cartina dell'Italia. <br> Scriva il capoluogo della regione indicata dalla freccia nello spazio apposito.
+    <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per iniziare', 'Prema qui per ripetere la prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta = 1;
+      } else {
+        var risposta = 0;
+        console.log("Termine loop prova");
+        jsPsych.addNodeToEndOfTimeline(trial_timeline);
+      }
+      data.risposta_loop = risposta
+    }
+  };
+
+
+
+  var loop_prova = {
+    timeline: [begin_loop, prova_loop, feedback, end_loop_prova],
+    loop_function: function () {
+      var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+      if (response_button == 1) {
+        return true;
+      } else {
+        return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+      }
+    }
+  };
+
+  var timeline = [pre_if, if_node];
+  jsPsych.run(timeline)
+</script>
+
+
+</html>

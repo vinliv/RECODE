@@ -1,0 +1,63 @@
+var storiella3 = {
+ type: jsPsychHtmlButtonResponse,
+ stimulus: `<p style="font-size: 24px; font-weight: bold;
+ ">Milena è andata al mercato per comprare dei fiori freschi.<br>
+Arrivata alla sua bancarella di fiducia si è fermata ad ammirare i fiori. <br>
+'Quanto costa un mazzo di petunie e di rose?' ha chiesto. <br>
+Siccome il fioraio l’ha riconosciuta, decide di farle uno sconto. <br>
+Quindi le risponde che, per lei, il totale è di 5 euro. <br>
+Soddisfatta dello sconto, Milena compra 2 mazzi di fiori. <br>
+Tornata a casa Milena regala un mazzo di fiori alla vicina.
+ </p>`,
+ button_html: `<button class="jspsych-btn" style="position: left; font-size: 20px; color:black;">%choice%</button>`,
+ choices: ['Prema qui dopo aver letto la storiella per procedere'],
+};
+
+var storiella3_parti = [
+  { storiella3: "Milena è andata al mercato per comprare dei fiori freschi.", position:"1"},
+  { storiella3: "Arrivata alla sua bancarella di fiducia si è fermata ad ammirare i fiori.", position:"2"},
+  { storiella3: "'Quanto costa un mazzo di petunie e di rose?' ha chiesto.", position:"3"},
+  { storiella3: "Siccome il fioraio l’ha riconosciuta, decide di farle uno sconto.", position:"4"},
+  { storiella3: "Quindi le risponde che, per lei, il totale è di 5 euro.", position:"5"},
+  { storiella3: "Soddisfatta dello sconto, Milena compra 2 mazzi di fiori. ", position:"6"}
+]
+ var storiella3_parti = jsPsych.randomization.shuffle(storiella3_parti);
+
+ var trial_storiella3 = {
+   type: jsPsychSurveyHtmlForm,
+   preamble: "<h2> Scriva con la tastiera i numeri da 1 a 5 accanto alle frasi scritte di seguito per ricomporre la storiella appena letta: </h2>",
+   html:[
+       '<p> <input type="text" id="test-resp-box" name="1" size="4" /> '+storiella3_parti[0].storiella3+'</p>',
+       '<p> <input type="text" id="test-resp-box" name="2" size="4" /> '+storiella3_parti[1].storiella3+'</p>',
+       '<p> <input type="text" id="test-resp-box" name="3" size="4" /> '+storiella3_parti[2].storiella3+'</p>',
+       '<p> <input type="text" id="test-resp-box" name="4" size="4" /> '+storiella3_parti[3].storiella3+'</p>',
+       '<p> <input type="text" id="test-resp-box" name="5" size="4" /> '+storiella3_parti[4].storiella3+'</p>',
+       '<p> <input type="text" id="test-resp-box" name="6" size="4" /> '+storiella3_parti[5].storiella3+'</p>'
+   ],
+   dataAsArray: true,
+   required: true,
+   button_label: 'INVIA RISPOSTE',
+   on_finish: function(data){
+       var risposta1 = data.response[0].value;
+       var risposta2 = data.response[1].value;
+       var risposta3 = data.response[2].value;
+       var risposta4 = data.response[3].value;
+       var risposta5 = data.response[4].value;
+       var risposta6 = data.response[5].value;
+
+       if (risposta1.includes(storiella3_parti[0].position) && risposta2.includes(storiella3_parti[1].position) && risposta3.includes(storiella3_parti[2].position) && risposta4.includes(storiella3_parti[3].position)&& risposta5.includes(storiella3_parti[4].position)&& risposta6.includes(storiella3_parti[5].position)) {
+           var accuracy = true
+       } else {
+           var accuracy = false
+       }
+       console.log(accuracy)
+       data.accuracy_prova = accuracy;
+       console.log("RISPOSTA PRIMO POSTO: "+risposta1+"")
+       console.log("RISPOSTA SECONDO POSTO: "+risposta2+"")
+       console.log("RISPOSTA TERZO POSTO: "+risposta3+"")
+       console.log("RISPOSTA QUARTO POSTO: "+risposta4+"")
+       console.log("RISPOSTA QUINTO POSTO: "+risposta5+"")
+       console.log("RISPOSTA SESTO POSTO: "+risposta6+"")
+   }
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////

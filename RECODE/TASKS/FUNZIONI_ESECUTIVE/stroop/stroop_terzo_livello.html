@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STROOP LIV.3 </title>
+
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+  <script src="./jspsych-psychophysics-3.3.0/jspsych-psychophysics.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-canvas-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+  <script src="jatos.js"></script>
+
+</head>
+
+<body></body>
+<script>
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //Il max è escluso e il min è incluso
+  }
+
+  var jsPsych = initJsPsych({
+    use_webaudio: false,
+    on_finish: function() {
+        /*jsPsych.data.displayData();*/
+            if(punteggio >= 16){
+                var feed = 1;
+            } else {
+                var feed = -1;
+            }
+            var punteggio_dec = punteggio*10/20;
+        jatos.studySessionData = feed;
+        var funzioni_esecutive = Number(sessionStorage.getItem('funzioni_esecutive'))+feed;
+        var counter_funzioni_esecutive = Number(sessionStorage.getItem('counter_funzioni_esecutive'))+1;
+        var punteggio_finale_funzioni_esecutive= Number(sessionStorage.getItem('punteggio_finale_funzioni_esecutive'))+punteggio_dec;
+        sessionStorage.setItem('punteggio_finale_funzioni_esecutive', punteggio_finale_funzioni_esecutive);
+        if (funzioni_esecutive < 0) {funzioni_esecutive = 0}
+        if (funzioni_esecutive > 2) {funzioni_esecutive = 2}
+        if (counter_funzioni_esecutive > 3) {counter_funzioni_esecutive = 3}
+        sessionStorage.setItem('funzioni_esecutive', funzioni_esecutive);
+        sessionStorage.setItem('counter_funzioni_esecutive', counter_funzioni_esecutive);
+        var Data = {feed: feed, type: 'FUNZIONI_ESECUTIVE_stroop_level3', cresp: punteggio_dec};
+        jatos.startComponentByPos(4,Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+    }
+  });
+
+  var pre_if = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5; font-weight: normal;"> Sullo schermo apparirà il nome di un colore che può essere scritto con diversi colori.</p>  
+      <p style='font-size:100px; margin-top: 10px; color:red;'>verde</p> <br>
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> La parola VERDE  è scritta in rosso.</p> <br>
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-50px; font-weight: bold;"> Il suo compito è di indicare il colore con cui è scritta la parola sullo schermo.</p> <br> 
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> Ad esempio qui la risposta esatta è rosso</p> <br>
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> ATTENZIONE: attorno ad alcune parole ci sarà una cornice colorata. Non si faccia distrarre, si concentri solo sul colore della parola. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta_prova = 1;
+      } else {
+        var risposta_prova = 0;
+      }
+      data.risposta_prova = risposta_prova
+    }
+
+  };
+
+  var images = ["arancione", "blu", "giallo", "nero", "rosso", "verde"];
+  var number = [1, 2, 3, 4, 5, 6];
+  var colorbutton = ["Arancione", "Blu", "Giallo", "Nero", "Rosso", "Verde"];
+
+  let punteggio = 0;
+
+  var test_stimuli1 = [
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[0] + number[3] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[1], test3: colorbutton[2], cresponse: 0 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[1] + number[4] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[1], test3: colorbutton[4], cresponse: 1 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[2] + number[5] + '.png" height="200pt"></p>', test1: colorbutton[1], test2: colorbutton[4], test3: colorbutton[2], cresponse: 2 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[3] + number[0] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[1], test3: colorbutton[4], cresponse: 0 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[4] + number[1] + '.png" height="200pt"></p>', test1: colorbutton[5], test2: colorbutton[4], test3: colorbutton[1], cresponse: 1 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[5] + number[2] + '.png" height="200pt"></p>', test1: colorbutton[2], test2: colorbutton[0], test3: colorbutton[5], cresponse: 2 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[0] + number[4] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[1], test3: colorbutton[3], cresponse: 0 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[1] + number[5] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[1], test3: colorbutton[5], cresponse: 1 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[2] + number[0] + '.png" height="200pt"></p>', test1: colorbutton[1], test2: colorbutton[4], test3: colorbutton[2], cresponse: 2 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[3] + number[1] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[2], test3: colorbutton[5], cresponse: 0 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[4] + number[2] + '.png" height="200pt"></p>', test1: colorbutton[1], test2: colorbutton[4], test3: colorbutton[0], cresponse: 1 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[5] + number[3] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[3], test3: colorbutton[5], cresponse: 2 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[0] + number[5] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[2], test3: colorbutton[1], cresponse: 0 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[1] + number[0] + '.png" height="200pt"></p>', test1: colorbutton[2], test2: colorbutton[1], test3: colorbutton[4], cresponse: 1 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[2] + number[1] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[5], test3: colorbutton[2], cresponse: 2 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[3] + number[2] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[2], test3: colorbutton[1], cresponse: 0 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[4] + number[3] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[4], test3: colorbutton[5], cresponse: 1 },
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[5] + number[4] + '.png" height="200pt"></p>', test1: colorbutton[2], test2: colorbutton[3], test3: colorbutton[5], cresponse: 2 },
+
+];
+var test_stimuli2 = [
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[0] + number[0] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[2], test3: colorbutton[4], cresponse: 0 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[1] + number[1] + '.png" height="200pt"></p>', test1: colorbutton[2], test2: colorbutton[1], test3: colorbutton[5], cresponse: 1 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[2] + number[2] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[3], test3: colorbutton[2], cresponse: 2 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[3] + number[3] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[0], test3: colorbutton[4], cresponse: 0 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[4] + number[4] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[4], test3: colorbutton[1], cresponse: 1 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[5] + number[5] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[1], test3: colorbutton[5], cresponse: 2 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[0] + number[1] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[3], test3: colorbutton[5], cresponse: 0 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[1] + number[2] + '.png" height="200pt"></p>', test1: colorbutton[2], test2: colorbutton[1], test3: colorbutton[4], cresponse: 1 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[2] + number[3] + '.png" height="200pt"></p>', test1: colorbutton[4], test2: colorbutton[0], test3: colorbutton[2], cresponse: 2 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[3] + number[4] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[0], test3: colorbutton[1], cresponse: 0 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[4] + number[5] + '.png" height="200pt"></p>', test1: colorbutton[2], test2: colorbutton[4], test3: colorbutton[1], cresponse: 1 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[5] + number[0] + '.png" height="200pt"></p>', test1: colorbutton[4], test2: colorbutton[3], test3: colorbutton[5], cresponse: 2 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[0] + number[2] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[1], test3: colorbutton[2], cresponse: 0 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[1] + number[3] + '.png" height="200pt"></p>', test1: colorbutton[0], test2: colorbutton[1], test3: colorbutton[2], cresponse: 1 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[2] + number[4] + '.png" height="200pt"></p>', test1: colorbutton[5], test2: colorbutton[3], test3: colorbutton[2], cresponse: 2 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[3] + number[5] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[4], test3: colorbutton[2], cresponse: 0 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[4] + number[0] + '.png" height="200pt"></p>', test1: colorbutton[3], test2: colorbutton[4], test3: colorbutton[1], cresponse: 1 },//colore cronice presente
+    { stimulus: '<p> <img src="./TASKS/FUNZIONI_ESECUTIVE/stroop/img/' + images[5] + number[1] + '.png" height="200pt"></p>', test1: colorbutton[1], test2: colorbutton[4], test3: colorbutton[5], cresponse: 2 },//colore cronice presente
+]
+// Funzione per selezionare casualmente n elementi da un array
+function selectRandomElements(array, n) {
+    var shuffled = array.slice(0), i = array.length, min = i - n, temp, index;
+    while (i-- > min) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+    }
+    return shuffled.slice(min);
+}
+
+// Seleziona casualmente 10 elementi da test_stimuli1 e 10 elementi da test_stimuli2
+var randomElements1 = selectRandomElements(test_stimuli1, 10);
+var randomElements2 = selectRandomElements(test_stimuli2, 10);
+
+// Concatena i due insiemi di elementi selezionati casualmente
+var combinedRandomElements = randomElements1.concat(randomElements2);
+// Ora combinedRandomElements contiene 10 elementi da test_stimuli1 e 10 elementi da test_stimuli2, mescolati insieme
+var test_stimuli = combinedRandomElements;
+
+  var prova_loop = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus:''+ test_stimuli2[0].stimulus+'',
+    choices: "NO_KEYS",
+    trial_duration: 5000,
+
+  };
+
+
+
+
+  var prova_loop_test = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: [''+ test_stimuli2[0].test1 + '', '' + test_stimuli2[0].test2 + '', '' + test_stimuli2[0].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + test_stimuli2[0].cresponse + '') {// 70 is the numeric code for f
+        data.accuracy = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.accuracy = false;
+        console.log("Sbagliato")
+      }
+    }
+  };
+
+
+
+
+  var feedback = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "'NO_KEYS'",
+    trial_duration: 1500,
+    data: "",
+    stimulus: "",
+    on_start: function (prova_loop_test) {
+      var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;
+      if (last_response_accuracy == true) {
+        var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+        console.log("Corretto")
+      } else {
+        var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+        console.log("Sbagliato")
+      };
+      var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback + "</b></div>";
+      prova_loop_test.data = { stimulus: feedback };
+      prova_loop_test.stimulus = feedback_prova_stima;
+    },
+
+  };
+
+  var prova_loop_timeline = {
+    timeline: [prova_loop, prova_loop_test, feedback],
+  };
+
+  var begin_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 24px; font-weight: normal;"> Allora proseguiamo, inziamo con l'esercizio.
+      <p style="font-size: 34px;line-height: 1.5; font-weight: normal;"> Sullo schermo apparirà il nome di un colore che può essere scritto con diversi colori.</p>
+      <p style='font-size:100px; margin-top: 10px; color:red;'>verde</p> <br>
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> La parola VERDE  è scritta in rosso.</p> <br>
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-50px; font-weight: bold;"> Il suo compito è di indicare il colore con cui è scritta la parola sullo schermo.</p> <br> 
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> Ad esempio qui la risposta esatta è rosso</p> <br>
+      <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> ATTENZIONE: attorno ad alcune parole ci sarà una cornice colorata. Non si faccia distrarre, si concentri solo sul colore della parola. </p>`,
+    button_html: `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+    choices: ['Premi qui per iniziare']
+  };
+
+  var stimuli = jsPsych.randomization.shuffle(test_stimuli);
+
+  var trial1 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: ''+ combinedRandomElements[0].stimulus+'',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial2 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: ''+ combinedRandomElements[1].stimulus+'',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial3 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[2].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial4 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[3].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial5 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[4].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial6 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[5].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial7 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[6].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial8 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[7].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial9 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[8].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial10 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[9].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial11 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[10].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial12 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[11].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial13 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[12].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial14 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[13].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial15 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[14].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial16 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[15].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial17 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[16].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial18 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[17].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial19 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[18].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+  var trial20 = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '' + combinedRandomElements[19].stimulus + '',
+      choices: "NO_KEYS",
+      trial_duration: 5000,
+  };
+
+
+
+
+
+
+  var rtrial1 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[0].test1 + '', '' + combinedRandomElements[0].test2 + '', '' + combinedRandomElements[0].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[0].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+
+  var rtrial2 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[1].test1 + '', '' + combinedRandomElements[1].test2 + '', '' + combinedRandomElements[1].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[1].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+  var rtrial3 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[2].test1 + '', '' + combinedRandomElements[2].test2 + '', '' + combinedRandomElements[2].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[2].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+  var rtrial4 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[3].test1 + '', '' + combinedRandomElements[3].test2 + '', '' + combinedRandomElements[3].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[3].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+  var rtrial5 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[4].test1 + '', '' + combinedRandomElements[4].test2 + '', '' + combinedRandomElements[4].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[4].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+  //7 trial non congruenti
+
+  var rtrial6 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[5].test1 + '', '' + combinedRandomElements[5].test2 + '', '' + combinedRandomElements[5].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[5].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+
+  var rtrial7 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[6].test1 + '', '' + combinedRandomElements[6].test2 + '', '' + combinedRandomElements[6].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[6].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //0 giusto
+  };
+
+
+
+  var rtrial8 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[7].test1 + '', '' + combinedRandomElements[7].test2 + '', '' + combinedRandomElements[7].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[7].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //2 giusto
+  };
+
+  var rtrial9 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[8].test1 + '', '' + combinedRandomElements[8].test2 + '', '' + combinedRandomElements[8].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[8].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //0giusto
+  };
+
+  var rtrial10 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[9].test1 + '', '' + combinedRandomElements[9].test2 + '', '' + combinedRandomElements[9].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[9].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //1giusto
+  };
+
+  var rtrial11 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[10].test1 + '', '' + combinedRandomElements[10].test2 + '', '' + combinedRandomElements[10].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[10].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //1giusto
+  };
+
+  var rtrial12 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[11].test1 + '', '' + combinedRandomElements[11].test2 + '', '' + combinedRandomElements[11].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[11].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //2giusto
+  };
+
+  var rtrial13 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[12].test1 + '', '' + combinedRandomElements[12].test2 + '', '' + combinedRandomElements[12].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[12].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //0giusto
+  };
+  //7 trials simboli congruenti
+
+  var rtrial14 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[13].test1 + '', '' + combinedRandomElements[13].test2 + '', '' + combinedRandomElements[13].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[13].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //1giusto
+  };
+
+  var rtrial15 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[14].test1 + '', '' + combinedRandomElements[14].test2 + '', '' + combinedRandomElements[14].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[14].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //2giusto
+  };
+
+
+  var rtrial16 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[15].test1 + '', '' + combinedRandomElements[15].test2 + '', '' + combinedRandomElements[15].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[15].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //0giusto
+  };
+
+
+
+  var rtrial17 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[16].test1 + '', '' + combinedRandomElements[16].test2 + '', '' + combinedRandomElements[16].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[16].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //0giusto
+  };
+
+
+  var rtrial18 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[17].test1 + '', '' + combinedRandomElements[17].test2 + '', '' + combinedRandomElements[17].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[17].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //2giusto
+  };
+
+  var rtrial19 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[18].test1 + '', '' + combinedRandomElements[18].test2 + '', '' + combinedRandomElements[18].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[18].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+    //1giusto
+  };
+
+  var rtrial20 = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px; font-weight: bold;">Qual era il colore della parola?</p>`,
+    button_html: [`<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`,
+      `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`, `<button class="jspsych-btn" style="position: left; font-size: 24px; color:black; ">%choice%</button>`],
+    choices: ['' + combinedRandomElements[19].test1 + '', '' + combinedRandomElements[19].test2 + '', '' + combinedRandomElements[19].test3 + ''],
+    on_finish: function (data) {
+      if (data.response == '' + combinedRandomElements[19].cresponse + '') {// 70 is the numeric code for f
+        data.correct = true; // can add property correct by modify data object directly
+        console.log("Corretto")
+      } else {
+        data.correct = false;
+        console.log("Sbagliato")
+      }
+      if (data.correct == true) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+        ;
+      } else {
+
+        console.log('risposta sbagliata', punteggio);
+        ;
+      }
+    }
+  };
+
+
+
+  var trial_timeline = {
+    timeline: [trial1, rtrial1, trial2, rtrial2, trial3, rtrial3, trial4, rtrial4, trial5, rtrial5, trial6, rtrial6,
+      trial7, rtrial7, trial8, rtrial8, trial9, rtrial9, trial10, rtrial10, trial11, rtrial11, trial12, rtrial12, trial13, rtrial13, trial14, rtrial14, trial15, rtrial15, trial16, rtrial16,
+      trial17, rtrial17, trial18, rtrial18, trial19, rtrial19, trial20, rtrial20],
+    //randomize_order: true,
+
+  };
+  var if_node = {
+    timeline: [begin_trial, trial_timeline],
+    conditional_function: function () {
+      var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+      if (response_button == 0) {
+        console.log("prosegui a esercizio");
+        return true;
+      } else {
+        console.log("inizia la prova");
+        jsPsych.addNodeToEndOfTimeline(loop_prova)
+        return false;
+      }
+    }
+  };
+
+  var begin_loop = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5 "> Va bene facciamo una prova! </p>
+  <p style="font-size: 34px;line-height: 1.5; font-weight: normal;"> Sullo schermo apparirà il nome di un colore che può essere scritto con diversi colori.</p>
+  <p style='font-size:100px; margin-top: 10px; color:red;'>verde</p> <br>
+  <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> La parola VERDE  è scritta in rosso.</p> <br>
+  <p style="font-size: 34px;line-height: 1.5; margin-top:-50px; font-weight: bold;"> Il suo compito è di indicare il colore con cui è scritta la parola sullo schermo.</p> <br> 
+  <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> Ad esempio qui la risposta esatta è rosso</p> <br>
+  <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> ATTENZIONE: attorno ad alcune parole ci sarà una cornice colorata. Non si faccia distrarre, si concentri solo sul colore della parola. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare la prova'],
+    on_start: function (data) {
+      var response_button = jsPsych.data.get().last(1).values()[0].response;
+      console.log(response_button)
+      if (response_button == 0) {
+        console.log("salta loop");
+        jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+      }
+    }
+  };
+
+  var end_loop_prova = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5; font-weight: normal;"> Ora che ha terminato la prova, inziamo con il vero esercizio. </p>
+    <p style="font-size: 34px;line-height: 1.5; font-weight: normal;"> Sullo schermo apparirà il nome di un colore che può essere scritto con diversi colori.</p>
+    <p style='font-size:100px; margin-top: 10px; color:red;'>verde</p> <br>
+    <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> La parola VERDE  è scritta in rosso.</p> <br>
+    <p style="font-size: 34px;line-height: 1.5; margin-top:-50px; font-weight: bold;"> Il suo compito è di indicare il colore con cui è scritta la parola sullo schermo.</p> <br> 
+    <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> Ad esempio qui la risposta esatta è rosso</p> <br>
+    <p style="font-size: 34px;line-height: 1.5; margin-top:-70px; font-weight: normal;"> ATTENZIONE: attorno ad alcune parole ci sarà una cornice colorata. Non si faccia distrarre, si concentri solo sul colore della parola. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per proseguire', 'Premi qui per ripetere la prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta = 1;
+      } else {
+        var risposta = 0;
+        console.log("Termine loop prova");
+        jsPsych.addNodeToEndOfTimeline(trial_timeline);
+      }
+      data.risposta_loop = risposta
+    }
+  };
+
+  var loop_prova = {
+    timeline: [begin_loop, prova_loop_timeline, end_loop_prova],
+    loop_function: function () {
+      var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+      if (response_button == 1) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+
+
+
+  var timeline = [pre_if, if_node];
+  jsPsych.run(timeline)
+
+</script>
+
+</html>

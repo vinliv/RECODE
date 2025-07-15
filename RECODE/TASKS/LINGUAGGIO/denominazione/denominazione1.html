@@ -1,0 +1,626 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>LINGUAGGIO DENOMINAZIONE LIV.1 </title>
+  <meta charset="UTF-8">
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-html-form.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="jatos.js"></script>
+  <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+  <style>
+    body {
+      background-color: white;
+    }
+  </style>
+
+  <!--
+    ISTRUZIONI
+Inserire: ISTRUZIONI all’apice delle istruzioni, in stampatello.
+
+      Poi:
+“Adesso le verranno presentate delle figure. Scriva il nome corrispondente ad ogni figura nello spazio apposito. Se non ricorda il nome lasci lo spazio vuoto e vada avanti.”
+Nota: A capo ad ogni punto.
+I due tasti: “Premi qui per continuare” (-- DA TOGLIERE PERO' NELLA SCHERMATA INIZIALE --) e “Premi qui per fare una prova”. Rendere visivamente più saliente il primo.
+NB nello spazio sottostante mettere caselline/spazi
+SVOLGIMENTO
+Immagine centrale, più grande rispetto a quella attuale.
+Subito sotto l’immagine: “come si chiama questo oggetto?
+A capo con spaziatura in mezzo: “scriva il nome qui” (e inserire subito sotto la casella)
+Sotto: tasto -> Premi per andare avanti (uniformare grandezza con gli altri).
+15 immagini per livello, che siano proporzionate a 10 come punteggio.
+Livelli di difficoltà: 1° livello -> immagini ad alta frequenza d’uso, colorate. 2° livello -> immagini a media frequenza d’uso. 3° livello -> bassa frequenza d’uso, degradate
+  -->
+
+</body>
+
+<script type='text/javascript'>
+
+  var jsPsych = initJsPsych({
+    use_webaudio: false,
+    on_finish: function () {
+      /*jsPsych.data.displayData();*/
+      var feed;
+      if(punteggio >=12){
+        feed = 1;
+      } else {
+        feed = -1;
+      }
+      var punteggio_dec=punteggio*10/15;
+      jatos.studySessionData = feed;
+      var linguaggio = Number(sessionStorage.getItem('linguaggio'))+feed;
+      var counter_linguaggio = Number(sessionStorage.getItem('counter_linguaggio'))+1;
+      var punteggio_finale_linguaggio= Number(sessionStorage.getItem('punteggio_finale_linguaggio'))+punteggio_dec;
+      sessionStorage.setItem('punteggio_finale_linguaggio', punteggio_finale_linguaggio);
+      if (linguaggio < 0) {linguaggio = 0}
+      if (linguaggio > 2) {linguaggio = 2}
+      if (counter_linguaggio > 3) {counter_linguaggio = 3}
+      sessionStorage.setItem('linguaggio', linguaggio);
+      sessionStorage.setItem('counter_linguaggio', counter_linguaggio);
+      var Data = { feed: feed, type: 'LINGUAGGIO_denominazione_level1', cresp: punteggio_dec };
+      jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+    }
+  });
+
+  var preload_images = {
+    type: jsPsychPreload,
+    auto_preload: true,
+    show_detailed_errors: true
+  };
+
+  var imgs2 = [
+    { image: './TASKS/LINGUAGGIO/denominazione/img/banana2.jpg', name: 'banana' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/barba2.jpg', name: 'barba' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/braccio2.jpg', name: 'braccio' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/carota2.jpg', name: 'carota' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/elefante2.jpg', name: 'elefante' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/farfalla2.jpg', name: 'farfalla' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/gatto2.jpg', name: 'gatto' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/limone2.jpg', name: 'limone' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/mela2.jpg', name: 'mela' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/mucca2.jpg', name: 'mucca' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/ossa2.jpg', name: 'ossa' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/penna2.jpg', name: 'penna' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/pesca2.jpg', name: 'pesca' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/scarpe2.jpg', name: 'scarpe' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/serpente2.jpg', name: 'serpente' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/tartaruga2.jpg', name: 'tartaruga' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/tigre2.jpg', name: 'tigre' },
+    { image: './TASKS/LINGUAGGIO/denominazione/img/aereo2.jpg', name: 'aereo'},
+    { image: './TASKS/LINGUAGGIO/denominazione/img/chiavi2.jpg', name: 'chiavi'},
+    { image: './TASKS/LINGUAGGIO/denominazione/img/ancora2.jpg', name: 'ancora'},
+    { image: './TASKS/LINGUAGGIO/denominazione/img/cavallo2.jpg', name: 'cavallo'}
+  ];
+
+var imgs1 = [
+  { image: './TASKS/LINGUAGGIO/denominazione/img/banana1.jpg', name: 'banana' }, /*sono state richieste 15 immagini per 10 punti ma è di miglior realizzazione 10 immagini per 10 punti */
+  { image: './TASKS/LINGUAGGIO/denominazione/img/barba1.jpg', name: 'barba' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/braccio1.jpg', name: 'braccio' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/carota1.jpg', name: 'carota' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/elefante1.jpg', name: 'elefante' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/farfalla1.jpg', name: 'farfalla' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/gatto1.jpg', name: 'gatto' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/limone1.jpg', name: 'limone' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/mela1.jpg', name: 'mela' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/mucca1.jpg', name: 'mucca' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/ossa1.jpg', name: 'ossa' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/penna1.jpg', name: 'penna' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/pesca1.jpg', name: 'pesca' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/scarpe1.jpg', name: 'scarpe' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/serpente1.jpg', name: 'serpente' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/tartaruga1.jpg', name: 'tartaruga' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/tigre1.jpg', name: 'tigre' },
+  { image: './TASKS/LINGUAGGIO/denominazione/img/aereo1.jpg', name: 'aereo'},
+  { image: './TASKS/LINGUAGGIO/denominazione/img/chiavi1.jpg', name: 'chiavi'},
+  { image: './TASKS/LINGUAGGIO/denominazione/img/ancora1.jpg', name: 'ancora'},
+  { image: './TASKS/LINGUAGGIO/denominazione/img/cavallo1.jpg', name: 'cavallo'}
+];
+// Scegli casualmente tra imgs1 e imgs2
+var selectedArray = Math.random() < 0.5 ? imgs1 : imgs2;
+
+// Copia casualmente gli elementi dell'array selezionato in images
+var images = jsPsych.randomization.shuffle(selectedArray.slice());
+
+  var pre_if = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;">ISTRUZIONI: <br> <br>
+      Adesso le verranno presentate delle figure. <br> <strong> Scriva il nome corrispondente ad ogni figura nello spazio apposito. </strong>
+     <br> <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti.</p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta_prova = 1;
+      } else {
+        var risposta_prova = 0;
+      }
+      data.risposta_prova = risposta_prova
+    }
+  };
+
+  var prova_loop = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: `<p> <img src="` + images[15].image + `" height="400pt"> </p>
+     <p style="font-size: 34px; font-weight: bold;"> Come si chiama? scriva il nome nella casella sottostante </p>` ,
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: true,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[15] && images[15].name) ? images[15].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+      var accuracy = true;
+        console.log('Risposta corretta');
+      } else {
+        var accuracy = false;
+        console.log('Risposta sbagliata');
+      }
+      data.accuracy = accuracy;
+    }
+  };
+
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_loop){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_loop.data = {stimulus: feedback};
+    prova_loop.stimulus = feedback_prova_stima;
+  },
+};
+
+  var begin_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+     Adesso le verranno presentate delle figure. <br> <strong> Scriva il nome corrispondente ad ogni figura nello spazio apposito.
+    <br> <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti.</p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare']
+  };
+
+
+  // ELENCO 10 TRIALS //////////////////////////////////////////////////////////////////
+  // Aggiungi gli elementi HTML / input al modulo
+
+
+  let punteggio = 0;
+  var one = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[0].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>', // Esempio di campo di input con dimensioni specifiche
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[0] && images[0].name) ? images[0].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+  var two = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[1].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[1] && images[1].name) ? images[1].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var three = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[2].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[2] && images[2].name) ? images[2].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var four = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[3].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[3] && images[3].name) ? images[3].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var five = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[4].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[4] && images[4].name) ? images[4].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var six = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[5].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[5] && images[5].name) ? images[5].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var seven = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[6].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[6] && images[6].name) ? images[6].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var eight = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[7].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[7] && images[7].name) ? images[7].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var nine = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[8].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[8] && images[8].name) ? images[8].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+  var ten = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[9].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[9] && images[9].name) ? images[9].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var eleven = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[10].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[10] && images[10].name) ? images[10].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var twelve = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[11].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[11] && images[11].name) ? images[11].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var thirteen = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[12].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[12] && images[12].name) ? images[12].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+
+  var fourteen = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[13].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[13] && images[13].name) ? images[13].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+  var fifteen = {
+    type: jsPsychSurveyHtmlForm,
+    preamble: '<p> <img src="' + images[14].image + '" height="400pt"> </p> <p style="font-size: 34px; font-weight: bold;"> Come si chiama questo oggetto? scriva il nome nella casella sottostante </p>',
+    button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+    html: '</p> <input name="response" type="text" style="font-size: 24px; width: 200px; height: 30px; border: 1px solid black;"><br><br>',
+    required: false,
+    on_finish: function (data) {
+    var response = data.response.response.toLowerCase();
+    console.log("Risposta dell'utente:", response);
+    var correctAnswer = (images[14] && images[14].name) ? images[14].name.toLowerCase() : '';
+    if (correctAnswer && response.substring(0, 3) === correctAnswer.substring(0, 3)) {
+        punteggio++;
+        console.log('risposta corretta', punteggio);
+      } else {
+      console.log('risposta sbagliata', punteggio);
+
+      }
+      console.log("RISPOSTA: " + data.response.response.toLowerCase()+ "")
+
+    }
+  };
+
+  var trial_timeline = {
+    timeline: [one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen]
+  };
+
+  ////////////////////////////////////////////////////////////////////////
+
+  var if_node = {
+    timeline: [begin_trial, trial_timeline],
+    conditional_function: function () {
+      var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+      if (response_button == 0) {
+        console.log("prosegui a esercizio");
+        return true;
+      } else {
+        console.log("inizia la prova");
+        jsPsych.addNodeToEndOfTimeline(loop_prova)
+        return false;
+      }
+    }
+  };
+
+  var begin_loop = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br>
+     Adesso le verranno presentate delle figure. <br> <strong> Scriva il nome corrispondente ad ogni figura nello spazio apposito.
+    <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti.</p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare la prova'],
+    on_start: function (data) {
+      var response_button = jsPsych.data.get().last(1).values()[0].response;
+      console.log(response_button)
+      if (response_button == 0) {
+        console.log("salta loop");
+        jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+      }
+    }
+  };
+
+  var end_loop_prova = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br>  Adesso le verranno presentate delle figure. <br> Scriva il nome corrispondente ad ogni figura nello spazio apposito.
+    <br> Se non ricorda il nome lasci lo spazio vuoto e vada avanti. </p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Premi qui per iniziare', 'Premi qui per ripetere la prova'],
+    on_finish: function (data) {
+      if (data.response == 1) {
+        var risposta = 1;
+      } else {
+        var risposta = 0;
+        console.log("Termine loop prova");
+        jsPsych.addNodeToEndOfTimeline(trial_timeline);
+      }
+      data.risposta_loop = risposta
+    }
+  };
+
+
+
+  var loop_prova = {
+    timeline: [begin_loop, prova_loop, feedback, end_loop_prova],
+    loop_function: function () {
+      var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+      if (response_button == 1) {
+        return true;
+      } else {
+        return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+      }
+    }
+  };
+
+  var timeline = [pre_if, if_node];
+  jsPsych.run(timeline)
+</script>
+
+
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>"Ricerca Visiva Liv. 2"</title>
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-survey-likert.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-fullscreen.js"></script>
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+  <script src="jatos.js"></script>
+</head>
+<body></body>
+<script>
+var jsPsych = initJsPsych({
+        use_webaudio: false,
+        on_finish: function() {
+          //  jsPsych.data.displayData();
+
+            var feed;
+            if(punteggio >= 4){
+              feed = 1;
+            } else {
+              feed = -1;
+            }
+            var punteggio_dec =punteggio*10/5;
+            jatos.studySessionData = feed;
+            var attenzione = Number(sessionStorage.getItem('attenzione'))+feed;
+            var counter_attenzione = Number(sessionStorage.getItem('counter_attenzione'))+1;
+            var punteggio_finale_attenzione = Number(sessionStorage.getItem('punteggio_finale_attenzione'))+punteggio_dec;
+            sessionStorage.setItem('punteggio_finale_attenzione', punteggio_finale_attenzione);
+            if (attenzione < 0) {attenzione = 0}
+            if (attenzione > 2) {attenzione = 2}
+            if (counter_attenzione > 3) {counter_attenzione = 3}
+            sessionStorage.setItem('attenzione', attenzione);
+            sessionStorage.setItem('counter_attenzione', counter_attenzione);
+            var Data = {feed: feed, type: 'ATTENZIONE_ricercavisiva_level2', cresp: punteggio_dec};
+            jatos.startComponentByPos(4,Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+        }
+    });
+
+
+
+// Initialize variables
+var symbolCounts = [];
+var pickedSymbols = [];
+var repeatedSymbols = [];
+var positions = [];
+var target = [];
+var myArray = [0,1,2,3,4];
+myArray = jsPsych.randomization.repeat(myArray, 1);
+
+// Define symbols
+const symbols = ['△', '♪', '♡', '⨂', '⬗', '◯', '◿','◺'];
+
+// Function to find a combination of random numbers that sum to 40
+function findCombination() {
+  const targetSum = 52;
+  const minNumber = 1;
+  const maxNumber = 15;
+  const numberOfNumbers = Math.floor(Math.random() * 2) + 5; // Randomly choose 5 or 6 numbers
+  let numbers = [];
+
+  while (numbers.length < numberOfNumbers) {
+    const randomNumber = Math.floor(Math.random() * (maxNumber - minNumber + 1)) + minNumber;
+
+    // Ensure the number is not already in the array
+    if (!numbers.includes(randomNumber)) {
+      numbers.push(randomNumber);
+    }
+  }
+
+  // Check if the sum of the chosen numbers equals the target sum
+  const sum = numbers.reduce((acc, num) => acc + num, 0);
+
+  if (sum === targetSum) {
+    return numbers;
+  } else {
+    // If the sum is not equal to the target, recursively try again
+    return findCombination();
+  }
+}
+
+// Function to get an array of random symbols without repetition
+function getRandomSymbols(n) {
+  const selectedSymbols = [];
+
+  while (selectedSymbols.length < n) {
+    const randomIndex = Math.floor(Math.random() * symbols.length);
+    const randomSymbol = symbols[randomIndex];
+
+    // Ensure the selected symbol is not already in the array
+    if (!selectedSymbols.includes(randomSymbol)) {
+      selectedSymbols.push(randomSymbol);
+    }
+  }
+
+  return selectedSymbols;
+}
+
+// Function to get random non-overlapping positions within a rectangle
+function getRandomPosition() {
+  const positions = [];
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  const rectWidth = width / 2*1.3;
+  const rectHeight = height / 3*1.3;
+  const minDistance = 70;
+
+  for (let i = 0; i < 52; i++) {
+    let x, y;
+    let validPosition = false;
+
+    while (!validPosition) {
+      x = Math.floor(Math.random() * rectWidth + (width - rectWidth) / 2);
+      y = Math.floor(Math.random() * rectHeight + (height - rectHeight) / 2) - 200; // Adjusted for your requirement
+
+      validPosition = positions.every(pos => {
+        const dx = pos.x - x;
+        const dy = pos.y - y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        return distance >= minDistance;
+      });
+    }
+
+    positions.push({ x, y });
+  }
+
+  return positions;
+}
+
+// Function to initialize data
+function initializeData() {
+  symbolCounts = findCombination();
+  pickedSymbols = getRandomSymbols(symbolCounts.length);
+  positions = getRandomPosition();
+  repeatedSymbols = symbolCounts.flatMap((count, index) => Array(count).fill(pickedSymbols[index]));
+
+  return { repeatedSymbols, pickedSymbols, symbolCounts, positions };
+}
+
+//fullscreen
+var fullscreen_on = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: true
+};
+
+var fullscreen_off = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: false
+};
+//prova_loop
+var pre_if = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus:  `<p style='font-size: 34px;line-height: 1.5;'>Adesso le verranno mostrate delle immagini.<br> <br>In ogni immagine ci sono molte figure geometriche.
+  <br> <strong> dovrai contare tutte le figure geometriche di uno stesso tipo, che le sarà indicato. </strong> </p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare', 'Prema qui per fare una prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta_prova = 1;
+    } else{
+      var risposta_prova = 0;
+    }
+    data.risposta_prova = risposta_prova
+  }
+};
+let upload_trial_prova = 0
+
+var prova_loop = {
+  type: jsPsychSurveyLikert,
+  preamble: '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>',
+  button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  questions: [
+    {
+      prompt: function() {
+        initializeData();
+        let htmlString = '';
+
+        for (let i = 0; i < repeatedSymbols.length; i++) {
+          htmlString += `<div style="position: absolute; left: ${positions[i].x}px; top: ${positions[i].y}px; font-size: 48px;">${repeatedSymbols[i]}</div>`;
+        }
+
+        htmlString += `<div style='font-size:34px;'><strong>Quanti ${repeatedSymbols[0]} ci sono nell’immagine?</strong></div>`;
+        htmlString += `<p style='font-size:34px;'>Selezioni con il mouse il numero corretto</p>`;
+
+        return htmlString;
+      },
+      labels: function() {
+        // Access symbolCounts here
+        var ordered_labels = [
+          `<p style='font-size:30px;'>${symbolCounts[0]}</p>`, // CORRETTA
+          `<p style='font-size:30px;'>${symbolCounts[1]}</p>`,
+          `<p style='font-size:30px;'>${symbolCounts[2]}</p>`,
+          `<p style='font-size:30px;'>${symbolCounts[3]}</p>`,
+          `<p style='font-size:30px;'>${symbolCounts[4]}</p>`
+        ];
+
+        // Shuffle ordered_labels based on myArray order
+        var reordered_labels = myArray.map(function (index) {return ordered_labels[index];});
+        return reordered_labels;
+      },
+      required: true
+    }
+  ],
+  on_finish: function(data) {
+    data.correct = data.response.Q0 == myArray.indexOf(0);
+    myArray = jsPsych.randomization.repeat(myArray, 1);
+    console.log(data.response.Q0)
+    console.log(myArray[0])
+    console.log(data.correct)
+    if (data.correct == true ) {
+      data.accuracy = true;
+      console.log("Corretto");
+      upload_trial_prova++;
+  } else {
+      data.accuracy = false;
+      console.log("Sbagliato");
+      upload_trial_prova++;
+  }
+
+},
+  post_trial_gap: 1000
+};
+
+var feedback = {
+  type: jsPsychHtmlKeyboardResponse,
+  choices: "NO_KEYS",
+  trial_duration: 1500,
+  data:"",
+  stimulus: "",
+  on_start: function(prova_loop){
+    var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+    if (last_response_accuracy == true) {
+      var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+      console.log("Corretto")
+    } else {
+      var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+      console.log("Sbagliato")
+    };
+    var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback +"</b></div>";
+    prova_loop.data = {stimulus: feedback};
+    prova_loop.stimulus = feedback_prova_stima;
+  },
+
+};
+
+var begin_trial = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br> Adesso le verranno mostrate delle immagini.<br> <br>In ogni immagine ci sono molte figure geometriche.
+  <br> <strong> dovrai contare tutte le figure geometriche di uno stesso tipo, che le sarà indicato. </strong></p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare']
+};
+
+// Define JsPsych trial
+let punteggio = 0;
+
+var trial = {
+  type: jsPsychSurveyLikert,
+  preamble: '<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>',
+  button_label: [`INVIA RISPOSTA"jspsych-btn custom-button"; style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;</button>`],
+  questions: [
+    {
+      prompt: function() {
+        initializeData();
+        let htmlString = '';
+
+        for (let i = 0; i < repeatedSymbols.length; i++) {
+          htmlString += `<div style="position: absolute; left: ${positions[i].x}px; top: ${positions[i].y}px; font-size: 48px;">${repeatedSymbols[i]}</div>`;
+        }
+
+        htmlString += `<div style='font-size:34px;'><strong>Quanti ${repeatedSymbols[0]} ci sono nell’immagine?</strong></div>`;
+        htmlString += `<p style='font-size:34px;'>Selezioni con il mouse il numero corretto</p>`;
+
+        return htmlString;
+      },
+      labels: function() {
+        // Access symbolCounts here
+        var ordered_labels = [
+          `<p style='font-size:30px;'>${symbolCounts[0]}</p>`, // CORRETTA
+          `<p style='font-size:30px;'>${symbolCounts[1]}</p>`,
+          `<p style='font-size:30px;'>${symbolCounts[2]}</p>`,
+          `<p style='font-size:30px;'>${symbolCounts[3]}</p>`,
+          `<p style='font-size:30px;'>${symbolCounts[4]}</p>`
+        ];
+
+        // Shuffle ordered_labels based on myArray order
+        var reordered_labels = myArray.map(function (index) {return ordered_labels[index];});
+        return reordered_labels;
+      },
+      required: true
+    }
+  ],
+  on_finish: function(data) {
+    data.correct = data.response.Q0 == myArray.indexOf(0);
+    myArray = jsPsych.randomization.repeat(myArray, 1);
+    console.log(data.response.Q0)
+    console.log(myArray[0])
+    console.log(data.correct)
+    if (data.correct == true ) {
+      punteggio++
+      console.log("Corretto", punteggio);
+
+  } else {
+      console.log("Sbagliato", punteggio);
+
+  }
+
+},
+  post_trial_gap: 1000
+};
+
+
+var trial_timeline = {
+  timeline: [trial],
+  repetitions:5
+}
+
+
+var if_node = {
+  timeline: [begin_trial, fullscreen_on, trial_timeline, fullscreen_off],
+    conditional_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+        if (response_button == 0){
+            console.log("prosegui a esercizio");
+            return true;
+        } else {
+            console.log("inizia la prova");
+            jsPsych.addNodeToEndOfTimeline(loop_prova)
+            return false;
+        }
+    }
+};
+
+var begin_loop = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br>Adesso le verranno mostrate delle immagini.<br> <br>In ogni immagine ci sono molte figure geometriche.
+  <br> <strong> dovrai contare tutte le figure geometriche di uno stesso tipo, che le sarà indicato. </strong></p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare la prova'],
+  on_start: function(data){
+    var response_button = jsPsych.data.get().last(1).values()[0].response;
+    console.log(response_button)
+    if (response_button == 0){
+      console.log("salta loop");
+      jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+    }
+  }
+};
+
+var end_loop_prova = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br> Adesso le verranno mostrate delle immagini.<br> <br>In ogni immagine ci sono molte figure geometriche.
+  <br> <strong>dovrai contare tutte le figure geometriche di uno stesso tipo, che le sarà indicato.</strong></p>`,
+  button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+  choices: ['Prema qui per iniziare', 'Prema qui per ripetere la prova'],
+  on_finish: function(data){
+    if(data.response == 1){
+      var risposta = 1;
+    } else{
+      var risposta = 0;
+      console.log("Termine loop prova");
+      jsPsych.addNodeToEndOfTimeline(trial_timeline);
+    }
+    data.risposta_loop = risposta
+  }
+};
+
+var loop_prova = {
+  timeline: [begin_loop, fullscreen_on, prova_loop, feedback, end_loop_prova],
+  loop_function: function(){
+    var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+    if (response_button == 1){
+      return true;
+    } else {
+
+      return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+    }
+  }
+};
+
+
+
+
+
+
+var timeline = [pre_if, if_node];
+
+// Run the JsPsych trial
+jsPsych.run(timeline);
+
+</script>
+</html>

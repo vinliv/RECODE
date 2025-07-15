@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>LINGUAGGIO Categorizzazione Semantica LIV.1</title>
+  <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+
+  <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+
+  <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-canvas-button-response.js"></script>
+  <script src="./jspsych7.2.3/dist/jspsych-psychophysics.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-call-function.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-sort-DragDrop.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-canvas-keyboard-response.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+  <script src="./jspsych7.2.3/dist/plugin-fullscreen.js"></script>
+
+  <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+  <script src="jatos.js"></script>
+
+  <style>
+  body {
+    margin: 100;
+    padding: 0;
+    transform-origin: top center;
+    transform: scale(0.75); /* Adjust the scale value as needed */
+  }
+
+  .content {
+    text-align: center;
+    transform: scale(1.25); /* Adjust the inverse scale value to counteract the body scale */
+    transform-origin: center;
+  }
+     </style>
+  </head>
+
+  <body>
+     <div class="content">
+         <!-- Your page content goes here -->
+         <p>This is your page content.</p>
+     </div>
+  </body>
+  <!--
+
+  CATEGORIZZAZIONE SEMANTICA per immagini:
+
+  Ogni livello prevede 5 categorizzazioni (ad es. categoria: abbigliamento) ;
+  Ogni categorizzazione prevede 5 distrattori e 5 target e ha un punteggio che va da 0 a 10 (hanno punteggio anche i distrattori correttamente non inclusi); il punteggio totale sarà
+  dato dalla somma dei punteggi alle cinque categorizzazioni diviso 5, in modo tale da avere un punteggio globale da 0 a 10;
+  Il primo livello ha un cue contestualizzato (cesto con oggetti della stessa categoria), il secondo e il terzo no;
+  Tra il secondo e il terzo varia soprattutto la vicinanza semantica e la specificità di categoria;
+  Ogni livello avrà al centro un contenitore diverso: per il primo livello il cesto, il secondo la  scatola, il terzo il sacco.
+  ISTRUZIONI (primo livello):
+  ISTRUZIONI a apice
+  Sotto “Ora vedrai una sacco piena di oggetti che appartengono alla stessa categoria.
+  Attorno, ci saranno altri oggetti sparsi.
+  Dovrà sceglierne 5 da aggiungere al sacco che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.
+  Sotto “Premi qui per continuare” “Premi qui per essere ricontattato”
+
+  Schermata successiva, quella già con la sacco:
+  Sopra: Cosa manca?
+  In mezzo la sacco, attorno gli oggetti
+  E sotto: “Premi con il tasto sinistro del mouse sugli oggetti della stessa categoria.
+  Mancano X elementi da inserire”
+  ISTRUZIONI (secondo e terzo livello):
+  ISTRUZIONI a apice
+  Sotto “Ora vedrai una scatola-sacco vuota.
+  Attorno, ci saranno diversi oggetti sparsi.
+  Dovrà sceglierne 5 da mettere nella scatola-sacco che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.
+  Sotto “Premi qui per continuare” “Premi qui per essere ricontattato”
+
+  Schermata successiva, quella già con la scatola o il sacco vuoto:
+  In mezzo la scatola o il sacco, attorno gli oggetti
+  E sotto: “Premi con il tasto sinistro del mouse sugli oggetti della stessa categoria.
+  Mancano X elementi da inserire”
+
+
+
+  CATEGORIE SEMANTICHE E IMMAGINI DA INSERIRE
+
+  1° LIVELLO DI DIFFICOLTÀ
+
+  Categoria ABBIGLIAMENTO
+
+  Nel cesto si vedono PANTALONI e BERRETTO.
+
+  Stimoli target:
+  MAGLIONE
+  MUTANDE
+  GUANTI
+  T-SHIRT
+  SCIARPA
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+
+  Categoria ABBIGLIAMENTO (versione 2)
+
+  Nel cesto si vedono MAGLIONE e MUTANDE.
+
+  stimoli target:
+  PANTALONI
+  CALZINI
+  COSTUME DA BAGNO
+  PIGIAMA
+  CANNOTTIERA
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+
+
+
+  Categoria FIORI
+
+  Nel cesto si vedono MARGHERITA e TULIPANO.
+
+  stimoli target:
+  VIOLA
+  GIRASOLE
+  ORCHIDEA
+  GAROFANO
+  ROSA
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+  Categoria FIORI (versione 2)
+
+  Nel cesto si vedono GIRASOLE e CALLE.
+
+  stimoli target:
+  GERANIO
+  GERBERA
+  CICLAMINO
+  ROSA
+  TULIPANO
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+
+  Categoria ALIMENTI
+
+  Nel cesto si vedono BISTECCA e PASTA.
+
+  stimoli target:
+  UOVA
+  PASSATA
+  FARINA
+  FORMAGGIO
+  BARRETTA DI CIOCCOLATA
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+  Categoria ALIMENTI (versione 2)
+
+  Nel cesto si vedono FORMAGGIO e UOVA.
+
+  stimoli target:
+  CAFFè
+  CROSTATA
+  PESCE
+  PANE
+  INSALATA
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+
+
+
+  Categoria MEZZI DI TRASPORTO
+
+  Nel cesto si vedono BARCA e BUS.
+
+  stimoli target:
+  MOTOCICLETTA
+  MACCHINA
+  BICICLETTA
+  AEREO
+  TRENO
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+  Categoria ANIMALI
+
+  Nel cesto si vedono SCOIATTOLO e MEDUSA.
+
+  stimoli target:
+  RANA
+  PESCE
+  CRICETO
+  GRANCHIO
+  APE
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+
+  Categoria STRUMENTI MUSICALI
+
+  Nel cesto si vedono VIOLINO e MARACAS.
+
+  stimoli target:
+  TROMBA
+  FLAUTO
+  CHITARRA
+  BATTERIA
+  PIANOFORTE
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+  Categoria UTENSILI DA CUCINA
+
+  Nel cesto si vedono MESTOLO e PENTOLA.
+
+  stimoli target:
+  FORCHETTA
+  COLTELLO
+  PIATTO
+  PADELLA
+  CUCCHIAIO
+
+  gli stimoli non-target devono essere oggetti casuali che non c’entrano nulla con la categoria di riferimento.
+
+-->
+</body>
+<script>
+
+var jsPsych = initJsPsych({
+  on_finish: function () {
+  //  jsPsych.data.displayData();
+    var feed;
+    if(punteggio >=4){
+      feed = 1;
+    } else {
+      feed = -1;
+    }
+    var punteggio_dec=punteggio*10/5;
+    jatos.studySessionData = feed;
+    var linguaggio = Number(sessionStorage.getItem('linguaggio'))+feed;
+    var counter_linguaggio = Number(sessionStorage.getItem('counter_linguaggio'))+1;
+    var punteggio_finale_linguaggio= Number(sessionStorage.getItem('punteggio_finale_linguaggio'))+punteggio_dec;
+    sessionStorage.setItem('punteggio_finale_linguaggio', punteggio_finale_linguaggio);
+    if (linguaggio < 0) {linguaggio = 0}
+    if (linguaggio > 2) {linguaggio = 2}
+    if (counter_linguaggio > 3) {counter_linguaggio = 3}
+    sessionStorage.setItem('linguaggio', linguaggio);
+    sessionStorage.setItem('counter_linguaggio', counter_linguaggio);
+    var Data = { feed: feed, type: 'LINGUAGGIO_categorizzazione_semantica_level1', cresp: punteggio_dec };
+    jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+  }
+});
+
+var preload = {
+  type: jsPsychPreload,
+  auto_preload: true
+}
+
+var num = jsPsych.randomization.shuffle([1, 2])
+
+
+var fruttaEfiori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/pera.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mela.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/prugna.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/frutta/cartoon1/melone2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/frutta/cartoon1/anguria2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore1.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiore3.jpg",
+];
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var abbigliamento = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/guanti1.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/guanti2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/maglietta1.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/maglietta2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/maglione1.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/maglione2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/mutande1.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/mutande2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/sciarpa1.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/sciarpa2.jpg"
+];
+
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var abbigliamento_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/guanti" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/maglietta" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/maglione" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/mutande" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/sciarpa" + num[0] + ".jpg"
+];
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var abbigliamento2 = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/calzini1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/calzini2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/canottiera1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/canottiera2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/costume1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/costume2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/pantaloni1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/pantaloni2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/pigiama1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/pigiama2.jpg"
+];
+
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var abbigliamento2_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/pantaloni" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/calzini" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/costume" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/pigiama" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/canottiera" + num[0] + ".jpg"
+];
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var alimenti = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/cioccolato1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/cioccolato2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/farina1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/farina2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/formaggio1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/formaggio2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/passata1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/passata2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/uova1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/uova2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var alimenti_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/uova" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/cioccolato" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/farina" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/formaggio" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/passata" + num[0] + ".jpg"
+];
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var alimenti2 = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/caffe1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/caffe2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/crostata1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/crostata2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/insalata1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/insalata2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/pane1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/pane2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/pesce1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/pesce2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var alimenti2_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/caffe" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/crostata" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/pesce" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/pane" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/insalata" + num[0] + ".jpg",
+];
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var animali = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/ape1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/ape2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/criceto1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/criceto2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/granchio1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/granchio2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/pesce1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/pesce2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/rana1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/rana2.jpg"
+
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var animali_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/rana" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/pesce" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/criceto" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/granchio" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/ape" + num[0] + ".jpg"
+];
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+var fiori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/garofano1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/garofano2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/girasole1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/girasole2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/orchidea1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/orchidea2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/rosa1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/rosa2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/violetta1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/violetta2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var fiori_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/violetta" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/girasole" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/orchidea" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/garofano" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/rosa" + num[0] + ".jpg"
+];
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+var fiori2 = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/ciclamino1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/ciclamino2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/geranio1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/geranio2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/gerbera1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/gerbera2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/rosa1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/rosa2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/tulipano1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/tulipano2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var fiori2_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/geranio" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/gerbera" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/ciclamino" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/rosa" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/tulipano" + num[0] + ".jpg"
+];
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+var mezzi_trasporto = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/aereo1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/aereo2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/bicicletta1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/bicicletta2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/macchina1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/macchina2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/moto1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/moto2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/treno1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/treno2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var mezzi_trasporto_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/moto" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/macchina" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/bicicletta" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/aereo" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/treno" + num[0] + ".jpg"
+];
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var strumenti_musicali = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/batteria1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/batteria2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/chitarra1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/chitarra2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/flauto1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/flauto2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/piano1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/piano2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/tromba1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/tromba2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var strumenti_musicali_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/tromba" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/flauto" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/chitarra" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/batteria" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/pianoforte" + num[0] + ".jpg",
+];
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var utensili_cucina = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/coltello1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/coltello2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/cucchiaio1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/cucchiaio2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/forchetta1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/forchetta2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/padella1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/padella2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/piatto1.jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/piatto2.jpg"
+];
+// oggetti che verranno presentati all'esterno del contenitore e che dovranno venir inseriti dal partecipante //
+var utensili_cucina_fuori = [
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/forchetta" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/coltello" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/piatto" + num[0] + ".jpg", "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/padella" + num[0] + ".jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/cucchiaio" + num[0] + ".jpg"
+];
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//Elenco dei vari distrattori in base alle CATEGORIE SEMANTICHE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var distrattori_ABBIGLIAMENTO = alimenti.concat(alimenti2).concat(animali).concat(fiori).concat(fiori2).concat(mezzi_trasporto).concat(strumenti_musicali).concat(utensili_cucina)
+var distrattori_abbigliamento = jsPsych.randomization.sampleWithoutReplacement(distrattori_ABBIGLIAMENTO, 5);
+
+var distrattori_ALIMENTI = abbigliamento.concat(abbigliamento2).concat(animali).concat(fiori).concat(fiori2).concat(mezzi_trasporto).concat(strumenti_musicali).concat(utensili_cucina)
+var distrattori_alimenti = jsPsych.randomization.sampleWithoutReplacement(distrattori_ALIMENTI, 5);
+
+var distrattori_ANIMALI = abbigliamento.concat(abbigliamento2).concat(alimenti).concat(alimenti2).concat(fiori).concat(fiori2).concat(mezzi_trasporto).concat(strumenti_musicali).concat(utensili_cucina);
+var distrattori_animali = jsPsych.randomization.sampleWithoutReplacement(distrattori_ANIMALI, 5);
+
+var distrattori_FIORI = abbigliamento.concat(abbigliamento2).concat(alimenti).concat(alimenti2).concat(animali).concat(mezzi_trasporto).concat(strumenti_musicali).concat(utensili_cucina);
+var distrattori_fiori = jsPsych.randomization.sampleWithoutReplacement(distrattori_FIORI, 5);
+
+var distrattori_MEZZI_TRASPORTO = abbigliamento.concat(abbigliamento2).concat(alimenti).concat(alimenti2).concat(animali).concat(fiori).concat(fiori2).concat(strumenti_musicali).concat(utensili_cucina);
+var distrattori_mezzi_trasporto = jsPsych.randomization.sampleWithoutReplacement(distrattori_MEZZI_TRASPORTO, 5);
+
+var distrattori_STRUMENTI_MUSICALI = abbigliamento.concat(abbigliamento2).concat(alimenti).concat(alimenti2).concat(animali).concat(fiori).concat(fiori2).concat(mezzi_trasporto).concat(utensili_cucina);
+var distrattori_strumenti_musicali = jsPsych.randomization.sampleWithoutReplacement(distrattori_STRUMENTI_MUSICALI, 5);
+
+var distrattori_UTENSILI_CUCINA = abbigliamento.concat(abbigliamento2).concat(alimenti).concat(alimenti2).concat(animali).concat(fiori).concat(fiori2).concat(mezzi_trasporto).concat(strumenti_musicali);
+var distrattori_utensili_cucina = jsPsych.randomization.sampleWithoutReplacement(distrattori_UTENSILI_CUCINA, 5);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var fullscreen_on = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: true
+};
+
+var fullscreen_off = {
+  type: jsPsychFullscreen,
+  fullscreen_mode: false
+};
+
+var pre_if = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Ora vedrai una sacco piena di oggetti che appartengono alla stessa categoria. <br>
+  Attorno, ci saranno altri oggetti sparsi. <br>
+  <strong> Dovrà sceglierne 5 da aggiungere al sacco che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+  button_html: ['<button class="jspsych-btn" style="font-size:30px; color:green;">%choice%</button>', '<button class="jspsych-btn" style="font-size:20px;color:black;">%choice%</button>'],
+  choices: ['Premi qui per iniziare', 'Premi qui per fare una prova'],
+  on_finish: function (data) {
+    if (data.response == 1) {
+      var risposta_prova = 1;
+    } else {
+      var risposta_prova = 0;
+    }
+    data.risposta_prova = risposta_prova
+  }
+
+};
+
+var prova_loop = {
+  type: jsPsychSortDD, //obbligatorio -> nome plugin
+  stimuli: fruttaEfiori, //obbligatorio -> array di tutte le immagini senza limite di numero
+  bagItems: ["./TASKS/LINGUAGGIO/categorizzazione_semantica/img/pera.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mela.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/prugna.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/frutta/cartoon1/melone2.jpg",
+  "./TASKS/LINGUAGGIO/categorizzazione_semantica/img/frutta/cartoon1/anguria2.jpg",
+], //obbligatorio -> elementi che vanno nel sacco/scaffale
+sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+counter_text_unfinished: "Deve ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+on_finish: function (data) {
+  console.log(data.final_locations[0].score +
+    data.final_locations[1].score +
+    data.final_locations[2].score +
+    data.final_locations[3].score +
+    data.final_locations[4].score +
+    data.final_locations[5].score +
+    data.final_locations[6].score);
+    if((data.final_locations[0].score +
+      data.final_locations[1].score +
+      data.final_locations[2].score +
+      data.final_locations[3].score +
+      data.final_locations[4].score +
+      data.final_locations[5].score +
+      data.final_locations[6].score) > 2){ //<!---: da controllare -->
+        data.accuracy = true;
+      } else {
+        data.accuracy = false;
+      }
+    }
+  };
+
+  var feedback = {
+    type: jsPsychHtmlKeyboardResponse,
+    choices: "NO_KEYS",
+    trial_duration: 1500,
+    data: "",
+    stimulus: "",
+    on_start: function (prova_loop) {
+      var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;;
+      if (last_response_accuracy == true) {
+        var feedback = "<img src='feedback/img/corretto.png' width='300'></img>";
+        console.log("Corretto")
+      } else {
+        var feedback = "<img src='feedback/img/sbagliato.png' width='300'></img>";
+        console.log("Sbagliato")
+      };
+      var feedback_prova_stima = "<div style='font-size:60px'><b>" + feedback + "</b></div>";
+      prova_loop.data = { stimulus: feedback };
+      prova_loop.stimulus = feedback_prova_stima;
+    },
+
+  };
+
+  var begin_trial = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+    Ora vedrai una sacco piena di oggetti che appartengono alla stessa categoria. <br>
+    Attorno, ci saranno altri oggetti sparsi. <br>
+    <strong> Dovrà sceglierne 5 da aggiungere al sacco che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+    button_html: `<button class="jspsych-btn" style="position: left; font-size: 20px; color:black;">%choice%</button>`,
+    choices: ['Premi qui per iniziare']
+
+  };
+
+  let punteggio = 0 //aggiorna punteggio
+
+  var trial1 = {
+    type: jsPsychSortDD, //obbligatorio -> nome plugin
+    stimuli: abbigliamento_fuori.concat(distrattori_abbigliamento), //obbligatorio -> array di tutte le immagini senza limite di numero
+    bagItems: abbigliamento_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+    sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+    sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+    sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+    prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+    counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+    counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+    prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+    numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+    stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+    stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+    scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+    button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+    border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+    on_finish: function (data) {
+      console.log(data.final_locations[0].score +
+        data.final_locations[1].score +
+        data.final_locations[2].score +
+        data.final_locations[3].score +
+        data.final_locations[4].score +
+        data.final_locations[5].score +
+        data.final_locations[6].score);
+        if((data.final_locations[0].score +
+          data.final_locations[1].score +
+          data.final_locations[2].score +
+          data.final_locations[3].score +
+          data.final_locations[4].score +
+          data.final_locations[5].score +
+          data.final_locations[6].score) > 2){ //<!---: da controllare -->
+            data.accuracy = true;
+          } else {
+            data.accuracy = false;
+            console.log(data.accuracy)
+          }
+          if (data.accuracy == true) {
+            punteggio++;
+            console.log('risposta corretta', punteggio);
+
+          } else {
+
+            console.log('risposta sbagliata', punteggio);
+
+          }
+        },
+        on_load: function changeBackground(trial1) {
+
+          const background = document.getElementById("jspsych-free-sort-arena");
+          background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon1/sacco_abbigliamento1.png')";;
+
+        }
+      };
+
+      var trial2 = {
+        type: jsPsychSortDD, //obbligatorio -> nome plugin
+        stimuli: abbigliamento2_fuori.concat(distrattori_abbigliamento), //obbligatorio -> array di tutte le immagini senza limite di numero
+        bagItems: abbigliamento2_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+        sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+        sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+        prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+        counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+        on_finish: function (data) {
+          console.log(data.final_locations[0].score +
+            data.final_locations[1].score +
+            data.final_locations[2].score +
+            data.final_locations[3].score +
+            data.final_locations[4].score +
+            data.final_locations[5].score +
+            data.final_locations[6].score);
+            if((data.final_locations[0].score +
+              data.final_locations[1].score +
+              data.final_locations[2].score +
+              data.final_locations[3].score +
+              data.final_locations[4].score +
+              data.final_locations[5].score +
+              data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                data.accuracy = true;
+              } else {
+                data.accuracy = false;
+                console.log(data.accuracy)
+              }
+              if (data.accuracy == true) {
+                punteggio++;
+                console.log('risposta corretta', punteggio);
+
+              } else {
+
+                console.log('risposta sbagliata', punteggio);
+
+              }
+            },
+            on_load: function changeBackground(trial2) {
+
+              const background = document.getElementById("jspsych-free-sort-arena");
+              background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/abbigliamento/cartoon2/sacco_abbigliamento2.png')";;
+
+            }
+          };
+
+          var trial3 = {
+            type: jsPsychSortDD, //obbligatorio -> nome plugin
+            stimuli: alimenti_fuori.concat(distrattori_alimenti), //obbligatorio -> array di tutte le immagini senza limite di numero
+            bagItems: alimenti_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+            sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+            sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+            sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+            prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+            counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+            counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+            prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+            numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+            stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+            stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+            scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+            button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+            border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+            on_finish: function (data) {
+              console.log(data.final_locations[0].score +
+                data.final_locations[1].score +
+                data.final_locations[2].score +
+                data.final_locations[3].score +
+                data.final_locations[4].score +
+                data.final_locations[5].score +
+                data.final_locations[6].score);
+                if((data.final_locations[0].score +
+                  data.final_locations[1].score +
+                  data.final_locations[2].score +
+                  data.final_locations[3].score +
+                  data.final_locations[4].score +
+                  data.final_locations[5].score +
+                  data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                    data.accuracy = true;
+                  } else {
+                    data.accuracy = false;
+                    console.log(data.accuracy)
+
+                  }
+                  if (data.accuracy == true) {
+                    punteggio++;
+                    console.log('risposta corretta', punteggio);
+
+                  } else {
+
+                    console.log('risposta sbagliata', punteggio);
+
+                  }
+                },
+                on_load: function changeBackground(trial1) {
+
+                  const background = document.getElementById("jspsych-free-sort-arena");
+                  background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon1/sacco_alimenti1.png')";;
+
+                }
+              };
+              var trial4 = {
+                type: jsPsychSortDD, //obbligatorio -> nome plugin
+                stimuli: alimenti2_fuori.concat(distrattori_alimenti), //obbligatorio -> array di tutte le immagini senza limite di numero
+                bagItems: alimenti2_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                on_finish: function (data) {
+                  console.log(data.final_locations[0].score +
+                    data.final_locations[1].score +
+                    data.final_locations[2].score +
+                    data.final_locations[3].score +
+                    data.final_locations[4].score +
+                    data.final_locations[5].score +
+                    data.final_locations[6].score);
+                    if((data.final_locations[0].score +
+                      data.final_locations[1].score +
+                      data.final_locations[2].score +
+                      data.final_locations[3].score +
+                      data.final_locations[4].score +
+                      data.final_locations[5].score +
+                      data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                        data.accuracy = true;
+                      } else {
+                        data.accuracy = false;
+                        console.log(data.accuracy)
+                      }
+                      if (data.accuracy == true) {
+                        punteggio++;
+                        console.log('risposta corretta', punteggio);
+
+                      } else {
+
+                        console.log('risposta sbagliata', punteggio);
+
+                      }
+                    },
+                    on_load: function changeBackground(trial4) {
+
+                      const background = document.getElementById("jspsych-free-sort-arena");
+                      background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/alimenti/cartoon2/sacco_alimenti2.png')";;
+
+                    }
+                  };
+
+                  var trial5 = {
+                    type: jsPsychSortDD, //obbligatorio -> nome plugin
+                    stimuli: animali_fuori.concat(distrattori_animali), //obbligatorio -> array di tutte le immagini senza limite di numero
+                    bagItems: animali_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                    sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                    sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                    sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                    prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                    counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                    counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                    prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                    numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                    stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                    stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                    scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                    button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                    border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                    on_finish: function (data) {
+                      console.log(data.final_locations[0].score +
+                        data.final_locations[1].score +
+                        data.final_locations[2].score +
+                        data.final_locations[3].score +
+                        data.final_locations[4].score +
+                        data.final_locations[5].score +
+                        data.final_locations[6].score);
+                        if((data.final_locations[0].score +
+                          data.final_locations[1].score +
+                          data.final_locations[2].score +
+                          data.final_locations[3].score +
+                          data.final_locations[4].score +
+                          data.final_locations[5].score +
+                          data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                            data.accuracy = true;
+                          } else {
+                            data.accuracy = false;
+                            console.log(data.accuracy)
+                          }
+                          if (data.accuracy == true) {
+                            punteggio++;
+                            console.log('risposta corretta', punteggio);
+
+                          } else {
+
+                            console.log('risposta sbagliata', punteggio);
+
+                          }
+                        },
+                        on_load: function changeBackground(trial5) {
+
+                          const background = document.getElementById("jspsych-free-sort-arena");
+                          background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/animali/cartoon/sacco_animali.png')";;
+
+                        }
+                      };
+
+                      var trial6 = {
+                        type: jsPsychSortDD, //obbligatorio -> nome plugin
+                        stimuli: fiori_fuori.concat(distrattori_fiori), //obbligatorio -> array di tutte le immagini senza limite di numero
+                        bagItems: fiori_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                        sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                        sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                        prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                        counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                        on_finish: function (data) {
+                          console.log(data.final_locations[0].score +
+                            data.final_locations[1].score +
+                            data.final_locations[2].score +
+                            data.final_locations[3].score +
+                            data.final_locations[4].score +
+                            data.final_locations[5].score +
+                            data.final_locations[6].score);
+                            if((data.final_locations[0].score +
+                              data.final_locations[1].score +
+                              data.final_locations[2].score +
+                              data.final_locations[3].score +
+                              data.final_locations[4].score +
+                              data.final_locations[5].score +
+                              data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                                data.accuracy = true;
+                              } else {
+                                data.accuracy = false;
+                                console.log(data.accuracy)
+                              }
+                              if (data.accuracy == true) {
+                                punteggio++;
+                                console.log('risposta corretta', punteggio);
+
+                              } else {
+
+                                console.log('risposta sbagliata', punteggio);
+
+                              }
+                            },
+                            on_load: function changeBackground(trial6) {
+
+                              const background = document.getElementById("jspsych-free-sort-arena");
+                              background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon1/sacco_fiori1.png')";;
+
+                            }
+                          };
+
+                          var trial7 = {
+                            type: jsPsychSortDD, //obbligatorio -> nome plugin
+                            stimuli: fiori2_fuori.concat(distrattori_fiori), //obbligatorio -> array di tutte le immagini senza limite di numero
+                            bagItems: fiori2_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                            sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                            sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                            sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                            prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                            counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                            counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                            prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                            numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                            stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                            stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                            scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                            button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                            border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                            on_finish: function (data) {
+                              console.log(data.final_locations[0].score +
+                                data.final_locations[1].score +
+                                data.final_locations[2].score +
+                                data.final_locations[3].score +
+                                data.final_locations[4].score +
+                                data.final_locations[5].score +
+                                data.final_locations[6].score);
+                                if((data.final_locations[0].score +
+                                  data.final_locations[1].score +
+                                  data.final_locations[2].score +
+                                  data.final_locations[3].score +
+                                  data.final_locations[4].score +
+                                  data.final_locations[5].score +
+                                  data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                                    data.accuracy = true;
+                                  } else {
+                                    data.accuracy = false;
+                                    console.log(data.accuracy)
+                                  }
+                                  if (data.accuracy == true) {
+                                    punteggio++;
+                                    console.log('risposta corretta', punteggio);
+
+                                  } else {
+
+                                    console.log('risposta sbagliata', punteggio);
+
+                                  }
+                                },
+                                on_load: function changeBackground(trial7) {
+
+                                  const background = document.getElementById("jspsych-free-sort-arena");
+                                  background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/fiori/cartoon2/sacco_fiori2.png')";;
+
+                                }
+                              };
+
+                              var trial8 = {
+                                type: jsPsychSortDD, //obbligatorio -> nome plugin
+                                stimuli: mezzi_trasporto_fuori.concat(distrattori_mezzi_trasporto), //obbligatorio -> array di tutte le immagini senza limite di numero
+                                bagItems: mezzi_trasporto_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                                sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                                sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                                sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                                prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                                counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                                counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                                prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                                numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                                stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                                stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                                scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                                button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                                border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                                on_finish: function (data) {
+                                  console.log(data.final_locations[0].score +
+                                    data.final_locations[1].score +
+                                    data.final_locations[2].score +
+                                    data.final_locations[3].score +
+                                    data.final_locations[4].score +
+                                    data.final_locations[5].score +
+                                    data.final_locations[6].score);
+                                    if((data.final_locations[0].score +
+                                      data.final_locations[1].score +
+                                      data.final_locations[2].score +
+                                      data.final_locations[3].score +
+                                      data.final_locations[4].score +
+                                      data.final_locations[5].score +
+                                      data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                                        data.accuracy = true;
+                                      } else {
+                                        data.accuracy = false;
+                                        console.log(data.accuracy)
+                                      }
+                                      if (data.accuracy == true) {
+                                        punteggio++;
+                                        console.log('risposta corretta', punteggio);
+
+                                      } else {
+
+                                        console.log('risposta sbagliata', punteggio);
+
+                                      }
+                                    },
+                                    on_load: function changeBackground(trial8) {
+
+                                      const background = document.getElementById("jspsych-free-sort-arena");
+                                      background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/mezzi_trasporto/cartoon1/sacco_mezzi1.png')";;
+
+                                    }
+                                  };
+
+                                  var trial9 = {
+                                    type: jsPsychSortDD, //obbligatorio -> nome plugin
+                                    stimuli: strumenti_musicali_fuori.concat(distrattori_strumenti_musicali), //obbligatorio -> array di tutte le immagini senza limite di numero
+                                    bagItems: strumenti_musicali_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                                    sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                                    sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                                    sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                                    prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                                    counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                                    counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                                    prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                                    numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                                    stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                                    stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                                    scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                                    button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                                    border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                                    on_finish: function (data) {
+                                      console.log(data.final_locations[0].score +
+                                        data.final_locations[1].score +
+                                        data.final_locations[2].score +
+                                        data.final_locations[3].score +
+                                        data.final_locations[4].score +
+                                        data.final_locations[5].score +
+                                        data.final_locations[6].score);
+                                        if((data.final_locations[0].score +
+                                          data.final_locations[1].score +
+                                          data.final_locations[2].score +
+                                          data.final_locations[3].score +
+                                          data.final_locations[4].score +
+                                          data.final_locations[5].score +
+                                          data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                                            data.accuracy = true;
+                                          } else {
+                                            data.accuracy = false;
+                                            console.log(data.accuracy)
+                                          }
+                                          if (data.accuracy == true) {
+                                            punteggio++;
+                                            console.log('risposta corretta', punteggio);
+
+                                          } else {
+
+                                            console.log('risposta sbagliata', punteggio);
+
+                                          }
+                                        },
+                                        on_load: function changeBackground(trial9) {
+
+                                          const background = document.getElementById("jspsych-free-sort-arena");
+                                          background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/strumenti_musicali/cartoon/sacco_strumenti.png')";;
+
+                                        }
+                                      };
+
+                                      var trial10 = {
+                                        type: jsPsychSortDD, //obbligatorio -> nome plugin
+                                        stimuli: utensili_cucina_fuori.concat(distrattori_utensili_cucina), //obbligatorio -> array di tutte le immagini senza limite di numero
+                                        bagItems: utensili_cucina_fuori, //obbligatorio -> elementi che vanno nel sacco/scaffale
+                                        sort_area_width: 500, //obbligatorio -> larghezza area dove rilasciare gli oggetti
+                                        sort_area_height: 1000, //obbligatorio -> altezza area dove rilasciare gli oggetti
+                                        sort_area_shape: "square", //obbligatorio -> forma area rilascio oggetti ('square', 'ellipse' o personalizzabile con codice)
+                                        prompt: "<p>Metta gli elementi simili nel sacco.</p>", //obbligatorio -> testo intestazione compito
+                                        counter_text_unfinished: "Devi ancora posizionare %n% elementi dentro il sacco.", //opzionale -> testo didascalia compito, default: "Devi ancora posizionare %n% elementi dentro il sacco."
+                                        counter_text_finished: "Ha posizionato tutti gli elementi. Si senta libero di ripensarci se necessario.", //opzionale -> testo fine compito, default: "Hai posizionato tutti gli elementi. Sentiti libero di ripensarci se necessario."
+                                        prompt_location: 'above', //opzionale -> posizione didascalie ('above' o 'below'), default: 'above'
+                                        numItem: 5, //opzionale -> IMPORTANTE: numero elementi da mettere nel sacco
+                                        stim_height: 111, //opzionale -> altezza della cella e dello stimolo, default: 111
+                                        stim_width: 115, //opzionale -> larghezza della cella e dello stimolo, default: 115
+                                        scale_factor: 1.5, //opzionale -> scala di ingrandimento dello stimolo da muovere (1 = stessa grandezza)
+                                        button_label: "FINE", //opzionale -> testo bottone finale, default: 'FINE'
+                                        border_width: 5, //opzionale -> bordo celle attivabili, default: 5
+                                        on_finish: function (data) {
+                                          console.log(data.final_locations[0].score +
+                                            data.final_locations[1].score +
+                                            data.final_locations[2].score +
+                                            data.final_locations[3].score +
+                                            data.final_locations[4].score +
+                                            data.final_locations[5].score +
+                                            data.final_locations[6].score);
+                                            if((data.final_locations[0].score +
+                                              data.final_locations[1].score +
+                                              data.final_locations[2].score +
+                                              data.final_locations[3].score +
+                                              data.final_locations[4].score +
+                                              data.final_locations[5].score +
+                                              data.final_locations[6].score) > 2){ //<!---: da controllare -->
+                                                data.accuracy = true;
+                                              } else {
+                                                data.accuracy = false;
+                                                console.log(data.accuracy)
+                                              }
+                                              if (data.accuracy == true) {
+                                                punteggio++;
+                                                console.log('risposta corretta', punteggio);
+
+                                              } else {
+
+                                                console.log('risposta sbagliata', punteggio);
+
+                                              }
+                                            },
+                                            on_load: function changeBackground(trial10) {
+
+                                              const background = document.getElementById("jspsych-free-sort-arena");
+                                              background.style.backgroundImage  = "url('./TASKS/LINGUAGGIO/categorizzazione_semantica/img/utensili_cucina/cartoon/sacco_utensili.png')";;
+
+                                            }
+                                          };
+
+                                          var sample_trials = jsPsych.randomization.sampleWithoutReplacement([trial1, trial2, trial3, trial4, trial5, trial6, trial7, trial8, trial9, trial10],5);
+
+
+                                          var trial_timeline = {
+                                            timeline: [fullscreen_on, sample_trials[0], sample_trials[1], sample_trials[2], sample_trials[3], sample_trials[4], fullscreen_off]
+                                          };
+
+                                          /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                                          var if_node = {
+                                            timeline: [begin_trial, trial_timeline],
+                                            conditional_function: function () {
+                                              var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+                                              if (response_button == 0) {
+                                                console.log("prosegui a esercizio");
+                                                return true;
+                                              } else {
+                                                console.log("inizia la prova");
+                                                jsPsych.addNodeToEndOfTimeline(loop_prova)
+                                                return false;
+                                              }
+                                            }
+                                          };
+
+                                          var begin_loop = {
+                                            type: jsPsychHtmlButtonResponse,
+                                            stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Va bene facciamo una prova! <br> Ora vedrai una sacco piena di oggetti che appartengono alla stessa categoria. <br>
+                                            Attorno, ci saranno altri oggetti sparsi. <br>
+                                            <strong> Dovrà sceglierne 5 da aggiungere al sacco che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+                                            button_html: `<button class="jspsych-btn" style="position: left; font-size: 30px; color:black; ">%choice%</button>`,
+                                            choices: ['Premi qui per iniziare la prova'],
+                                            on_start: function (data) {
+                                              var response_button = jsPsych.data.get().last(1).values()[0].response;
+                                              console.log(response_button)
+                                              if (response_button == 0) {
+                                                console.log("salta loop");
+                                                jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+                                              }
+                                            }
+                                          };
+
+                                          var end_loop_prova = {
+                                            type: jsPsychHtmlButtonResponse,
+                                            stimulus: `<p style="font-size: 40px; line-height: 1.5;"> Ora che ha terminato la prova, inziamo con il vero esercizio. <br>
+                                            Ora vedrai una sacco piena di oggetti che appartengono alla stessa categoria. <br>
+                                            Attorno, ci saranno altri oggetti sparsi. <br>
+                                            Dovrà sceglierne 5 da aggiungere al sacco che appartengono alla stessa categoria, lasciando fuori quelli che non c'entrano.</p>`,
+                                            button_html: ['<button class="jspsych-btn" style="font-size:30px; color:green;">%choice%</button>', '<button class="jspsych-btn" style="font-size:20px; color:black;">%choice%</button>'],
+                                            choices: ['Premi qui per iniziare', 'Premi qui per ripetere la prova'],
+                                            on_finish: function (data) {
+                                              if (data.response == 1) {
+                                                var risposta = 1;
+                                              } else {
+                                                var risposta = 0;
+                                                console.log("Termine loop prova");
+                                                jsPsych.addNodeToEndOfTimeline(trial_timeline);
+                                              }
+                                              data.risposta_loop = risposta
+                                            }
+                                          };
+
+                                          var loop_prova = {
+                                            timeline: [begin_loop, prova_loop, feedback, end_loop_prova],
+                                            loop_function: function () {
+                                              var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+                                              if (response_button == 1) {
+                                                return true;
+                                              } else {
+                                                return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+                                              }
+                                            }
+                                          };
+
+
+
+
+                                          var timeline = [pre_if, if_node];
+                                          jsPsych.run(timeline);
+
+                                          </script>
+
+                                          </html>

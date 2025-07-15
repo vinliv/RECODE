@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		Feedback
+	</title>
+
+	<script src="jatos.js"></script>
+
+	<script src="./jspsych7.2.3/dist/jspsych.js"></script>
+	<script src="./jspsych-psychophysics-3.3.0/jspsych-psychophysics.js"></script>
+	<script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+	<script src="./jspsych7.2.3/dist/plugin-fullscreen.js"></script>
+	<script src="./jspsych7.2.3/dist/plugin-survey-likert.js"></script>
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+	<!-- https://github.com/mrmins/EmojiRaiting LINK PER FUNZIONE EMOJI -->
+	<link rel="stylesheet" type="text/css" href="./feedback/csshake.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="./feedback/emoji.js"></script>
+
+
+</head>
+<style>
+#top {
+	height: 20%;
+}
+
+#bottom {
+	position: fixed;
+	left: 0;
+	right: 0;
+	height: 80%;
+}
+
+#bottom {
+	bottom: 0;
+	background-color: white;
+}
+
+#top {
+	top: 0;
+	background-color: rgb(220, 220, 220);
+}
+
+body {
+	background-color: rgb(255, 255, 255);
+}
+
+.emoji {border-radius: 30%;}
+
+ul.jspsych-survey-likert-opts:before {height:0px}
+</style>
+
+<body>
+	<div id="top">
+		<div id="myprogress" class="w3-container w3-green w3-center" style="width:0%"></div>
+	  </div><br>
+	</div>
+	<div id = "bottom">
+	</div>
+</body>
+
+<script>
+//var gradimento = 'none';
+
+jatos.onload(function(){
+	var componentCounter = Number(sessionStorage.getItem('componentCounter'));
+	var str = sessionStorage.getItem('nextComponentPosition');
+
+	const regex = /\d+/gm;
+	let m;
+	const filter = [];
+	while ((m = regex.exec(str)) !== null) {
+		// This is necessary to avoid infinite loops with zero-width matches
+		if (m.index === regex.lastIndex) {
+			regex.lastIndex++;
+		}
+
+		// The result can be accessed through the `m`-variable.
+		m.forEach((match, groupIndex) => {
+			filter.push(parseInt(match))
+		});
+	};
+
+	var nextComponentPosition = filter;
+
+	var progress = Math.round((1/nextComponentPosition.length)*(componentCounter+1)*100,0);
+	var progressText="avanzamento" + progress + "%";
+	var elem = document.getElementById("myprogress");
+					elem.style.width = progress + "%";
+					elem.innerText= "avanzamento " + progress + "%";
+					elem.value=progress
+	var jsPsych = initJsPsych({
+		display_element: "bottom",
+		//experiment_width: 300,
+		//experiment_height: 300,
+		on_finish: function(){
+			var componentCounter = Number(sessionStorage.getItem('componentCounter'))+1;
+			sessionStorage.setItem('componentCounter', componentCounter);
+			var str = sessionStorage.getItem('nextComponentPosition');
+
+			const regex = /\d+/gm;
+			let m;
+			const filter = [];
+			while ((m = regex.exec(str)) !== null) {
+				// This is necessary to avoid infinite loops with zero-width matches
+				if (m.index === regex.lastIndex) {
+					regex.lastIndex++;
+				}
+
+				// The result can be accessed through the `m`-variable.
+				m.forEach((match, groupIndex) => {
+					filter.push(parseInt(match))
+				});
+			};
+
+			var attenzione = Number(sessionStorage.getItem('attenzione'));
+      var linguaggio = Number(sessionStorage.getItem('linguaggio'));
+      var memoria_visiva = Number(sessionStorage.getItem('memoria_visiva'));
+      var memoria_lavoro = Number(sessionStorage.getItem('memoria_lavoro'));
+      var funzioni_esecutive = Number(sessionStorage.getItem('funzioni_esecutive'));
+      var orientamento = Number(sessionStorage.getItem('orientamento'));
+
+			var level_attenzione = Number(sessionStorage.getItem('level_attenzione'));
+			var level_linguaggio = Number(sessionStorage.getItem('level_linguaggio'));
+			var level_memoria_visiva = Number(sessionStorage.getItem('level_memoria_visiva'));
+			var level_memoria_lavoro = Number(sessionStorage.getItem('level_level_memoria_lavoro'));
+			var level_funzioni_esecutive = Number(sessionStorage.getItem('level_funzioni_esecutive'));
+			var level_orientamento = Number(sessionStorage.getItem('level_orientamento'));
+
+			var counter_attenzione = Number(sessionStorage.getItem('counter_attenzione'));
+      var counter_linguaggio = Number(sessionStorage.getItem('counter_linguaggio'));
+      var counter_memoria_visiva = Number(sessionStorage.getItem('counter_memoria_visiva'));
+      var counter_memoria_lavoro = Number(sessionStorage.getItem('counter_memoria_lavoro'));
+      var counter_funzioni_esecutive = Number(sessionStorage.getItem('counter_funzioni_esecutive'));
+      var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'));
+
+			var punteggio_finale_attenzione= Number(sessionStorage.getItem('punteggio_finale_attenzione'));
+			var punteggio_finale_linguaggio= Number(sessionStorage.getItem('punteggio_finale_linguaggio'));
+			var punteggio_finale_memoria_visiva= Number(sessionStorage.getItem('punteggio_finale_memoria_visiva'));
+			var punteggio_finale_memoria_lavoro= Number(sessionStorage.getItem('punteggio_finale_memoria_lavoro'));
+			var punteggio_finale_funzioni_esecutive= Number(sessionStorage.getItem('punteggio_finale_funzioni_esecutive'));
+			var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'));
+
+        var data = {
+					attenzione: attenzione,
+			    counter_attenzione: counter_attenzione,
+			    punteggio_finale_attenzione:punteggio_finale_attenzione,
+			    linguaggio: linguaggio,
+			    counter_linguaggio: counter_linguaggio,
+			    punteggio_finale_linguaggio:punteggio_finale_linguaggio,
+			    memoria_visiva: memoria_visiva,
+			    counter_memoria_visiva: counter_memoria_visiva,
+			    punteggio_finale_memoria_visiva:punteggio_finale_memoria_visiva,
+			    memoria_lavoro: memoria_lavoro,
+			    counter_memoria_lavoro: counter_memoria_lavoro,
+			    punteggio_finale_memoria_lavoro:punteggio_finale_memoria_lavoro,
+			    funzioni_esecutive: funzioni_esecutive,
+			    counter_funzioni_esecutive: counter_funzioni_esecutive,
+			    punteggio_finale_funzioni_esecutive:punteggio_finale_funzioni_esecutive,
+			    orientamento: orientamento,
+			    counter_orientamento: counter_orientamento,
+			    punteggio_finale_orientamento:punteggio_finale_orientamento,
+        };
+
+				jatos.batchSession.set("level_attenzione", attenzione)
+			  .then(() => jatos.batchSession.set("level_linguaggio", linguaggio))
+			  .then(() => jatos.batchSession.set("level_memoria_visiva", memoria_visiva))
+			  .then(() => jatos.batchSession.set("level_memoria_lavoro", memoria_lavoro))
+			  .then(() => jatos.batchSession.set("level_funzioni_esecutive", funzioni_esecutive))
+			  .then(() => jatos.batchSession.set("level_orientamento", orientamento))
+
+        let arr = [data];
+
+        function arrayToCSV(objArray) {
+          const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+          let str = `${Object.keys(array[0]).map(value => `"${value}"`).join(",")}` + '\r\n';
+
+          return array.reduce((str, next) => {
+            str += `${Object.values(next).map(value => `"${value}"`).join(",")}` + '\r\n';
+            return str;
+          }, str);
+        }
+
+        csv = arrayToCSV(arr);
+        var day = new Date();
+        var gg, mm, aaaa;
+        gg = day.getDate() + "-";
+        mm = day.getMonth() + 1 + "-";
+        aaaa = day.getFullYear();
+        jatos.uploadResultFile(csv, "data_file_" + gg + mm + aaaa + ".csv")
+        .then(() => console.log("File was successfully uploaded"))
+        .catch(() => console.log("File upload failed"));
+
+			var nextComponentPosition = filter;
+			jatos.startComponentByPos(nextComponentPosition[componentCounter]);
+		},
+
+	});
+
+
+	var feed = jatos.studySessionData; // da rivedere in base a nuovi punteggi per passare accuratezza del 80percento
+	if (feed ==1) {
+		var feedback = {
+			type: jsPsychHtmlButtonResponse,
+			stimulus: "<div style='float: up;'><img src='./feedback/img/ok.jpg' width='300'></img>" +
+			"<p style='font-size:30px; color:green'><strong>Stai andando alla grande</strong></p>"+
+			"<div id='emoji-div'></div>",
+			button_html: '<button class="jspsych-btn" style="font-size:30px; color:black;">%choice%</button>',
+			choices: ["Continua"],
+		};
+	} else {
+		var feedback = {
+			type: jsPsychHtmlButtonResponse,
+			stimulus:"<div style='float: up;'><img src='./feedback/img/dead.jpg' width='300'></img>" +
+			"<p style='font-size:30px; color:orange'>Qualcosa è andato storto...</p> <p style='font-size:30px; color:blue'><strong>Non preoccuparti, puoi fare meglio!</strong></p>",
+			button_html: '<button class="jspsych-btn" style="font-size:30px; color:black;">%choice%</button>',
+			choices: ["Continua"],
+		}
+	}
+
+	/*var gradimento = {
+		type: jsPsychSurveyLikert,
+
+		questions: [{
+			prompt: `<p style="font-size: 34px; font-weight: bold;">Voglio esprimere un giudizio sull'ultimo esercizio. <br><br><br><br> L'ultimo esercizio è stato: </p>`,
+			labels: [
+				'<p style="font-size: 70px; "> &#x1F620;</p>',
+				'<p style="font-size: 70px; "> &#x1F61E;</p>',
+				'<p style="font-size: 70px; "> &#x1F610;</p>',
+				'<p style="font-size: 70px; "> &#x1F60A;</p>',
+				'<p style="font-size: 70px; "> &#x1F603;</p>',
+			],
+		}],
+		css_classes: ['jspsych-survey-likert-opts']
+
+	};/*
+
+	/*$(function(){
+	//var emojis = ['&#x1F620;'];
+	//$("#emoji-div").emoji({ value: 4 });
+	var emojis = ['&#x1F620;','&#x1F61E;','&#x1F610;','&#x1F60A;','&#x1F603;'];
+
+	$("#emoji-div").emoji({
+	opacity: 0.3, //Opacity for no-selected emojis. [The value should be between 0 and 1 (like 0.5)]
+	value: 0,  //Selected value
+	width: '90px',  //With of each emoji.
+	event: 'click',  //Event "click" or "mouseover".
+	color: 'blue',
+	emojis: emojis,  //In case you want to define your own list of emojis
+	count: 5, //VERY OPTIONAL - In case you want set 1 emoji in the array and display N number of them.
+	animation: 'shake-slow', //shake, shake-slow, shake-hard, shake-horizontal, shake-vertical, shake-rotate, shake-opacity, shake-crazy, shake-chunk
+	UTF8: true, //By default, the EmojiRaiting plugin insert the meta tag to your code.
+	callback: notifyMe, //Returns event and currentValue in the change event
+	debug: false //Boolean value
+});
+
+function notifyMe(event, value){
+gradimento = ("Gradimento: " + value);
+return gradimento;
+}
+});*/
+
+
+
+var timeline = [feedback];
+
+jsPsych.run(timeline)
+
+});
+
+
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIENTAMENTO Orologio LIV.1</title>
+
+    <script src="./jspsych7.2.3/dist/jspsych.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-survey-text.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-image-button-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-preload.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-keyboard-response.js"></script>
+    <script src="./jspsych7.2.3/dist/plugin-html-button-response.js"></script>
+
+
+    <link href="./jspsych7.2.3/dist/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="jatos.js"></script>
+</head>
+<body>
+    <!-- LIVELLO 1: si alternano in modo randomizzato, come nell’esercizio “stagioni”, due tipi di esercizi:
+
+ATTIVITÀ  TIPICHE: ad ogni trial si presenta un’attività che tipicamente (e inequivocabilmente) si fa a certi orari piuttosto che altri
+(ad es. la spesa si fa durante il giorno e non durante la notte). Si propongono quindi 4 orari, di cui uno solo compatibile con l’attività  e il partecipante deve cliccare sull’orario corretto.
+
+ISTRUZIONI: Adesso leggerà un’attività che si fa più spesso in certi orari del giorno. Scelga qual è l’orario corretto secondo lei.
+
+Schermata successiva: sopra “a che ora si svolge questa attività?”
+
+al centro l’azione ad es. FARE LA SPESA
+
+sotto: selezioni l’orario in cui svolgerebbe questa attività cliccando sopra con il mouse.
+Sotto le quattro caselle con gli orari.
+
+Elenco di possibili azioni ed orari. Aggiungetene altri o modificate pure:
+“FARE LA SPESA (23:00; 4:30; 24:00; 9:15)- ANDARE A DORMIRE (8:15; 13:00; 3:45; 22:00)- FARE COLAZIONE (7:30, 16:40; 23:20; 12:00)-
+PREPARARE IL PRANZO (12:00; 14:15; 17:30; 20;30)- PREPARARE LA CENA (18:30; 14:15; 9:00; 22:20) - ACCOMPAGNARE I BAMBINI A SCUOLA(8:00, 20:20; 15:00, 10:45)
+- PRENDERE I BAMBINI DA SCUOLA (13:30, 19:10, 23:25, 4:00)-  ANDARE AL CINEMA (12:00; 9:45; 17:00; 3:00)
+
+MOMENTI DELLA GIORNATA: questo esercizio va randomizzato con il precedente. Si presenta, di volta in volta, un solo orario centrale
+e il partecipante deve scegliere a quale momento della giornata appartiene tra i 4  (MATTINA 6:00- 13:00, POMERIGGIO 16:00- 18:00, SERA 20-23:30, NOTTE: 24:00- 3:00 ).
+
+ISTRUZIONI: nella prima schermata: “Adesso vedrai un orario. Indichi a quale momento della giornata appartiene.”
+
+Schermata dell’esercizio: sopra “A che momento del giorno appartiene questo orario?”
+
+            Al centro una sveglia che segna solo ore e minuti.
+
+Sotto: “Selezioni il momento del giorno cliccando con il mouse su una tra queste alternative:”
+
+sotto 4 caselle con scritto “mattina, pomeriggio, sera, notte”.
+
+Scegliete liberamente orari, possibilmente evitando le fasce un po’ al limite (ad es. le 23 magari per una persona anziana che va a letto alle 19:00 può essere considerata notte più che sera).
+
+
+In totale vengono proposti 5 trial tra i due esercizi, in modo randomico, e la modalità di scoring è 0 o 2.
+-->
+</body>
+
+<script>
+
+    var jsPsych = initJsPsych({
+        use_webaudio: false,
+        on_finish: function () {
+            /*jsPsych.data.displayData();*/
+
+            if (punteggio >= 4) { // in modo da passare come corretto l'esercizio all'80% di risposte corrette
+                var feed = 1;
+            } else {
+                var feed = -1;
+            }
+            var punteggio_dec=punteggio*10/5;
+            jatos.studySessionData = feed;
+            var orientamento = Number(sessionStorage.getItem('orientamento'))+feed;
+            var counter_orientamento = Number(sessionStorage.getItem('counter_orientamento'))+1;
+            var punteggio_finale_orientamento= Number(sessionStorage.getItem('punteggio_finale_orientamento'))+punteggio_dec;
+            sessionStorage.setItem('punteggio_finale_orientamento', punteggio_finale_orientamento);
+            if (orientamento < 0) {orientamento = 0}
+            if (orientamento > 2) {orientamento = 2}
+            if (counter_orientamento > 3) {counter_orientamento = 3}
+            sessionStorage.setItem('orientamento', orientamento);
+            sessionStorage.setItem('counter_orientamento', counter_orientamento);
+            var Data = { feed: feed, type: 'ORIENTAMENTO_orologio_level1', cresp: punteggio_dec};
+            jatos.startComponentByPos(4, Data); /*PER FAR COMPARIRE FEEDBACK in base a posizione file su jatos */
+        }
+    });
+
+    var preload = {
+        type: jsPsychPreload,
+        trials: [attività_mattina, momenti_array],
+        show_detailed_errors: true
+    };
+
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+    };
+    var row_full_design_mattina = 0;
+    var row_full_design_pranzo = 0;
+    var row_full_design_pomeriggio = 0;
+    var row_full_design_sera = 0;
+    var row_full_design_notte = 0;
+
+    var attività_mattina = [
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/colazione.jpg', cue:'FARE COLAZIONE', momento: 'mattina'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/colazione1.jpg', cue:'FARE COLAZIONE', momento: 'mattina'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/colazione2.jpg', cue:'FARE COLAZIONE', momento: 'mattina'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/colazione3.jpg',cue:'FARE COLAZIONE',  momento: 'mattina'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/scuola_mattina.jpg',cue:'ANDARE A SCUOLA',  momento: 'mattina'},
+        //{attività: './TASKS/ORIENTAMENTO/orologio/img/attività/notte.jpg',  cue:'ANDARE A FARE UNA PASSEGGIATA', momento: 'mattina'},
+      ];
+    var attività_pranzo = [
+      {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/pranzare.jpg',cue:'PRANZARE',  momento: 'pranzo'},
+      {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/pranzare1.jpg',cue:'PRANZARE',  momento: 'pranzo'},
+      {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/pranzare2.jpg',cue:'PRANZARE',  momento: 'pranzo'},
+      {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/pranzare3.jpg',cue:'PRANZARE',  momento: 'pranzo'},
+      {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/pranzare3.jpg',cue:'PRANZARE',  momento: 'pranzo'},
+
+    ]
+    var attività_pomeriggio = [
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/parco.jpg',cue:'ANDARE AL PARCO', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/parco2.jpg',cue:'ANDARE AL PARCO', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/parco3.jpg',cue:'ANDARE AL PARCO', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/passeggiata.jpg',cue:'ANDARE A FARE UNA PASSEGGIATA', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/passeggiata1.jpg',cue:'ANDARE A FARE UNA PASSEGGIATA',momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cinema.jpg', cue:'ANDARE AL CINEMA', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/bicicletta.jpg',cue:'ANDARE A FARE UN GIRO IN BICICLETTA', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/bicicletta1.jpg',cue:'ANDARE A FARE UN GIRO IN BICICLETTA', momento: 'pomeriggio'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/bicicletta2.jpg',cue:'ANDARE A FARE UN GIRO IN BICICLETTA', momento: 'pomeriggio'}
+      ];
+
+      var attività_sera = [
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cenare.jpg', cue:'CENARE', momento: 'sera'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cenare1.jpg',cue:'CENARE', momento: 'sera'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cenare2.jpg',cue:'CENARE', momento: 'sera'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cenare3.jpg', cue:'CENARE', momento: 'sera'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cinema.jpg', cue:'ANDARE AL CINEMA', momento: 'sera'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/cinema1.jpg', cue:'ANDARE AL CINEMA', momento: 'sera'},
+
+        //{attività: './TASKS/ORIENTAMENTO/orologio/img/attività/taranta.jpg', cue: 'ANDARE A BALLARE', momento: 'sera'},
+        //{attività: './TASKS/ORIENTAMENTO/orologio/img/attività/ballare.jpg', cue: 'ANDARE A BALLARE', momento: 'sera'},
+      ];
+var attività_notte = [
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire.jpg', cue: 'DORMIRE', momento: 'notte'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire1.jpg', cue: 'DORMIRE', momento: 'notte'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire2.jpg', cue: 'DORMIRE', momento: 'notte'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire3.jpg', cue: 'DORMIRE', momento: 'notte'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire4.jpg', cue: 'DORMIRE', momento: 'notte'},
+      //  {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire5.jpg', cue: 'ALZARSI PER ANDARE IN BAGNO', momento: 'notte'},
+        {attività: './TASKS/ORIENTAMENTO/orologio/img/attività/dormire6.jpg', cue: 'DORMIRE', momento: 'notte'}
+    ];
+
+    var attività_all = attività_mattina.concat(attività_pranzo).concat(attività_pomeriggio).concat(attività_sera).concat(attività_notte);
+    var attività_all = jsPsych.randomization.shuffle(attività_all);
+
+
+  var factors_mattina = {
+    corretta: ['7:30', '7:00', '8:30', '8:00'],
+    sbagliata1: ['02:00', '03:00'],
+    sbagliata2: ['17:00', '18:00'],
+    sbagliata3: ['21:00', '22:00'],
+};
+var full_design_mattina = jsPsych.randomization.factorial(factors_mattina, 1);
+
+var factors_pranzo = {
+  corretta: ['12:30', '13:00', '13:30', '12:00'],
+  sbagliata1: ['04:00', '05:00'],
+  sbagliata2: ['17:00', '18:00'],
+  sbagliata3: ['21:00', '22:00'],
+  };
+var full_design_pranzo = jsPsych.randomization.factorial(factors_pranzo, 1);
+
+var factors_pomeriggio = {
+    corretta: ['17:30', '16:00', '16:30', '17:00'],
+    sbagliata1: ['02:00', '03:00'],
+    sbagliata2: ['6:00', '5:00'],
+    sbagliata3: ['23:00', '00:00'],
+};
+var full_design_pomeriggio = jsPsych.randomization.factorial(factors_pomeriggio, 1);
+
+var factors_sera = {
+    corretta: ['19:30', '20:00', '19:00', '20:30'],
+    sbagliata1: ['02:00', '03:00'],
+    sbagliata2: ['7:00', '8:00'],
+    sbagliata3: ['10:00', '11:00'],
+};
+var full_design_sera = jsPsych.randomization.factorial(factors_sera, 1);
+
+var factors_notte = {
+    corretta: ['00:30', '23:00', '23:30'],
+    sbagliata1: ['7:00', '7:30'],
+    sbagliata2: ['17:00', '18:00'],
+    sbagliata3: ['15:00', '12:00'],
+};
+var full_design_notte = jsPsych.randomization.factorial(factors_notte, 1);
+
+/*MATTINA 6:05- 13:00, POMERIGGIO 13:05- 18:00, SERA 18.05-23:00, NOTTE: 23:05- 6:00*/
+
+    var momenti_array = [
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/6_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/7_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/8_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/9_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/10_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/11_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_00.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_05.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_10.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_15.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_20.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_25.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_30.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_35.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_40.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_45.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_50.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/12_55.jpg', giornata: 'mattina'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_00.jpg', giornata: 'mattina'},
+
+
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_05.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_10.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_15.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_20.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_25.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_30.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_35.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_40.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_45.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_50.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/13_55.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_00.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_05.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_10.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_15.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_20.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_25.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_30.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_35.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_40.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_45.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_50.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/14_55.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_00.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_05.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_10.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_15.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_20.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_25.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_30.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_35.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_40.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_45.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_50.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/15_55.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_00.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_05.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_10.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_15.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_20.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_25.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_30.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_35.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_40.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_45.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_50.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/16_55.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_00.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_05.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_10.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_15.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_20.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_25.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_30.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_35.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_40.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_45.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_50.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/17_55.jpg', giornata: 'pomeriggio'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_00.jpg', giornata: 'pomeriggio'},
+
+
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_05.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_10.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_15.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_20.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_25.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_30.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_35.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_40.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_45.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_50.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/18_55.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_00.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_05.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_10.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_15.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_20.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_25.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_30.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_35.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_40.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_45.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_50.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/19_55.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_00.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_05.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_10.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_15.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_20.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_25.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_30.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_35.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_40.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_45.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_50.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/20_55.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_00.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_05.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_10.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_15.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_20.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_25.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_30.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_35.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_40.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_45.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_50.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/21_55.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_00.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_05.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_10.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_15.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_20.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_25.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_30.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_35.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_40.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_45.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_50.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/22_55.jpg', giornata: 'sera'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_00.jpg', giornata: 'sera'},
+
+
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/23_55.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_00.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/00_55.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_00.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/1_55.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_00.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/2_55.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_00.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/3_55.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_00.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/4_55.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_00.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_05.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_10.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_15.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_20.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_25.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_30.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_35.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_40.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_45.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_50.jpg', giornata: 'notte'},
+        {orario:'./TASKS/ORIENTAMENTO/orologio/img/digitali/5_55.jpg', giornata: 'notte'}
+    ];
+    var momenti = jsPsych.randomization.shuffle(momenti_array)
+
+    var preload_ATTIVITA = {
+        type: jsPsychPreload,
+        images: attività_all
+    };
+
+    var preload_MOMENTI = {
+        type: jsPsychPreload,
+        images: momenti
+    };
+
+    var pre_if_ATTIVITA = {
+        type:jsPsychHtmlButtonResponse,
+        stimulus: `<p style='font-size:34px;line-height: 1.5;'><strong> ISTRUZIONI </strong> <br> <br> Adesso leggerà un’<strong>attività</strong> che si fa più spesso in certi orari del giorno.<br>
+            <br>Scelga qual è l’orario corretto secondo lei.</p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+	      choices: ['Prema qui per iniziare', 'Prema qui per fare una prova'],
+        on_finish: function(data){
+            if(data.response == 1){
+                var risposta_prova = 1;
+            } else{
+                var risposta_prova = 0;
+            }
+            data.risposta_prova = risposta_prova
+        }
+
+    };
+
+    /*MATTINA 6:00- 13:00, POMERIGGIO 16:00- 18:00, SERA 20-23:00, NOTTE: 24:00- 5:00*/
+
+    var pre_if_MOMENTI = {
+        type:jsPsychHtmlButtonResponse,
+        stimulus: `<p style='font-size:34px;line-height: 1.5;'><strong> ISTRUZIONI </strong> <br> <br>  Adesso vedrai un orario. <br> <br> Indichi a quale <strong> momento della giornata </strong> appartiene.</p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare', 'Prema qui per fare una prova'],
+        on_finish: function(data){
+            if(data.response == 1){
+                var risposta_prova = 1;
+            } else{
+                var risposta_prova = 0;
+            }
+            data.risposta_prova = risposta_prova
+        }
+    };
+
+    var prova_loop_ATTIVITA = {
+        type: jsPsychImageButtonResponse,
+        stimulus: attività_all[0].attività,
+        stimulus_height: 500,
+        prompt: "<p style='font-size:34px;line-height: 1.5;'> <strong> A che ora </strong> si svolge questa attività? <br> <br> <strong>"+attività_all[0].cue+" </strong></p>",
+        choices: function() {
+        var buttons_array= [];
+
+        if (attività_all[0].momento === "mattina") {
+          buttons_array = [
+            full_design_mattina[0].corretta,
+            full_design_mattina[0].sbagliata1,
+            full_design_mattina[0].sbagliata2,
+            full_design_mattina[0].sbagliata3
+          ];
+        } else if (attività_all[0].momento === "pranzo") {
+          buttons_array = [
+            full_design_pranzo[0].corretta,
+            full_design_pranzo[0].sbagliata1,
+            full_design_pranzo[0].sbagliata2,
+            full_design_pranzo[0].sbagliata3
+          ];
+        } else if (attività_all[0].momento === "pomeriggio") {
+          buttons_array = [
+            full_design_pomeriggio[0].corretta,
+            full_design_pomeriggio[0].sbagliata1,
+            full_design_pomeriggio[0].sbagliata2,
+            full_design_pomeriggio[0].sbagliata3
+          ];
+        } else if (attività_all[0].momento === "sera") {
+          buttons_array = [
+            full_design_sera[0].corretta,
+            full_design_sera[0].sbagliata1,
+            full_design_sera[0].sbagliata2,
+            full_design_sera[0].sbagliata3
+          ];
+        } else if (attività_all[0].momento === "notte") {
+          buttons_array = [
+            full_design_notte[0].corretta,
+            full_design_notte[0].sbagliata1,
+            full_design_notte[0].sbagliata2,
+            full_design_notte[0].sbagliata3
+          ];
+        }
+
+        // Shuffling the buttons_array
+        buttons_array = jsPsych.randomization.repeat(buttons_array, 1);
+        return buttons_array;
+      },
+      button_html: '<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+      /*on_load: function() {
+        // Defining variables for row indexes based on the moment
+        if (attività_all[0].momento === "mattina") {
+          row_full_design_mattina = getRandomInt(0, full_design_mattina.length);
+        } else if (attività_all[0].momento === "pranzo") {
+          row_full_design_pranzo = getRandomInt(0, full_design_pranzo.length);
+        } else if (attività_all[0].momento === "pomeriggio") {
+          row_full_design_pomeriggio = getRandomInt(0, full_design_pomeriggio.length);
+        } else if (attività_all[0].momento === "sera") {
+          row_full_design_sera = getRandomInt(0, full_design_sera.length);
+        } else if (attività_all[0].momento === "notte") {
+          row_full_design_notte = getRandomInt(0, full_design_notte.length);
+        }
+      },*/
+        on_finish: function(data) {
+        var risposta=jsPsych.getCurrentTrial().choices;
+        if (attività_all[0].momento === "mattina") {
+          var risposta_corretta = risposta[data.response]==full_design_mattina[0].corretta;
+        } else if (attività_all[0].momento === "pranzo") {
+          var risposta_corretta = risposta[data.response]==full_design_pranzo[0].corretta;
+        } else if (attività_all[0].momento === "pomeriggio") {
+          var risposta_corretta = risposta[data.response]==full_design_pomeriggio[0].corretta;
+        } else if (attività_all[0].momento === "sera") {
+          var risposta_corretta = risposta[data.response]==full_design_sera[0].corretta;
+        } else if (attività_all[0].momento === "notte") {
+          var risposta_corretta = risposta[data.response]==full_design_notte[0].corretta;
+        }
+          console.log(risposta_corretta)
+
+        if (risposta_corretta==true) {
+          var accuracy = true;
+        } else {
+          var accuracy = false;
+        }
+        data.accuracy = accuracy;
+      },
+    };
+
+    var prova_loop_MOMENTI = {
+        type: jsPsychImageButtonResponse,
+        stimulus: ''+ momenti[0].orario+'',
+        stimulus_height: 400,
+        choices: ['MATTINA', 'POMERIGGIO', 'SERA', 'NOTTE'],
+        button_html:'<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+        prompt: "<p style='font-size:34px;line-height: 1.5;'>Selezioni il <strong> momento del giorno </strong> cliccando con il mouse su una tra queste alternative:</p>",
+        on_finish: function(data) {
+            if (data.response == 0){
+                var risposta = 'mattina';
+            } if (data.response == 1){
+                var risposta = 'pomeriggio';
+            } if (data.response == 2){
+                var risposta = 'sera';
+            } if (data.response == 3){
+                var risposta = 'notte';
+            };
+            if (risposta == momenti[0].giornata){
+                var accuracy = 1;
+
+            } else {
+                var accuracy = 0;
+            }
+            data.accuracy = accuracy;
+            console.log("RISPOSTA: "+risposta+"")
+        }
+    };
+
+    var feedback = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: function(){
+            var last_response_accuracy = jsPsych.data.getLastTrialData().values()[0].accuracy;
+            if (last_response_accuracy == true) {
+                var feedback = "<img src='./feedback/img/corretto.png' width='300' height='300'>";
+            } else {
+                var feedback = "<img src='./feedback/img/sbagliato.png' width='300' height='300'>";
+            }
+            return feedback;
+        },
+        choices: "NO_KEYS",
+        trial_duration: 1500
+    };
+
+    var begin_trial_ATTIVITA = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+             Adesso leggerà un’<strong>attività</strong> che si fa più spesso in certi orari del giorno.<br>
+            <br> <br> <strong>Scelga qual è l’orario corretto secondo lei. </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare']
+    };
+
+    var begin_trial_MOMENTI = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Allora proseguiamo, inziamo con l'esercizio. <br>
+            Adesso vedrai un orario. <br> <br> <strong> Indichi a quale momento della giornata appartiene. <strong> </p>`,
+        button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+        choices: ['Prema qui per iniziare']
+    };
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+let punteggio = 0; //CORRECT TRIALS
+//---: si potrebbe provare a modificare le regole CSS per portare il prompt al di sopra dell immagine -->
+
+var trial1_ATTIVITA = {
+    type: jsPsychImageButtonResponse,
+    stimulus: attività_all[1].attività,
+    stimulus_height: 500,
+    prompt: "<p style='font-size:34px;line-height: 1.5;'> <strong> A che ora </strong> si svolge questa attività? <br> <br> <strong>"+attività_all[1].cue+" </strong></p>",
+    choices: function() {
+    var buttons_array;
+
+    if (attività_all[1].momento === "mattina") {
+      buttons_array = [
+        full_design_mattina[1].corretta,
+        full_design_mattina[1].sbagliata1,
+        full_design_mattina[1].sbagliata2,
+        full_design_mattina[1].sbagliata3
+      ];
+    } else if (attività_all[1].momento === "pranzo") {
+      buttons_array = [
+        full_design_pranzo[1].corretta,
+        full_design_pranzo[1].sbagliata1,
+        full_design_pranzo[1].sbagliata2,
+        full_design_pranzo[1].sbagliata3
+      ];
+    } else if (attività_all[1].momento === "pomeriggio") {
+      buttons_array = [
+        full_design_pomeriggio[1].corretta,
+        full_design_pomeriggio[1].sbagliata1,
+        full_design_pomeriggio[1].sbagliata2,
+        full_design_pomeriggio[1].sbagliata3
+      ];
+    } else if (attività_all[1].momento === "sera") {
+      buttons_array = [
+        full_design_sera[1].corretta,
+        full_design_sera[1].sbagliata1,
+        full_design_sera[1].sbagliata2,
+        full_design_sera[1].sbagliata3
+      ];
+    } else if (attività_all[1].momento === "notte") {
+      buttons_array = [
+        full_design_notte[1].corretta,
+        full_design_notte[1].sbagliata1,
+        full_design_notte[1].sbagliata2,
+        full_design_notte[1].sbagliata3
+      ];
+    }
+
+    // Shuffling the buttons_array
+    buttons_array = jsPsych.randomization.repeat(buttons_array, 1);
+    return buttons_array;
+  },
+  button_html: '<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+  /*on_start: function() {
+    // Defining variables for row indexes based on the moment
+    if (attività_all[1].momento === "mattina") {
+      row_full_design_mattina = getRandomInt(0, full_design_mattina.length);
+    } else if (attività_all[1].momento === "pranzo") {
+      row_full_design_pranzo = getRandomInt(0, full_design_pranzo.length);
+    } else if (attività_all[1].momento === "pomeriggio") {
+      row_full_design_pomeriggio = getRandomInt(0, full_design_pomeriggio.length);
+    } else if (attività_all[1].momento === "sera") {
+      row_full_design_sera = getRandomInt(0, full_design_sera.length);
+    } else if (attività_all[1].momento === "notte") {
+      row_full_design_notte = getRandomInt(0, full_design_notte.length);
+    }
+  },*/
+    on_finish: function(data) {
+    var risposta=jsPsych.getCurrentTrial().choices;
+    if (attività_all[1].momento === "mattina") {
+      var risposta_corretta = risposta[data.response]==full_design_mattina[1].corretta;
+    } else if (attività_all[1].momento === "pranzo") {
+      var risposta_corretta = risposta[data.response]==full_design_pranzo[1].corretta;
+    } else if (attività_all[1].momento === "pomeriggio") {
+      var risposta_corretta = risposta[data.response]==full_design_pomeriggio[1].corretta;
+    } else if (attività_all[1].momento === "sera") {
+      var risposta_corretta = risposta[data.response]==full_design_sera[1].corretta;
+    } else if (attività_all[1].momento === "notte") {
+      var risposta_corretta = risposta[data.response]==full_design_notte[1].corretta;
+    }
+      console.log(risposta_corretta)
+
+    if (risposta_corretta==true) {
+      var accuracy = true;
+      punteggio++;
+    } else {
+      var accuracy = false;
+    }
+
+  },
+};
+
+var trial2_ATTIVITA = {
+    type: jsPsychImageButtonResponse,
+    stimulus: attività_all[2].attività,
+    stimulus_height: 500,
+    prompt: "<p style='font-size:34px;line-height: 1.5;'> <strong> A che ora </strong> si svolge questa attività? <br> <br> <strong>"+attività_all[2].cue+" </strong></p>",
+    choices: function() {
+    var buttons_array;
+
+    if (attività_all[2].momento === "mattina") {
+      buttons_array = [
+        full_design_mattina[2].corretta,
+        full_design_mattina[2].sbagliata1,
+        full_design_mattina[2].sbagliata2,
+        full_design_mattina[2].sbagliata3
+      ];
+    } else if (attività_all[2].momento === "pranzo") {
+      buttons_array = [
+        full_design_pranzo[2].corretta,
+        full_design_pranzo[2].sbagliata1,
+        full_design_pranzo[2].sbagliata2,
+        full_design_pranzo[2].sbagliata3
+      ];
+    } else if (attività_all[2].momento === "pomeriggio") {
+      buttons_array = [
+        full_design_pomeriggio[2].corretta,
+        full_design_pomeriggio[2].sbagliata1,
+        full_design_pomeriggio[2].sbagliata2,
+        full_design_pomeriggio[2].sbagliata3
+      ];
+    } else if (attività_all[2].momento === "sera") {
+      buttons_array = [
+        full_design_sera[2].corretta,
+        full_design_sera[2].sbagliata1,
+        full_design_sera[2].sbagliata2,
+        full_design_sera[2].sbagliata3
+      ];
+    } else if (attività_all[2].momento === "notte") {
+      buttons_array = [
+        full_design_notte[2].corretta,
+        full_design_notte[2].sbagliata1,
+        full_design_notte[2].sbagliata2,
+        full_design_notte[2].sbagliata3
+      ];
+    }
+
+    // Shuffling the buttons_array
+    buttons_array = jsPsych.randomization.repeat(buttons_array, 1);
+    return buttons_array;
+  },
+  button_html: '<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+  /*on_start: function() {
+    // Defining variables for row indexes based on the moment
+    if (attività_all[2].momento === "mattina") {
+      row_full_design_mattina = getRandomInt(0, full_design_mattina.length);
+    } else if (attività_all[2].momento === "pranzo") {
+      row_full_design_pranzo = getRandomInt(0, full_design_pranzo.length);
+    } else if (attività_all[2].momento === "pomeriggio") {
+      row_full_design_pomeriggio = getRandomInt(0, full_design_pomeriggio.length);
+    } else if (attività_all[2].momento === "sera") {
+      row_full_design_sera = getRandomInt(0, full_design_sera.length);
+    } else if (attività_all[2].momento === "notte") {
+      row_full_design_notte = getRandomInt(0, full_design_notte.length);
+    }
+  },*/
+    on_finish: function(data) {
+    var risposta=jsPsych.getCurrentTrial().choices;
+    if (attività_all[2].momento === "mattina") {
+      var risposta_corretta = risposta[data.response]==full_design_mattina[2].corretta;
+    } else if (attività_all[2].momento === "pranzo") {
+      var risposta_corretta = risposta[data.response]==full_design_pranzo[2].corretta;
+    } else if (attività_all[2].momento === "pomeriggio") {
+      var risposta_corretta = risposta[data.response]==full_design_pomeriggio[2].corretta;
+    } else if (attività_all[2].momento === "sera") {
+      var risposta_corretta = risposta[data.response]==full_design_sera[2].corretta;
+    } else if (attività_all[2].momento === "notte") {
+      var risposta_corretta = risposta[data.response]==full_design_notte[2].corretta;
+    }
+      console.log(risposta_corretta)
+
+    if (risposta_corretta==true) {
+      var accuracy = true;
+      punteggio++;
+    } else {
+      var accuracy = false;
+    }
+
+  },
+};
+var trial3_ATTIVITA = {
+    type: jsPsychImageButtonResponse,
+    stimulus: attività_all[3].attività,
+    stimulus_height: 500,
+    prompt: "<p style='font-size:34px;line-height: 1.5;'> <strong> A che ora </strong> si svolge questa attività? <br> <br> <strong>"+attività_all[3].cue+" </strong></p>",
+    choices: function() {
+    var buttons_array;
+
+    if (attività_all[3].momento === "mattina") {
+      buttons_array = [
+        full_design_mattina[3].corretta,
+        full_design_mattina[3].sbagliata1,
+        full_design_mattina[3].sbagliata2,
+        full_design_mattina[3].sbagliata3
+      ];
+    } else if (attività_all[3].momento === "pranzo") {
+      buttons_array = [
+        full_design_pranzo[3].corretta,
+        full_design_pranzo[3].sbagliata1,
+        full_design_pranzo[3].sbagliata2,
+        full_design_pranzo[3].sbagliata3
+      ];
+    } else if (attività_all[3].momento === "pomeriggio") {
+      buttons_array = [
+        full_design_pomeriggio[3].corretta,
+        full_design_pomeriggio[3].sbagliata1,
+        full_design_pomeriggio[3].sbagliata2,
+        full_design_pomeriggio[3].sbagliata3
+      ];
+    } else if (attività_all[3].momento === "sera") {
+      buttons_array = [
+        full_design_sera[3].corretta,
+        full_design_sera[3].sbagliata1,
+        full_design_sera[3].sbagliata2,
+        full_design_sera[3].sbagliata3
+      ];
+    } else if (attività_all[3].momento === "notte") {
+      buttons_array = [
+        full_design_notte[3].corretta,
+        full_design_notte[3].sbagliata1,
+        full_design_notte[3].sbagliata2,
+        full_design_notte[3].sbagliata3
+      ];
+    }
+
+    // Shuffling the buttons_array
+    buttons_array = jsPsych.randomization.repeat(buttons_array, 1);
+    return buttons_array;
+  },
+  button_html: '<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+  /*on_start: function() {
+    // Defining variables for row indexes based on the moment
+    if (attività_all[3].momento === "mattina") {
+      row_full_design_mattina = getRandomInt(0, full_design_mattina.length);
+    } else if (attività_all[3].momento === "pranzo") {
+      row_full_design_pranzo = getRandomInt(0, full_design_pranzo.length);
+    } else if (attività_all[3].momento === "pomeriggio") {
+      row_full_design_pomeriggio = getRandomInt(0, full_design_pomeriggio.length);
+    } else if (attività_all[3].momento === "sera") {
+      row_full_design_sera = getRandomInt(0, full_design_sera.length);
+    } else if (attività_all[3].momento === "notte") {
+      row_full_design_notte = getRandomInt(0, full_design_notte.length);
+    }
+  },*/
+    on_finish: function(data) {
+    var risposta=jsPsych.getCurrentTrial().choices;
+    if (attività_all[3].momento === "mattina") {
+      var risposta_corretta = risposta[data.response]==full_design_mattina[3].corretta;
+    } else if (attività_all[3].momento === "pranzo") {
+      var risposta_corretta = risposta[data.response]==full_design_pranzo[3].corretta;
+    } else if (attività_all[3].momento === "pomeriggio") {
+      var risposta_corretta = risposta[data.response]==full_design_pomeriggio[3].corretta;
+    } else if (attività_all[3].momento === "sera") {
+      var risposta_corretta = risposta[data.response]==full_design_sera[3].corretta;
+    } else if (attività_all[3].momento === "notte") {
+      var risposta_corretta = risposta[data.response]==full_design_notte[3].corretta;
+    }
+      console.log(risposta_corretta)
+
+    if (risposta_corretta==true) {
+      var accuracy = true;
+      punteggio++;
+    } else {
+      var accuracy = false;
+    }
+
+  },
+};
+var trial4_ATTIVITA = {
+    type: jsPsychImageButtonResponse,
+    stimulus: attività_all[4].attività,
+    stimulus_height: 500,
+    prompt: "<p style='font-size:34px;line-height: 1.5;'> <strong> A che ora </strong> si svolge questa attività? <br> <br> <strong>"+attività_all[4].cue+" </strong></p>",
+    choices: function() {
+    var buttons_array;
+
+    if (attività_all[4].momento === "mattina") {
+      buttons_array = [
+        full_design_mattina[4].corretta,
+        full_design_mattina[4].sbagliata1,
+        full_design_mattina[4].sbagliata2,
+        full_design_mattina[4].sbagliata3
+      ];
+    } else if (attività_all[4].momento === "pranzo") {
+      buttons_array = [
+        full_design_pranzo[4].corretta,
+        full_design_pranzo[4].sbagliata1,
+        full_design_pranzo[4].sbagliata2,
+        full_design_pranzo[4].sbagliata3
+      ];
+    } else if (attività_all[4].momento === "pomeriggio") {
+      buttons_array = [
+        full_design_pomeriggio[4].corretta,
+        full_design_pomeriggio[4].sbagliata1,
+        full_design_pomeriggio[4].sbagliata2,
+        full_design_pomeriggio[4].sbagliata3
+      ];
+    } else if (attività_all[4].momento === "sera") {
+      buttons_array = [
+        full_design_sera[4].corretta,
+        full_design_sera[4].sbagliata1,
+        full_design_sera[4].sbagliata2,
+        full_design_sera[4].sbagliata3
+      ];
+    } else if (attività_all[4].momento === "notte") {
+      buttons_array = [
+        full_design_notte[4].corretta,
+        full_design_notte[4].sbagliata1,
+        full_design_notte[4].sbagliata2,
+        full_design_notte[4].sbagliata3
+      ];
+    }
+
+    // Shuffling the buttons_array
+    buttons_array = jsPsych.randomization.repeat(buttons_array, 1);
+    return buttons_array;
+  },
+  button_html: '<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+  /*on_start: function() {
+    // Defining variables for row indexes based on the moment
+    if (attività_all[4].momento === "mattina") {
+      row_full_design_mattina = getRandomInt(0, full_design_mattina.length);
+    } else if (attività_all[4].momento === "pranzo") {
+      row_full_design_pranzo = getRandomInt(0, full_design_pranzo.length);
+    } else if (attività_all[4].momento === "pomeriggio") {
+      row_full_design_pomeriggio = getRandomInt(0, full_design_pomeriggio.length);
+    } else if (attività_all[4].momento === "sera") {
+      row_full_design_sera = getRandomInt(0, full_design_sera.length);
+    } else if (attività_all[4].momento === "notte") {
+      row_full_design_notte = getRandomInt(0, full_design_notte.length);
+    }
+  },*/
+    on_finish: function(data) {
+    var risposta=jsPsych.getCurrentTrial().choices;
+    if (attività_all[4].momento === "mattina") {
+      var risposta_corretta = risposta[data.response]==full_design_mattina[4].corretta;
+    } else if (attività_all[4].momento === "pranzo") {
+      var risposta_corretta = risposta[data.response]==full_design_pranzo[4].corretta;
+    } else if (attività_all[4].momento === "pomeriggio") {
+      var risposta_corretta = risposta[data.response]==full_design_pomeriggio[4].corretta;
+    } else if (attività_all[4].momento === "sera") {
+      var risposta_corretta = risposta[data.response]==full_design_sera[4].corretta;
+    } else if (attività_all[4].momento === "notte") {
+      var risposta_corretta = risposta[data.response]==full_design_notte[4].corretta;
+    }
+      console.log(risposta_corretta)
+
+    if (risposta_corretta==true) {
+      var accuracy = true;
+      punteggio++;
+    } else {
+      var accuracy = false;
+    }
+
+  },
+};
+var trial5_ATTIVITA = {
+    type: jsPsychImageButtonResponse,
+    stimulus: attività_all[5].attività,
+    stimulus_height: 500,
+    prompt: "<p style='font-size:34px;line-height: 1.5;'> <strong> A che ora </strong> si svolge questa attività? <br> <br> <strong>"+attività_all[5].cue+" </strong></p>",
+    choices: function() {
+    var buttons_array;
+
+    if (attività_all[5].momento === "mattina") {
+      buttons_array = [
+        full_design_mattina[5].corretta,
+        full_design_mattina[5].sbagliata1,
+        full_design_mattina[5].sbagliata2,
+        full_design_mattina[5].sbagliata3
+      ];
+    } else if (attività_all[5].momento === "pranzo") {
+      buttons_array = [
+        full_design_pranzo[5].corretta,
+        full_design_pranzo[5].sbagliata1,
+        full_design_pranzo[5].sbagliata2,
+        full_design_pranzo[5].sbagliata3
+      ];
+    } else if (attività_all[5].momento === "pomeriggio") {
+      buttons_array = [
+        full_design_pomeriggio[5].corretta,
+        full_design_pomeriggio[5].sbagliata1,
+        full_design_pomeriggio[5].sbagliata2,
+        full_design_pomeriggio[5].sbagliata3
+      ];
+    } else if (attività_all[5].momento === "sera") {
+      buttons_array = [
+        full_design_sera[5].corretta,
+        full_design_sera[5].sbagliata1,
+        full_design_sera[5].sbagliata2,
+        full_design_sera[5].sbagliata3
+      ];
+    } else if (attività_all[5].momento === "notte") {
+      buttons_array = [
+        full_design_notte[5].corretta,
+        full_design_notte[5].sbagliata1,
+        full_design_notte[5].sbagliata2,
+        full_design_notte[5].sbagliata3
+      ];
+    }
+
+    // Shuffling the buttons_array
+    buttons_array = jsPsych.randomization.repeat(buttons_array, 1);
+    return buttons_array;
+  },
+  button_html: '<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+  /*on_start: function() {
+    // Defining variables for row indexes based on the moment
+    if (attività_all[5].momento === "mattina") {
+      row_full_design_mattina = getRandomInt(0, full_design_mattina.length);
+    } else if (attività_all[5].momento === "pranzo") {
+      row_full_design_pranzo = getRandomInt(0, full_design_pranzo.length);
+    } else if (attività_all[5].momento === "pomeriggio") {
+      row_full_design_pomeriggio = getRandomInt(0, full_design_pomeriggio.length);
+    } else if (attività_all[5].momento === "sera") {
+      row_full_design_sera = getRandomInt(0, full_design_sera.length);
+    } else if (attività_all[5].momento === "notte") {
+      row_full_design_notte = getRandomInt(0, full_design_notte.length);
+    }
+  },*/
+    on_finish: function(data) {
+    var risposta=jsPsych.getCurrentTrial().choices;
+    if (attività_all[5].momento === "mattina") {
+      var risposta_corretta = risposta[data.response]==full_design_mattina[5].corretta;
+    } else if (attività_all[5].momento === "pranzo") {
+      var risposta_corretta = risposta[data.response]==full_design_pranzo[5].corretta;
+    } else if (attività_all[5].momento === "pomeriggio") {
+      var risposta_corretta = risposta[data.response]==full_design_pomeriggio[5].corretta;
+    } else if (attività_all[5].momento === "sera") {
+      var risposta_corretta = risposta[data.response]==full_design_sera[5].corretta;
+    } else if (attività_all[5].momento === "notte") {
+      var risposta_corretta = risposta[data.response]==full_design_notte[5].corretta;
+    }
+      console.log(risposta_corretta)
+
+    if (risposta_corretta==true) {
+      var accuracy = true;
+      punteggio++;
+    } else {
+      var accuracy = false;
+    }
+
+  },
+};
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var trial1_momenti = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+ momenti[1].orario+'',
+    stimulus_height: 400,
+    choices: ['MATTINA', 'POMERIGGIO', 'SERA', 'NOTTE'],
+    button_html:'<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+    prompt: "<p style='font-size:34px;line-height: 1.5;'>Selezioni il <strong> momento del giorno </strong> cliccando con il mouse su una tra queste alternative:</p>",
+    on_finish: function(data) {
+        if (data.response == 0){
+            var risposta = 'mattina';
+        } if (data.response == 1){
+            var risposta = 'pomeriggio';
+        } if (data.response == 2){
+            var risposta = 'sera';
+        } if (data.response == 3){
+            var risposta = 'notte';
+        };
+        if (risposta == momenti[1].giornata){
+            var accuracy = true;
+            punteggio++;
+            console.log("risposta corretta", punteggio)
+        } else {
+            var accuracy = false;
+            console.log("risposta sbagliata", punteggio)
+        }
+        data.correct = accuracy;
+        console.log("RISPOSTA: "+risposta+"")
+        console.log(accuracy);
+    }
+};
+
+var trial2_momenti = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+ momenti[2].orario+'',
+    stimulus_height: 400,
+    choices: ['MATTINA', 'POMERIGGIO', 'SERA', 'NOTTE'],
+    button_html:'<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+    prompt: "<p style='font-size:34px;line-height: 1.5;'>Selezioni il <strong> momento del giorno </strong> cliccando con il mouse su una tra queste alternative:</p>",
+    on_finish: function(data) {
+        if (data.response == 0){
+            var risposta = 'mattina';
+        } if (data.response == 1){
+            var risposta = 'pomeriggio';
+        } if (data.response == 2){
+            var risposta = 'sera';
+        } if (data.response == 3){
+            var risposta = 'notte';
+        };
+        if (risposta == momenti[2].giornata){
+            var accuracy = true;
+            punteggio++;
+            console.log("risposta corretta", punteggio)
+        } else {
+            var accuracy = false;
+            console.log("risposta sbagliata", punteggio)
+        }
+        data.correct = accuracy;
+        console.log("RISPOSTA: "+risposta+"")
+
+    }
+};
+
+var trial3_momenti = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+ momenti[3].orario+'',
+    stimulus_height: 400,
+    choices: ['MATTINA', 'POMERIGGIO', 'SERA', 'NOTTE'],
+    button_html:'<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+    prompt: "<p style='font-size:34px;line-height: 1.5;'>Selezioni il <strong> momento del giorno </strong> cliccando con il mouse su una tra queste alternative:</p>",
+    on_finish: function(data) {
+        if (data.response == 0){
+            var risposta = 'mattina';
+        } if (data.response == 1){
+            var risposta = 'pomeriggio';
+        } if (data.response == 2){
+            var risposta = 'sera';
+        } if (data.response == 3){
+            var risposta = 'notte';
+        };
+        if (risposta == momenti[3].giornata){
+            var accuracy = true;
+            punteggio++;
+            console.log("risposta corretta", punteggio)
+        } else {
+            var accuracy = false;
+            console.log("risposta sbagliata", punteggio)
+        }
+        data.correct = accuracy;
+        console.log("RISPOSTA: "+risposta+"")
+
+    }
+};
+
+var trial4_momenti = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+ momenti[4].orario+'',
+    stimulus_height:400,
+    choices: ['MATTINA', 'POMERIGGIO', 'SERA', 'NOTTE'],
+    button_html:'<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+    prompt: "<p style='font-size:34px;line-height: 1.5;'>Selezioni il <strong> momento del giorno </strong> cliccando con il mouse su una tra queste alternative:</p>",
+    on_finish: function(data) {
+        if (data.response == 0){
+            var risposta = 'mattina';
+        } if (data.response == 1){
+            var risposta = 'pomeriggio';
+        } if (data.response == 2){
+            var risposta = 'sera';
+        } if (data.response == 3){
+            var risposta = 'notte';
+        };
+        if (risposta == momenti[4].giornata){
+            var accuracy = true;
+            punteggio++;
+            console.log("risposta corretta", punteggio)
+        } else {
+            var accuracy = false;
+            console.log("risposta sbagliata", punteggio)
+        }
+        data.correct = accuracy;
+        console.log("RISPOSTA: "+risposta+"")
+
+    }
+};
+
+var trial5_momenti = {
+    type: jsPsychImageButtonResponse,
+    stimulus: ''+ momenti[5].orario+'',
+    stimulus_height: 400,
+    choices: ['MATTINA', 'POMERIGGIO', 'SERA', 'NOTTE'],
+    button_html:'<button class="jspsych-btn" style="font-size:40px;">%choice%</button>',
+    prompt: "<p style='font-size:34px;line-height: 1.5;'>Selezioni il <strong> momento del giorno </strong> cliccando con il mouse su una tra queste alternative:</p>",
+    on_finish: function(data) {
+        if (data.response == 0){
+            var risposta = 'mattina';
+        } if (data.response == 1){
+            var risposta = 'pomeriggio';
+        } if (data.response == 2){
+            var risposta = 'sera';
+        } if (data.response == 3){
+            var risposta = 'notte';
+        };
+        if (risposta == momenti[5].giornata){
+            var accuracy = true;
+            punteggio++;
+            console.log("risposta corretta", punteggio)
+        } else {
+            var accuracy = false;
+            console.log("risposta sbagliata", punteggio)
+        }
+        data.correct = accuracy;
+        console.log("RISPOSTA: "+risposta+"")
+
+    }
+};
+
+var trial_ATTIVITA = {
+    timeline: [trial1_ATTIVITA, trial2_ATTIVITA, trial3_ATTIVITA, trial4_ATTIVITA, trial5_ATTIVITA]
+};
+
+var trial_MOMENTI = {
+    timeline: [trial1_momenti, trial2_momenti, trial3_momenti, trial4_momenti, trial5_momenti]
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+var if_node_ATTIVITA = {
+    timeline: [begin_trial_ATTIVITA, trial_ATTIVITA],
+    conditional_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+        if (response_button == 0){
+            console.log("prosegui a esercizio");
+            return true;
+        } else {
+            console.log("inizia la prova");
+            jsPsych.addNodeToEndOfTimeline(loop_prova_ATTIVITA)
+            return false;
+        }
+    }
+};
+
+var if_node_MOMENTI = {
+    timeline: [begin_trial_MOMENTI,trial_MOMENTI],
+    conditional_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_prova;
+        if (response_button == 0){
+            console.log("prosegui a esercizio");
+            return true;
+        } else {
+            console.log("inizia la prova");
+            jsPsych.addNodeToEndOfTimeline(loop_prova_MOMENTI)
+            return false;
+        }
+    }
+};
+
+var begin_loop_ATTIVITA = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br> Adesso leggerà un’<strong>attività</strong> che si fa più spesso in certi orari del giorno.<br>
+        <br> <br> <strong>Scelga qual è l’orario corretto secondo lei.</strong></p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per iniziare la prova'],
+    on_start: function(data){
+        var response_button = jsPsych.data.get().last(1).values()[0].response;
+        console.log(response_button)
+        if (response_button == 0){
+            console.log("salta loop");
+            jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+        }
+    }
+};
+
+var begin_loop_MOMENTI = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Va bene facciamo una prova! <br> Adesso vedrai un orario. <br> <br> <strong> Indichi a quale momento della giornata appartiene. </strong></p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per iniziare la prova'],
+    on_start: function(data){
+        var response_button = jsPsych.data.get().last(1).values()[0].response;
+        console.log(response_button)
+        if (response_button == 0){
+            console.log("salta loop");
+            jsPsych.endCurrentTimeline(); /*Ends the current timeline. If timelines are nested, then only the timeline that contains the current trial is ended.*/
+        }
+    }
+};
+
+var end_loop_prova_ATTIVITA = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br> <br>
+        Adesso le verrà presentata un’<strong>attività</strong> che si fa più spesso in certi orari del giorno.<br>
+        <br> <br> <strong> Scelga qual è l’orario corretto secondo lei. </strong></p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per proseguire', 'Prema qui per ripetere la prova'],
+    on_finish: function(data){
+        if(data.response == 1){
+            var risposta = 1;
+        } else{
+            var risposta = 0;
+            console.log("Termine loop prova");
+            jsPsych.addNodeToEndOfTimeline(trial_ATTIVITA);
+        }
+        data.risposta_loop = risposta
+    }
+};
+
+var end_loop_prova_MOMENTI = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p style="font-size: 34px;line-height: 1.5;"> Ora che ha terminato la prova, inziamo con l'esercizio. <br>
+         <br> Adesso le verrà presentato un orario. <br> <br> <strong> Indichi a quale momento della giornata appartiene. </strong></p>`,
+    button_html:['<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: blue; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>','<button class="jspsych-btn" style="font-size: 20px; color: white; background-color: green; padding: 10px 20px; border: none; border-radius: 5px;">%choice%</button>'],
+    choices: ['Prema qui per proseguire', 'Prema qui per ripetere la prova'],
+    on_finish: function(data){
+        if(data.response == 1){
+            var risposta = 1;
+        } else{
+            var risposta = 0;
+            console.log("Termine loop prova");
+            jsPsych.addNodeToEndOfTimeline(trial_MOMENTI);
+        }
+        data.risposta_loop = risposta
+    }
+};
+
+var loop_prova_ATTIVITA = {
+    timeline: [begin_loop_ATTIVITA, prova_loop_ATTIVITA, feedback, end_loop_prova_ATTIVITA],
+    timeline_variables: full_design_mattina,
+    loop_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+         if (response_button == 1){
+            return true;
+        } else {
+            return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+        }
+    }
+};
+
+var loop_prova_MOMENTI = {
+    timeline: [begin_loop_MOMENTI, prova_loop_MOMENTI, feedback, end_loop_prova_MOMENTI],
+    loop_function: function(){
+        var response_button = jsPsych.data.get().last(1).values()[0].risposta_loop;
+         if (response_button == 1){
+            return true;
+        } else {
+            return false; /*IMPORTANTE: mantenere l'ordine in cui sono stati inseriti gli elementi*/
+        }
+    }
+};
+
+
+let num = [1,2];
+let y = jsPsych.randomization.shuffle(num);
+if (y[1] == 2){
+    var timeline = [pre_if_ATTIVITA,pre_if_ATTIVITA, if_node_ATTIVITA];
+    console.log("La condizione dell'esperimento sarà ATTIVITA'");
+} else if (y[1] == 1){
+    var timeline = [pre_if_MOMENTI,pre_if_MOMENTI, if_node_MOMENTI];
+    console.log("La condizione dell'esperimento sarà MOMENTI DELLA GIORNATA");
+};
+
+
+jsPsych.run(timeline) //non è stato possibile inserire la variabile PRELOAD perché altrimenti dà errore "Trial level node is missing the "type" parameter. The parameters for the node are: {}"
+</script>
+</html>
