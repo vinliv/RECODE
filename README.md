@@ -24,111 +24,225 @@
 
 ---
 
-## 1. Background and Motivation
+1. Background and Motivation
+RECODE (REmote stimulation for COgnitive DEcline) addresses the global public health challenge of neurocognitive disorders, which have a profound impact on patients, caregivers, and healthcare systems. With rising life expectancy, the incidence of cognitive impairment and dementia is expected to increase sharply, creating an urgent need for effective, scalable treatments. While non-pharmacological interventions like Computerized Cognitive Training (CCT) have shown promise in improving cognitive function, their widespread adoption faces significant barriers. Many existing CCT tools are proprietary and expensive, suffer from poor design, and lack flexibility for customization. Furthermore, there is a scarcity of tools that are validated and culturally adapted for the Italian healthcare context.
 
-RECODE addresses the global challenge of cognitive decline in aging, specifically focusing on mild cognitive impairment and early dementia. Computerized Cognitive Training (CCT) offers scalable, non-pharmacological interventions with modest but robust benefits for memory, attention, executive functioning, and overall cognitive health. However, many existing CCT tools are proprietary, lack transparency, and are rarely localized for the Italian context. RECODE overcomes these barriers by translating and adapting the validated volume *Demenza: 100 esercizi di stimolazione cognitiva* (Mapelli et al., 2007) into a web-native, open-source, Italian-language platform.
+To address these gaps, RECODE was developed as an open-access, browser-based platform to deliver CCT to older adults with Mild Cognitive Impairment (MCI) or mild-to-moderate dementia. Inspired by clinically validated paper-and-pencil tasks, RECODE translates established cognitive stimulation exercises into an accessible, web-native format. The platform is designed for remote, in-person, or hybrid delivery, requiring only a standard web browser and basic input devices. It is deployed using JATOS, an open-source research server, to ensure secure data management and ethical compliance. This repository contains the "frozen" code version used in the validation pilot study at the University of Padua's Hospital (Ethics Protocol #4246), which demonstrated the platform's feasibility and potential to produce clinically meaningful cognitive improvements.
 
-The platform supports remote, in person, or hybrid delivery, requiring only a modern browser and standard input devices, and is designed for deployment on institutional infrastructure using JATOS, guaranteeing secure data capture and ethical compliance. This repository preserves the "frozen" code version used in the validation pilot at Padua's University Hospital (Ethics Protocol #4246, February–June 2025), with all sessions conducted under informed consent and with rigorous protection of participant privacy.
+2. Project Goals
+RECODE was conceived to digitize and adapt established cognitive stimulation exercises, with the primary goal of making CCT more accessible, affordable, and effective for older adults with neurocognitive decline. Its core aims include:
 
----
+Overcoming Barriers: To address the key challenges limiting the adoption of CCT in clinical practice, including high costs, poor usability, lack of customization, and insufficient validation in specific populations like Italian older adults.
 
-## 2. Project Goals
+Open-Source and Scalable: To provide a free, open-access tool that does not require expensive proprietary software or specialized hardware, making it a cost-effective and scalable option for healthcare institutions operating under budget constraints.
 
-RECODE was conceived to digitize and adapt established cognitive stimulation exercises, ensuring accessibility for older adults with neurocognitive decline. Its core aims include the open-source translation of pencil-and-paper protocols into modular web tasks, the implementation of accessible interfaces with high-contrast, large-font settings, and the deployment of adaptive difficulty mechanisms to sustain participant engagement. The platform was developed for seamless use in home, clinic, and telehealth environments, capturing granular behavioral data securely via JATOS. By prioritizing reproducibility and open-science values, RECODE is intended to support rigorous research, transparent audit, and broad dissemination.
+Clinical Usability and Accessibility: To implement an intuitive, user-friendly interface grounded in age-friendly design principles, featuring large text, high contrast, and simple point-and-click interactions to accommodate the cognitive and physical limitations of older adults.
 
----
+Flexible Delivery Model: To support in-person, fully remote, or hybrid administration, allowing clinicians to tailor the intervention to the specific needs of the patient and enhance continuity of care.
 
-## 3. System Requirements
+Adaptive and Engaging Training: To deploy an adaptive difficulty mechanism that automatically adjusts task challenge based on user performance, keeping the training engaging and maintaining participant motivation and self-efficacy.
 
-The platform is designed to run efficiently on widely available hardware. Minimum client-side requirements are a dual-core processor and 4 GB RAM, while the recommended specification is a quad-core machine with at least 8 GB RAM. Supported operating systems include Windows 10 or later, macOS 10.14 or later, and modern Linux distributions, provided they are running a compatible browser (Chrome 109+, Firefox 108+, or Edge 109+). The platform adapts to screen sizes down to 1366×768 pixels, though 1920×1080 is preferred. All core interaction is via mouse and keyboard; touch input is experimental. Institutional deployment requires JATOS 3.5+ (preferably 3.7+) with at least 2 GB RAM and an HTTPS endpoint. All interface settings, including font size and contrast, can be customized via `config/uiSettings.json`, with full adherence to WCAG 2.1 AA accessibility guidelines.
+Reproducibility and Data Control: To build the platform on open-source technologies like jsPsych and JATOS, ensuring high temporal precision in measurements, transparent research protocols, and full institutional control over secure, pseudonymized data.
 
----
+3. System Requirements
+The platform is designed to run efficiently on widely available hardware and software.
 
-## 4. Installation and Quickstart
+Client-Side (Participant) Requirements:
 
-Begin by cloning the repository:
+Processor: Dual-core (minimum), Quad-core (recommended)
 
-```bash
-git clone https://github.com/giuconte/RECODE.git
-cd RECODE
-```
+RAM: 4 GB (minimum), 8 GB (recommended)
 
-To deploy the platform, import the provided JATOS study bundle (`recode.jzip`) into your JATOS instance, available at `https://<yourserver>:<port>`. Single-use participant links are generated and managed by JATOS, ensuring session isolation. All participant runs should be completed in a single session of 30–45 minutes.
+Operating System: Windows 10+, macOS 10.14+, modern Linux distributions
 
-For local testing or development, use a static server:
+Browser: Chrome 109+, Firefox 108+, Edge 109+
 
-```bash
-npm install -g http-server
-http-server ./app -p 8080
-```
+Screen Resolution: 1366×768 (minimum), 1920×1080 (preferred)
 
-The application will be accessible at `http://localhost:8080`, but in this mode, data are only written to local CSV for debugging and are not secured or session-managed.
+Input: A standard mouse and keyboard are required. Touch input is experimental and not recommended for clinical use.
 
----
+Connectivity: An active internet connection is needed to run each training session.
 
-## 5. Architecture Overview
+Server-Side (Deployment) Requirements:
 
-RECODE implements a three-tier structure: the browser-based frontend, the JATOS backend for data capture and management, and a configuration engine enabling dynamic adaptation. The frontend is built with jsPsych 7.2, using modular plugins for each cognitive task domain and a CSS/SASS-driven UI fully compliant with accessibility standards. Core logic is separated into timeline management (`app/js/timeline.js`), task plugin logic (`app/js/plugins/`), and adaptive control (`app/js/adaptive.js`). All configuration—including stimuli, difficulty, and appearance—is centralized in JSON files.
+JATOS: Version 3.5+ (3.7+ recommended)
 
-The backend leverages JATOS to manage study flow, data collection, and secure participant handling. Each session comprises sequential components (introduction, training, debrief), with participant progress tracked and data written atomically at each block via `jatos.submitResultData(...)`. Data are stored as JSON and CSV, accessible to authorized research staff via the JATOS interface.
+Java: A Java 11 Runtime Environment (JRE) is required to run JATOS.
 
----
+Server RAM: At least 2 GB
 
-## 6. Exercise Taxonomy and Logic
+Security: An HTTPS endpoint is mandatory for secure data transmission in a clinical or research setting.
 
-All exercises are derived from the clinical categories in Mapelli et al. (2007), spanning orientation, visual memory, attention (selective and sustained uni/cross-modal attention), language (naming,semantic categorization, fluency), executive function (stroop-like paradigm, go-no go). Each domain is implemented as a series of jsPsych plugins, parameterized via JSON and organized into blocks of 10 trials. The system logs participant responses, reaction times, and block-level accuracy, with aggregate statistics computed for adaptive progression. All plugins are based on jsPsych core types, with targeted customization to ensure precise stimulus presentation and response collection.
+4. Installation and Deployment
+RECODE is a web-based experiment designed to be run through JATOS (Just Another Tool for Online Studies), a free, open-source server for managing behavioral research. You must have a working JATOS instance to deploy and run this project.
 
----
+Prerequisites
+Before deploying RECODE, you need a JATOS installation. You can set it up on your personal computer (a "local" installation for development and testing) or on an internet-facing server (a "global" installation for live data collection).
 
-## 7. Session Flow and Adaptive Progression
+For detailed, step-by-step instructions on how to install JATOS on your specific operating system, please refer to the ().
 
-A standard session begins with participant onboarding and demographic data collection, followed by avatar selection and configuration of interface preferences (font size, contrast, audio). Each domain is introduced via a brief practice block to ensure familiarity. Main training is organized into 3–5 blocks per domain, with a round-robin sequence and mid-session rest. The adaptive staircase mechanism continuously monitors performance: three consecutive blocks at or above 80% accuracy prompt a difficulty increase, while two blocks at or below 50% trigger a decrease. Each session concludes with subjective feedback collection (fatigue, satisfaction), a session summary, and notification for the supervising clinician. All behavioral and progression data are securely stored after each block, supporting detailed longitudinal analysis.
+Deploying and Running RECODE
+Once your JATOS instance is running, deploying RECODE is a straightforward process:
 
----
+Download the Study Package: Download the latest RECODE.jzip file from this repository's "Releases" section. This is a JATOS Study Archive that contains all the necessary code, assets, and configuration files. Do not unzip this file. Manually altering the archive will corrupt it and cause import errors.
 
-## 8. Avatar and Feedback System
+Import into JATOS:
 
-Participant engagement is maintained via an avatar system allowing choice among four visual identities (young/male, young/female, senior/male, senior/female). The avatar manager coordinates on-screen animations, verbal and visual feedback, and motivational cues. Positive performance triggers celebratory effects such as confetti and applause, while lower accuracy results in constructive encouragement. All avatar behavior is synchronized with the trial timeline through jsPsych event hooks, ensuring seamless integration and maximizing engagement for older users.
+Log into your JATOS instance (e.g., at http://localhost:9000 for a local setup).
 
----
+In the left-hand sidebar, click the + button and select Import Study.
 
-## 9. Data Handling and Privacy
+In the file dialog, select the RECODE.jzip file you just downloaded.
 
-The platform implements strict privacy by design principles. Only essential behavioral data (trial responses, timing, and progression) are collected, and all metadata are pseudonymized at the client level. No personally identifying information (such as name, IP, or email) is stored. Data transmission is encrypted (HTTPS/TLS), and access is restricted to authorized research staff via JATOS. All session logs are available in both JSON and CSV formats for subsequent analysis, with full traceability and audit. Ethical compliance is maintained through approval by the University of Padua Ethics Committee (Protocol #4246) and adherence to GDPR and Italian privacy law. Participants may abort sessions at any point, with immediate deletion of any partial data.
+Run the Study:
 
----
+After a successful import, "RECODE" will appear in your list of studies in the sidebar.
 
-## 10. Known Bugs and Limitations
+Click on the study's name to open its main page.
 
-As a research release, this build may exhibit minor bugs or incomplete features. Rapid sequential clicks can cause overlapping audio feedback. Touch input is only partially supported and not intended for clinical use. Rare race conditions may misclassify adaptive progression, though these do not impact data integrity. The platform has been validated primarily in Chrome and Firefox; some display issues may occur in other browsers. At present, all content is in Italian, and internationalization is not yet implemented. Accessibility for screen readers is limited, though color contrast and font size conform to current guidelines. If a network interruption occurs, only data from completed blocks are saved. Some visual stimuli may be duplicated across categories. Open issues and progress toward version 2.1 are tracked on the project’s [GitHub Issues page](https://github.com/giuconte/RECODE/issues).
+Click the Run button in the top toolbar to begin a test session.
 
----
+The recommended workflow is to use a local JATOS installation for development and testing. Once the study is finalized, use the Export function in your local JATOS to create an updated .jzip file, and then import this file into your server installation for data collection.
 
-## 11. Citation and Acknowledgments
+5. Architecture Overview
+RECODE is built on a modern, open-source technology stack designed for flexibility and scientific rigor. The architecture consists of a browser-based frontend that runs on the participant's computer and a backend managed by JATOS for study administration and data collection.
 
-If you use RECODE for research or clinical purposes, please cite:
+Frontend: The user-facing experiment is implemented using HTML, CSS, and jsPsych (v7.2), a JavaScript library for creating web-based behavioral experiments. This allows for precise control over stimulus presentation and accurate measurement of responses and reaction times. The platform also utilizes the 
 
-Ravelli, A.*, Livoti, V.*, Contemori, G., Macchia, E., Romeo, Z., Noale, M., Lucchi, E., Ghilardotti, G., Morandi, A., De Rui, M., Sergi, G., Maggi, S., Mapelli, D., Bonato, M., & Devita, M. (2025). RECODE Pilot Study: Preliminary Testing of a New Open, Computer-Based Platform for Cognitive Stimulation in Italian. Behavior Research Methods. Submitted.
+jspsych-psychophysics plugin for enhanced timing accuracy and stimulus flexibility.
 
-Additionally, cite:
+Backend and Data Management: The study is hosted and managed by a JATOS instance. JATOS handles participant management by generating unique, personal links for each session, ensuring data is stored separately and securely. It also manages the flow between different components of the study (e.g., introduction, exercises, debrief). All behavioral data is sent from the client to the JATOS server and stored in both JSON and CSV formats, which can be accessed by authorized researchers through the JATOS graphical user interface.
 
-Mapelli, D., Parisi, P., Mondini, S., Iannizzi, P., & Bergamaschi, S. (2007). Demenza: 100 esercizi di stimolazione cognitiva \[with CD-ROM]. Varese, Italy: Raffaello Cortina Editore. ISBN 978-88-6030-153-6.
+Configuration: All experimental parameters—including stimuli, instructions, difficulty settings, and UI elements—are centralized in external JSON files. This allows researchers to modify the study's content and behavior without altering the core JavaScript code.
 
-de Leeuw, J. R. (2021). jsPsych: A JavaScript library for creating rich behavioral experiments in a web browser. Behavior Research Methods, 53, 869–877. [https://doi.org/10.3758/s13428-020-01586-y](https://doi.org/10.3758/s13428-020-01586-y)
+6. Exercise Taxonomy and Logic
+The cognitive exercises in RECODE are digital adaptations inspired by the validated paper-and-pencil tasks in Demenza: 100 esercizi di stimolazione cognitiva (Bergamaschi et al., 2008). The initial version of the platform used in the pilot study included a total of 17 distinct exercises distributed across six core cognitive domains :
 
-Lange, K. (2015). Just Another Tool for Online Studies (JATOS): An easy solution for setup and management of web servers supporting online studies. PLOS ONE, 10(6), e0130834. [https://doi.org/10.1371/journal.pone.0130834](https://doi.org/10.1371/journal.pone.0130834)
+Attention (e.g., selective and sustained attention tasks)
 
-We express our sincere gratitude to all participants and caregivers, the clinical and administrative staff at CDCD Padua, and the entire development team. This work was supported by the University of Padua Life Sciences Fund (Grant #LS-2019-02), with additional contributions from the Department of General Psychology, the Geriatrics Unit (DIMED), CNR, Cremona Solidale, and the University of Brescia.
+Visual Memory
 
----
+Language (e.g., naming, semantic categorization)
 
-## 12. Contact, Author Contributions, and Funding
+Executive Functions (e.g., Stroop-like and go/no-go paradigms)
 
-The RECODE project is the result of a multi-institutional collaboration. The full author list is as follows: Adele Ravelli (Geriatrics Unit, DIMED, University of Padua), Vincenzo Livoti (Padua Neuroscience Center; Department of General Psychology, University of Padua), Giulio Contemori (Department of General Psychology, University of Padua; corresponding author: [giulio.contemori@unipd.it](mailto:giulio.contemori@unipd.it)), Eleonora Macchia, Zaira Romeo, Marianna Noale, Stefania Maggi (Neuroscience Institute, Aging Branch, National Research Council - CNR, Padua), Elena Lucchi, Giorgia Ghilardotti (Cremona Solidale), Alessandro Morandi (University of Brescia; Cremona Solidale), Marina De Rui, Giuseppe Sergi (Geriatrics Unit, DIMED, University of Padua), Daniela Mapelli, Mario Bonato, Maria Devita (Department of General Psychology, University of Padua).
+Working Memory
 
-All correspondence should be addressed to Adele Ravelli (Geriatrics Unit, DIMED, University of Padua; adele.ravelli@studenti.unipd.it), Vincenzo Livoti (Padua Neuroscience Center, Department of General Psychology, University of Padua; vincenzo.livoti@phd.unipd.it), or Dr. Giulio Contemori (Department of General Psychology, University of Padua; giulio.contemori@unipd.it), Via Venezia 8, 35131 Padua, Italy.
+Spatial-Temporal Orientation
 
-The development and pilot evaluation of RECODE were supported by the University of Padua Life Sciences grant (#LS-2019-02), with institutional support from the Department of General Psychology and the Geriatrics Unit (DIMED). The project also benefited from the collaboration and infrastructure provided by the National Research Council (CNR), Cremona Solidale, and the University of Brescia. Ethical approval was granted by the Ethics Committee for Psychological Research at the University of Padua (Protocol no. 4246), and all procedures complied with the Declaration of Helsinki and Italian privacy law.
+Each domain contained multiple exercises, most with two predefined difficulty levels: "basic" and "advanced." The system logs participant responses, reaction times, and accuracy for each trial, which are then used to calculate block-level statistics for the adaptive progression mechanism.
 
-This repository is distributed under the MIT License. See [LICENSE.md](LICENSE.md) for details.
-For technical issues, feature requests, or collaborative inquiries, please use the GitHub issue tracker or contact the corresponding author.
+7. Session Flow and Adaptive Progression
+A typical RECODE session is designed to be structured yet flexible, guiding the participant through the training while adapting to their individual performance. The session flow is as follows :
+
+Onboarding: The session begins with participant onboarding, demographic data collection, and avatar selection.
+
+Exercise Blocks: A standard session consists of up to twelve exercises, with two exercises randomly selected from each of the six cognitive domains.
+
+Instructions and Practice: Each exercise starts with an instruction screen. Participants can choose to read the instructions and proceed directly to the task or complete a short, interactive practice block with immediate feedback (a thumbs-up for correct answers, a thumbs-down for incorrect ones).
+
+Adaptive Difficulty: All exercises begin at the "basic" level. The platform features an individual-specific adaptive staircase mechanism to keep the tasks challenging but not overwhelming.
+
+Progression: If a participant achieves an accuracy of 80% or higher on both exercises within a cognitive domain, subsequent exercises from that domain will be presented at the "advanced" level.
+
+Regression: If performance is below the threshold, the exercises remain at the "basic" level.
+
+Feedback and Breaks: No feedback is provided during the main task. At the end of each exercise, overall performance is summarized with an emoji and a short message (e.g., a smiling emoji with "Great job!" for high accuracy). Participants can take short breaks after each exercise and a longer break at the session's midpoint.
+
+Session Summary: The session concludes with a global report summarizing the average performance for each cognitive domain and a total score, followed by subjective feedback collection on fatigue and satisfaction.
+
+8. Avatar and Feedback System
+To enhance participant engagement, especially for older users who may have limited digital literacy, RECODE incorporates a user-friendly feedback system guided by an animated avatar. Participants can choose from one of four visual identities for their avatar (young/male, young/female, senior/male, senior/female).
+
+The avatar guides participants through the session, provides instructions, and delivers motivational feedback. Performance is reinforced through both visual and verbal cues. For example, positive performance triggers celebratory animations like confetti and applause, while lower accuracy is met with constructive encouragement (e.g., an encouraging emoji with the message "You can do better!"). All avatar behaviors are synchronized with the trial timeline using jsPsych event hooks to ensure a seamless and engaging user experience.
+
+9. Data Handling and Privacy
+The RECODE platform was designed with strict privacy-by-design principles to ensure compliance with GDPR and Italian privacy law. All procedures were approved by the University of Padua Ethics Committee for Psychological Research (Protocol no. 4246).
+
+Data Collection: Only essential, pseudonymized behavioral data (trial responses, reaction times, accuracy, and progression metrics) are collected. No personally identifying information (such as name, IP address, or email) is stored by the platform.
+
+Data Security: Data transmission between the participant's browser and the server is encrypted using HTTPS/TLS. The JATOS server and the protected database are hosted and owned by the Department of General Psychology of the University of Padua, ensuring full institutional control over the data.
+
+Data Access: Access to the raw data is restricted to authorized research staff via the secure JATOS interface. Session logs are available in both JSON and CSV formats for analysis and auditing.
+
+Participant Rights: Participants provide informed consent and can withdraw from the study at any time, at which point any partial data is immediately deleted.
+
+10. Known Bugs and Limitations
+This repository contains a research build used for a pilot study. While functionally stable, it has several limitations and known issues:
+
+Pilot Study Scope: The validation was a pilot study with a small sample size (n=12 per group). While results were promising, they require confirmation in larger, multicenter trials.
+
+Supervised Setting: Although designed for remote use, the pilot study was conducted in a clinical setting under the supervision of neuropsychologists. This was necessary to gather real-time usability feedback but means its feasibility in a fully unsupervised home environment has not yet been established.
+
+Alpha Stage Software: The platform is an evolving project. This pilot study helped identify areas for improvement, and subsequent versions have incorporated refinements to session duration, difficulty progression, and the exercise library. As such, this "frozen" version is considered an alpha build.
+
+Accessibility Challenges: While designed to be user-friendly, feedback suggests that individuals with more severe cognitive impairments (e.g., MMSE score of 13) may find the exercises too demanding. Accessibility for screen readers is also limited.
+
+Technical Issues:
+
+Rapid sequential clicks can sometimes cause overlapping audio feedback.
+
+Touch input is only partially supported and not intended for clinical use.
+
+In case of a network interruption, only data from fully completed blocks are saved.
+
+Content Limitations: All content is currently in Italian. Some visual stimuli may be duplicated across different exercise categories.
+
+Open issues and progress toward future versions are tracked on the project’s .
+
+11. Citation and Acknowledgments
+If you use RECODE for research or clinical purposes, please cite the pilot study manuscript:
+
+Ravelli, A., Livoti, V., Contemori, G., Macchia, E., Romeo, Z., Noale, M., Lucchi, E., Ghilardotti, G., Morandi, A., De Rui, M., Sergi, G., Maggi, S., Mapelli, D., Bonato, M., & Devita, M. (2025). RECODE Pilot Study: Preliminary Testing of a New Open, Computer-Based Platform for Cognitive Stimulation in Italian. Behavior Research Methods. Submitted. (*These authors contributed equally to the work) 
+
+Additionally, please cite the foundational works and technologies:
+
+Bergamaschi, S., Iannizzi, P., Mondini, S., & Mapelli, D. (2008). Demenza: 100 esercizi di stimolazione cognitiva. Raffaello Cortina Editore. 
+
+de Leeuw, J. R. (2015). jsPsych: a JavaScript library for creating behavioral experiments in a Web browser. Behavior research methods, 47(1), 1–12.
+
+Lange, K., Kühn, S., & Filevich, E. (2015). "Just another tool for online studies" (JATOS): an easy solution for setup and management of web servers supporting online studies. PLoS ONE, 10(6), e0130834.
+
+We express our sincere gratitude to all participants and caregivers, the clinical and administrative staff at CDCD Padua, and the entire development team.
+
+12. Contact, Author Contributions, and Funding
+The RECODE project is the result of a multi-institutional collaboration between the University of Padua, the National Research Council (CNR), Cremona Solidale, and the University of Brescia.
+
+Full Author List:
+Adele Ravelli¹, Vincenzo Livoti²,³, Giulio Contemori³, Eleonora Macchia⁴, Zaira Romeo⁴, Marianna Noale⁴, Elena Lucchi⁵, Giorgia Ghilardotti⁵, Alessandro Morandi⁵,⁶, Marina De Rui¹, Stefania Maggi⁴, Giuseppe Sergi¹, Daniela Mapelli³, Mario Bonato²,³, Maria Devita¹,³ 
+
+Affiliations:
+
+Geriatrics Unit, Department of Medicine (DIMED), University of Padua, Padua, Italy
+
+Padua Neuroscience Center (PNC), University of Padua, Padua, Italy
+
+Department of General Psychology, University of Padua, Padua, Italy
+
+Neuroscience Institute, Aging Branch, National Research Council (CNR), Padua, Italy
+
+Azienda Speciale Cremona Solidale, Cremona, Italy
+
+Department of clinical and experimental science, University of Brescia, Italy
+
+Correspondence:
+All correspondence should be addressed to:
+
+Adele Ravelli: adele.ravelli@studenti.unipd.it
+
+Vincenzo Livoti: vincenzo.livoti@phd.unipd.it
+
+Dr. Giulio Contemori: giulio.contemori@unipd.it
+
+Department of General Psychology, University of Padua, Via Venezia 8, 35131 Padua, Italy 
+
+Funding:
+
+Eleonora Macchia, Zaira Romeo, Marianna Noale, and Stefania Maggi acknowledge co-funding from Next Generation EU, in the context of the National Recovery and Resilience Plan, Investment PE8– Project Age-It: “Ageing Well in an Ageing Society” (DM 1557 11.10.2022).
+
+Vincenzo Livoti is funded by the Ministerial Decree No. 118/2023 within the National Recovery and Resilience Plan (PNRR), as part of Mission 4, Component 1, Investment 3.4: "Digital and Environmental Transition", financed by European Union (EU) – NextGenerationEU.
+
+The views and opinions expressed are only those of the authors and do not necessarily reflect those of the European Union or the European Commission. Neither the European Union nor the European Commission can be held responsible for them.
+
+This repository is distributed under the MIT License. See(LICENSE.md) for details.
+For technical issues, feature requests, or collaborative inquiries, please use the GitHub issue tracker or contact the corresponding authors.
