@@ -1,3 +1,5 @@
+---
+
 # RECODE
 
 *Frozen implementation (jsPsych 7.2, JATOS 3.x) deployed during the 2024–2025 pilot trial at the University of Padua, Italy*
@@ -9,18 +11,18 @@
 
 ## Table of Contents
 
-1. [Background and Motivation](#background-and-motivation)
-2. [Project Goals](#project-goals)
-3. [System Requirements](#system-requirements)
-4. [Installation and Quickstart](#installation-and-quickstart)
-5. [Architecture Overview](#architecture-overview)
-6. [Exercise Taxonomy and Logic](#exercise-taxonomy-and-logic)
-7. [Session Flow and Adaptive Progression](#session-flow-and-adaptive-progression)
-8. [Avatar and Feedback System](#avatar-and-feedback-system)
-9. [Data Handling and Privacy](#data-handling-and-privacy)
-10. [Known Bugs and Limitations](#known-bugs-and-limitations)
-11. [Citation and Acknowledgments](#citation-and-acknowledgments)
-12. [Contact, Author Contributions, and Funding](#contact-author-contributions-and-funding)
+1. [Background and Motivation](#1-background-and-motivation)
+2. [Project Goals](#2-project-goals)
+3. [System Requirements](#3-system-requirements)
+4. [Installation and Quickstart](#4-installation-and-quickstart)
+5. [Architecture Overview](#5-architecture-overview)
+6. [Exercise Taxonomy and Logic](#6-exercise-taxonomy-and-logic)
+7. [Session Flow and Adaptive Progression](#7-session-flow-and-adaptive-progression)
+8. [Avatar and Feedback System](#8-avatar-and-feedback-system)
+9. [Data Handling and Privacy](#9-data-handling-and-privacy)
+10. [Known Bugs and Limitations](#10-known-bugs-and-limitations)
+11. [Citation and Acknowledgments](#11-citation-and-acknowledgments)
+12. [Contact, Author Contributions, and Funding](#12-contact-author-contributions-and-funding)
 
 ---
 
@@ -70,30 +72,59 @@ The platform is designed to run efficiently on widely available hardware and sof
 
 ## 4. Installation and Quickstart
 
-RECODE is a web-based experiment designed to be run through JATOS (Just Another Tool for Online Studies), a free, open-source server for managing behavioral research. You must have a working JATOS instance to deploy and run this project.
+RECODE is a web-based experiment designed to be run through [JATOS](https://www.jatos.org/) (Just Another Tool for Online Studies), a free, open-source server for managing behavioral research. **You must have a working JATOS instance to deploy and run this project.**
 
-### Prerequisites
+### Local vs. Global JATOS Installations
 
-Before deploying RECODE, you need a JATOS installation. You can set it up on your personal computer (for development and testing) or on an internet-facing server (for live data collection).
-For detailed, step-by-step instructions on how to install JATOS, refer to the [official JATOS documentation](https://www.jatos.org/).
+**Local Installation:**
+A *local* JATOS installation refers to a setup where JATOS is installed on your personal computer, accessible only from that machine (e.g., via `http://localhost:9000`). This configuration is intended exclusively for development, debugging, and internal pilot testing. Local installations do **not** expose your study to the public internet and thus cannot be used to collect data remotely from external participants. All study links generated in a local installation will only work on the host machine.
 
-### Deploying and Running RECODE
+**Global (Server) Installation:**
+A *global* (or production) JATOS installation is deployed on a remote server or cloud service with a static IP address or domain name, configured to accept secure external connections (typically via HTTPS). This setup is essential if you intend to run your study online and distribute participation links to external users—such as research participants located outside your institutional network, including those in their homes or in remote clinics.
 
-1. **Download the Study Package:**
-   Download the latest `RECODE.jzip` file from this repository's [Releases](../../releases) section. This is a JATOS Study Archive containing all code, assets, and configuration files. **Do not unzip this file.** Manually altering the archive will corrupt it.
+With a global installation, JATOS is reachable via a publicly accessible URL (e.g., `https://your-lab-server.org:9000`), and participant links can be safely emailed or otherwise shared for remote data collection. A global JATOS setup requires additional IT resources and security measures, including domain registration, server configuration, and the installation of a valid SSL certificate for encrypted data transmission. Your institution’s IT department should be consulted for server provisioning and security compliance.
 
-2. **Import into JATOS:**
+### Setting Up a Global JATOS Server (for Internet-Accessible Participation Links)
 
-   * Log into your JATOS instance (e.g., at `http://localhost:9000` for a local setup).
-   * In the sidebar, click the "+" button and select *Import Study*.
-   * Select the `RECODE.jzip` file.
+To deploy RECODE in a manner that allows participants to access the study via the internet, follow these steps:
 
-3. **Run the Study:**
+1. **Provision a Server:**
+   Acquire a dedicated or virtual server with a static public IP or domain name. The server can be hosted by your institution or via a reputable cloud provider. Ensure the server meets [JATOS’s requirements](https://www.jatos.org/Requirements.html) and is configured to allow inbound traffic on the relevant ports (default is 9000).
 
-   * After import, "RECODE" will appear in your studies list.
-   * Click on the study name, then click *Run* to begin a test session.
+2. **Install Java:**
+   Install a Java 11 Runtime Environment (JRE), which is required to run JATOS.
 
-The recommended workflow is to use a local JATOS for development. Once finalized, export an updated `.jzip` file and import it into your server installation for data collection.
+3. **Install and Configure JATOS:**
+   Download the latest stable JATOS release from the [JATOS website](https://www.jatos.org/Download.html) and follow the [production deployment instructions](https://www.jatos.org/Installation.html#deploy-on-server).
+
+   * For secure remote studies, you **must** enable HTTPS by configuring a valid SSL certificate (e.g., via Let’s Encrypt or your institutional CA).
+   * Update JATOS’s configuration files to set the public URL, database location, and mail server if needed.
+   * (Optional but recommended) Set up authentication, firewalls, and automatic backups for additional security and compliance.
+
+4. **Test the Public Link:**
+   Verify that your JATOS server is accessible via your chosen domain (e.g., `https://your-lab-server.org:9000`). You should be able to access the JATOS admin interface from an external device.
+
+5. **Deploy the RECODE Study:**
+
+   * Download the latest `RECODE.jzip` file from this repository’s [Releases](../../releases) section.
+   * In the JATOS admin interface, click the "+" button in the sidebar and select *Import Study*. Upload the `.jzip` file.
+   * After import, the “RECODE” study will appear in your study list.
+
+6. **Distribute Participation Links:**
+
+   * In JATOS, generate *Personal Single* or *Multiple* study links for your study.
+   * Send these links to participants via email or your preferred recruitment channel.
+   * Participants will be able to access the experiment securely from any location with a web browser and internet connection.
+
+**Note:**
+A global JATOS installation is required for any distributed or remote study where participants are not present on the same local network as the host machine. Always ensure your server complies with all relevant data protection and privacy regulations (e.g., GDPR), particularly when handling sensitive participant data.
+
+### Summary of Steps (Local and Global)
+
+* Use a **local installation** for internal testing, development, or demonstration purposes. No external access is possible.
+* Use a **global installation** on a public-facing server to distribute participation links over the internet and collect data remotely.
+
+For full installation and deployment details, consult the [JATOS documentation](https://www.jatos.org/Documentation.html).
 
 ---
 
@@ -205,12 +236,15 @@ Adele Ravelli¹, Vincenzo Livoti²,³, Giulio Contemori³, Eleonora Macchia⁴, 
 
 **Affiliations:**
 
-1. Geriatrics Unit, Department of Medicine (DIMED), University of Padua, Padua, Italy
-2. Padua Neuroscience Center (PNC), University of Padua, Padua, Italy
-3. Department of General Psychology, University of Padua, Padua, Italy
-4. Neuroscience Institute, Aging Branch, National Research Council (CNR), Padua, Italy
-5. Azienda Speciale Cremona Solidale, Cremona, Italy
-6. Department of Clinical and Experimental Science, University of Brescia, Italy
+1. Geriatrics Unit, Department of Medicine (
+
+
+DIMED), University of Padua, Padua, Italy
+2\. Padua Neuroscience Center (PNC), University of Padua, Padua, Italy
+3\. Department of General Psychology, University of Padua, Padua, Italy
+4\. Neuroscience Institute, Aging Branch, National Research Council (CNR), Padua, Italy
+5\. Azienda Speciale Cremona Solidale, Cremona, Italy
+6\. Department of Clinical and Experimental Science, University of Brescia, Italy
 
 **Correspondence:**
 
@@ -233,3 +267,5 @@ This repository is distributed under the MIT License. See [LICENSE.md](LICENSE.m
 For technical issues, feature requests, or collaboration inquiries, please use the [GitHub issue tracker](../../issues) or contact the corresponding authors.
 
 ---
+
+*End of README*
