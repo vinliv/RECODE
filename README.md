@@ -1,5 +1,3 @@
----
-
 # RECODE
 
 *Frozen implementation (jsPsych 7.2, JATOS 3.x) deployed during the 2024–2025 pilot trial at the University of Padua, Italy*
