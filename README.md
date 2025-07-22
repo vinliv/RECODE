@@ -152,7 +152,7 @@ The cognitive exercises in RECODE are digital adaptations of validated paper-and
 * Working Memory
 * Spatial-Temporal Orientation
 
-Each domain contains multiple exercises, most with "basic" and "advanced" difficulty levels. The system logs responses, reaction times, and accuracy for each trial, which are used to calculate block-level statistics for adaptive progression.
+Each domain contains multiple exercises, most with "basic" and "advanced" difficulty levels. The system logs responses accuracy for each trial, which are used to calculate block-level statistics for adaptive progression.
 
 ---
 
@@ -160,11 +160,11 @@ Each domain contains multiple exercises, most with "basic" and "advanced" diffic
 
 A typical RECODE session is structured yet flexible, guiding participants through training while adapting to individual performance.
 
-* **Onboarding:** Session begins with onboarding, demographic data collection, and avatar selection.
-* **Exercise Blocks:** Standard sessions consist of up to twelve exercises, with two randomly selected from each cognitive domain.
+* **Onboarding:** Session begins with written instructions verbally reproduced by an avatar who welcome the user and guide them step-by-step.
+* **Exercise Blocks:** Standard sessions consist of twelve exercises, with two randomly selected from each cognitive domain.
 * **Instructions and Practice:** Each exercise starts with an instruction screen. Participants can read instructions or complete a short practice block with immediate feedback (thumbs-up/down for correct/incorrect).
 * **Adaptive Difficulty:** Exercises start at the "basic" level. An individual-specific adaptive staircase mechanism keeps tasks challenging but not overwhelming.
-* **Progression/Regression:** If accuracy ≥80% on both exercises within a domain, subsequent exercises in that domain move to "advanced" level; otherwise, they remain at "basic."
+* **Progression/Regression:** If accuracy ≥80% on both exercises within a domain, subsequent exercises in that domain move to "advanced" level; otherwise, they remain at "basic".
 * **Feedback and Breaks:** No feedback is given during the main task. At exercise end, performance is summarized with an emoji and message. Short breaks after each exercise and a longer break at session midpoint are available.
 * **Session Summary:** Each session concludes with a global report of average performance by domain and total score, followed by subjective feedback collection on fatigue and satisfaction.
 
@@ -172,9 +172,9 @@ A typical RECODE session is structured yet flexible, guiding participants throug
 
 ## 8. Avatar and Feedback System
 
-To enhance participant engagement—especially for older users with limited digital literacy—RECODE includes a feedback system guided by an animated avatar. Participants can choose from four visual identities (young/male, young/female, senior/male, senior/female).
+To enhance participant engagement—especially for older users with limited digital literacy—RECODE includes a feedback system guided by an animated avatar. 
 
-The avatar guides participants, provides instructions, and delivers motivational feedback. Performance is reinforced through both visual and verbal cues: positive performance triggers celebratory animations (e.g., confetti, applause), while lower accuracy yields constructive encouragement (e.g., "You can do better!"). All avatar behaviors are synchronized with the trial timeline using jsPsych event hooks.
+The avatar guides participants, provides instructions, and delivers motivational feedback. Performance is reinforced through both visual and verbal cues: positive performance triggers celebratory animations, while lower accuracy yields constructive encouragement (e.g., "You can do better!").
 
 ---
 
@@ -191,20 +191,16 @@ RECODE was designed with strict privacy-by-design principles to ensure complianc
 
 ## 10. Known Bugs and Limitations
 
-This repository contains the research build used for a pilot study. While functionally stable, it has several limitations and known issues:
+This repository contains the research build used for a pilot study. While functionally stable, it has several limitations and known issues.
 
 * **Pilot Study Scope:** Validation was conducted in a small pilot sample (n=12 per group). Results are promising but require confirmation in larger, multicenter trials.
-* **Supervised Setting:** Although designed for remote use, the pilot study was run in a clinical setting under neuropsychologist supervision. Feasibility in fully unsupervised environments is untested.
+* **Supervised Setting:** Although designed for remote use, the pilot study was run in a clinical setting under neuropsychologist supervision. Feasibility testing in fully unsupervised environments is currently underway in a sample of healthy older adults.
 * **Alpha Stage Software:** This version is considered an alpha build. The pilot study informed subsequent improvements, which are ongoing.
-* **Accessibility:** While user-friendly, participants with severe cognitive impairment (e.g., MMSE \~13) may find exercises too demanding. Screen reader support is limited.
+* **Accessibility:** While user-friendly, participants with severe cognitive impairment may find exercises too demanding.
 * **Technical Issues:**
-
-  * Rapid sequential clicks may cause overlapping audio feedback.
   * Touch input is only partially supported.
   * In case of network interruption, only completed blocks are saved.
-* **Content Limitations:** All content is currently in Italian. Some visual stimuli may be duplicated across exercise categories.
-
-Open issues and progress toward future versions are tracked in the project’s [issue tracker](../../issues).
+* **Content Limitations:** All content is currently in Italian.
 
 ---
 
